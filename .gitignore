@@ -1,0 +1,4 @@
+node_modules/
+.vscode/
+dist/output
+apify_storage/
