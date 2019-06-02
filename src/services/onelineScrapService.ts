@@ -1,15 +1,18 @@
 import * as request from 'request';
 import * as fs from 'fs';
-import { Builder, By, Key, until } from 'selenium-webdriver';
-import * as https from 'https';
+import * as schedule from 'node-schedule';
 import * as path from 'path';
 import * as json2xml from 'json2xml';
 import Scrap from '../scraping/scrap';
+import { Route } from '../scraping/scrapModel';
+import { GlobalSchedule } from './globalSheduleList';
+
 const porturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3006GS.do';
 const porttoporturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3001GS.do';
 
 export default class oneLineService {
     scrap;
+
     constructor() {
         this.scrap = new Scrap();
     }
@@ -20,30 +23,45 @@ export default class oneLineService {
         );
         return JSON.parse(data)['list'];
     }
-    public async loadPortToPortSchedule() {
-        let res = [];
-        let data = fs.readFileSync(
-            path.resolve(__dirname, '../../ports.json'),
-            'utf8'
-        );
-        //get all points
-        let ports = JSON.parse(data)['list'];
-        let i = 0;
-        let ch = this.chunkArray(ports, 600);
-        let obj = await this.scrap.insertMasterRoute();
-        let id = obj[0]['IDMasterRoute'];
-        console.log(new Date());
-        for (let i = 0; i < ports.length; i++) {
-            for (let j = 0; j < ch.length; j++) {
-                let res = await this.sendData(ports[i], ch[j]);
-                this.sendDataToDB(res, 4);
-            }
-            console.log(new Date());
-            console.log(i);
+    public loadPortToPortSchedule(scheduleTime) {
+        let scheduleString;
+        if (scheduleTime === -1) {
+        } else {
+            scheduleString = scheduleTime;
         }
-    }
-    public sendDataToDB(data, id) {
-        this.scrap.saveXML(id, json2xml(data));
+        if (GlobalSchedule.oneLineSchedule) {
+            GlobalSchedule.oneLineSchedule.cancel();
+        }
+        GlobalSchedule.oneLineSchedule = schedule.scheduleJob(
+            scheduleTime,
+            async () => {
+                console.log(scheduleTime);
+                console.log('service one-line call');
+                //get all points
+                let siteSetting = await this.scrap.loadSetting(1);
+                let timeLength = siteSetting[0]['LenghtScrap'];
+                let tempDate = new Date();
+                let endTime = this.IsoTime(
+                    tempDate.setDate(tempDate.getDate() + timeLength)
+                );
+                let startTime = this.IsoTime(new Date());
+                let portToPortList = await this.scrap.loadDetailSetting(1);
+                let iso = new Date().toISOString().split('T')[0];
+                let obj = await this.scrap.insertMasterRoute(iso, 1);
+                let id = obj[0]['PkMasterRoute'];
+                console.log(new Date());
+                for (let i = 0; i < portToPortList.length; i++) {
+                    await this.sendData(
+                        portToPortList[i]['fromPortcode'],
+                        portToPortList[i]['toPortcode'],
+                        startTime,
+                        endTime,
+                        id
+                    );
+                }
+                console.log('finish');
+            }
+        );
     }
     public chunkArray(myArray, chunk_size) {
         var index = 0;
@@ -58,56 +76,55 @@ export default class oneLineService {
 
         return tempArray;
     }
-    public sendData(port, ports) {
+    public sendData(from, to, start, end, id) {
         let rows = [];
         return new Promise((resolve, reject) => {
-            let t = ports.length;
-            for (let i = 0; i < ports.length; i++) {
-                // for (let j = 0; j < ports.length; j++) {
-                if (port === ports[i]['locCd']) {
-                    continue;
+            let u =
+                porttoporturl +
+                `?f_cmd=3&por_cd=${from}&del_cd=${to}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=D&skd_tp=L`;
+            request(u, (err, res, body) => {
+                if (err) {
+                    console.log(err);
                 }
-                let u =
-                    porttoporturl +
-                    `?f_cmd=3&por_cd=${port['locCd']}&del_cd=${
-                        ports[i]['locCd']
-                    }&rcv_term_cd=Y&de_term_cd=Y&frm_dt=2019-05-17&to_dt=2019-06-18&ts_ind=D&skd_tp=L`;
-                request(u, (err, res, body) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    try {
-                        if (res.statusCode === 200) {
-                            let obj = JSON.parse(res.body.replace('/\n/g', ''));
-                            if (+obj['count'] !== 0) {
-                                for (let l = 0; l < obj['count']; l++) {
-                                    rows.push({
-                                        row: {
-                                            to: obj['list'][l]['n1stPodYdCd'],
-                                            from: obj['list'][l]['polYdCd'],
-                                            inlandTime:
-                                                obj['list'][l]['inlandCct'],
-                                            portTime: obj['list'][l]['cct'],
-                                            depDate: obj['list'][l]['polEtdDt'],
-                                            arrivalDate:
-                                                obj['list'][l]['lstPodEtaDt'],
-                                            vessel: obj['list'][l]['n1stVslNm'],
-                                            ocean: obj['list'][l]['ocnTzDys'],
-                                            total: obj['list'][l]['ttlTzDys']
-                                        }
-                                    });
-                                }
+                try {
+                    if (res.statusCode === 200) {
+                        let obj = JSON.parse(res.body.replace('/\n/g', ''));
+                        if (+obj['count'] !== 0) {
+                            for (let l = 0; l < obj['count']; l++) {
+                                let roueTemp = new Route();
+                                roueTemp.to = obj['list'][l]['n1stPodYdCd'];
+                                roueTemp.from = obj['list'][l]['polYdCd'];
+                                roueTemp.inland = obj['list'][l]['inlandCct'];
+                                roueTemp.portTime = obj['list'][l]['cct'];
+                                roueTemp.depDate = obj['list'][l]['polEtdDt'];
+                                roueTemp.arrivalDate =
+                                    obj['list'][l]['lstPodEtaDt'];
+                                roueTemp.vessel = obj['list'][l]['n1stVslNm'];
+                                roueTemp.ocean = obj['list'][l]['ocnTzDys'];
+                                roueTemp.total = obj['list'][l]['ttlTzDys'];
+                                roueTemp.siteId = id;
+                                this.scrap.saveRoute(roueTemp);
                             }
                         }
-                    } catch (e) {
-                        console.log(e);
+                        resolve('ok');
                     }
-                    if (--t === 0) {
-                        return resolve(rows);
-                    }
-                });
-            }
+                } catch (e) {
+                    console.log(e);
+                    reject('ko');
+                }
+            });
         });
+    }
+    public IsoTime(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
     }
 }
 

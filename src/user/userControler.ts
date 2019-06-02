@@ -4,13 +4,15 @@ import User from './user';
 import * as userModel from './userModel';
 import { constants } from 'os';
 import Jwt from '../autorize';
-
+import SendMail from '../services/sendEmail';
 class MainControler {
     public router: express.router;
     public user: User;
+    public sendMail: SendMail;
     constructor() {
         this.router = express.Router();
         this.user = new User();
+        this.sendMail = new SendMail();
         this.config();
         this.call();
     }
@@ -27,7 +29,10 @@ class MainControler {
                 .loginUser(loginOData)
                 .then(data => {
                     if (data[0]['message'] === 'succeed') {
-                        let token = Jwt.createToken(data[0]['UserCo'], data[0]['FldFkTypeCo']);
+                        let token = Jwt.createToken(
+                            data[0]['UserCo'],
+                            data[0]['FldFkTypeCo']
+                        );
                         let result = {
                             msg: 'success',
                             token: token
@@ -61,7 +66,7 @@ class MainControler {
             userOData.password = req.body.password;
             userOData.phone = req.body.phone;
             userOData.type = req.body.type;
-            userOData.active = req.body.active;
+            userOData.active = req.body.active || 1;
             userOData.id = req.body.id || -1;
 
             this.user
@@ -115,7 +120,7 @@ class MainControler {
             if (status === 200) {
                 let oldPass = req.body.oldPass;
                 let newPass = req.body.newPass;
-                let userId = req.body.userId;
+                let userId = Jwt.getId(token);
                 this.user
                     .changePassword(userId, oldPass, newPass)
                     .then(data => {
@@ -145,6 +150,207 @@ class MainControler {
                 let userId = req.body.userId;
                 this.user
                     .deleteUser(userId)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+        this.router.post('/api/user/addEmail', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let masterId = req.body.masterId;
+                let email = req.body.email;
+                this.user
+                    .saveEmail(masterId, email)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+        this.router.post('/api/user/loadAllemails', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let emailId = req.body.emailId || -1;
+                this.user
+                    .loadAllEmails(emailId)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+        this.router.post('/api/user/saveSystemEmail', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let setting = new userModel.systemEmail();
+                setting.email = req.body.email;
+                setting.password = req.body.password;
+                setting.port = req.body.port;
+                setting.server = req.body.server;
+                setting.username = req.body.username;
+                this.user
+                    .saveSystemEmail(setting)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+        this.router.post('/api/user/loadSystemEmails', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let emailId = req.body.emailId || -1;
+                this.user
+                    .loadSystemEmails(emailId)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+
+        this.router.post('/api/user/saveEmailSetting', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let masterId = req.body.masterId || -1;
+                let time = req.body.time;
+                let saveTime = req.body.saveTime;
+                this.sendMail.main(time);
+                this.user
+                    .saveEmailSetting(masterId, saveTime)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+
+        this.router.post('/api/user/loadEmailSetting', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let masterId = req.body.masterId || -1;
+                this.user
+                    .loadEmailSetting(masterId)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
+
+        this.router.post('/api/user/deleteEmail', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkTokenforAdmin(token);
+            if (status === 200) {
+                let emalId = req.body.emalId;
+                this.user
+                    .deleteEmail(emalId)
                     .then(data => {
                         res.status(200).send({
                             data: data,

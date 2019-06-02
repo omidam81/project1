@@ -124,6 +124,189 @@ class User {
             });
         });
     }
+    changeActiveUser(userId, active, newPass) {
+        let qry = 'SpActiveOrInActiveUser';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('UserCo', userId)
+                    .input('Active', active)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    saveEmailSetting(masterId, time) {
+        let qry = 'Sp_InsertOrUpdateEmailSetting';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('FldPkEmailSetting', masterId)
+                    .input('FldSendTime', time)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    saveEmail(masterId, email) {
+        let qry = 'Sp_InsertEmail';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('PkMasterSetting', masterId)
+                    .input('Email', email)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    deleteEmail(emailId) {
+        let qry = 'Sp_DeleteEmail';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('PkEmail', emailId)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    loadAllEmails(emailSettingId = -1) {
+        let qry = 'Sp_LoadEmail';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('FkEmailSetting', emailSettingId)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    loadEmailSetting(settingId = -1) {
+        let qry = 'Sp_LoadEmailSetting';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('PkEmaillSetting', settingId)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    saveSystemEmail(systemEmail) {
+        let qry = 'Sp_InsertOrUpdateSystemEmail';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('FldEmail', systemEmail.email)
+                    .input('FldServer', systemEmail.server)
+                    .input('FldPort', systemEmail.port)
+                    .input('FldUserName', systemEmail.username)
+                    .input('FldPass', systemEmail.password)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
+    loadSystemEmails(emailId = -1) {
+        let qry = 'Sp_LoadSystemEmail';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('PkSystemEmail', emailId)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
 }
 exports.default = User;
 //# sourceMappingURL=user.js.map

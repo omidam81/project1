@@ -6,4 +6,10 @@ exports.loginOData = loginOData;
 class userOData {
 }
 exports.userOData = userOData;
+class saveEmail {
+}
+exports.saveEmail = saveEmail;
+class systemEmail {
+}
+exports.systemEmail = systemEmail;
 //# sourceMappingURL=userModel.js.map

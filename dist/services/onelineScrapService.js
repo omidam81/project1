@@ -10,9 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request");
 const fs = require("fs");
+const schedule = require("node-schedule");
 const path = require("path");
-const json2xml = require("json2xml");
 const scrap_1 = require("../scraping/scrap");
+const scrapModel_1 = require("../scraping/scrapModel");
+const globalSheduleList_1 = require("./globalSheduleList");
 const porturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3006GS.do';
 const porttoporturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3001GS.do';
 class oneLineService {
@@ -23,29 +25,35 @@ class oneLineService {
         let data = fs.readFileSync(path.resolve(__dirname, '../../ports.json'), 'utf8');
         return JSON.parse(data)['list'];
     }
-    loadPortToPortSchedule() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let res = [];
-            let data = fs.readFileSync(path.resolve(__dirname, '../../ports.json'), 'utf8');
+    loadPortToPortSchedule(scheduleTime) {
+        let scheduleString;
+        if (scheduleTime === -1) {
+        }
+        else {
+            scheduleString = scheduleTime;
+        }
+        if (globalSheduleList_1.GlobalSchedule.oneLineSchedule) {
+            globalSheduleList_1.GlobalSchedule.oneLineSchedule.cancel();
+        }
+        globalSheduleList_1.GlobalSchedule.oneLineSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            console.log(scheduleTime);
+            console.log('service one-line call');
             //get all points
-            let ports = JSON.parse(data)['list'];
-            let i = 0;
-            let ch = this.chunkArray(ports, 600);
-            let obj = yield this.scrap.insertMasterRoute();
-            let id = obj[0]['IDMasterRoute'];
+            let siteSetting = yield this.scrap.loadSetting(1);
+            let timeLength = siteSetting[0]['LenghtScrap'];
+            let tempDate = new Date();
+            let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));
+            let startTime = this.IsoTime(new Date());
+            let portToPortList = yield this.scrap.loadDetailSetting(1);
+            let iso = new Date().toISOString().split('T')[0];
+            let obj = yield this.scrap.insertMasterRoute(iso, 1);
+            let id = obj[0]['PkMasterRoute'];
             console.log(new Date());
-            for (let i = 0; i < ports.length; i++) {
-                for (let j = 0; j < ch.length; j++) {
-                    let res = yield this.sendData(ports[i], ch[j]);
-                    this.sendDataToDB(res, 4);
-                }
-                console.log(new Date());
-                console.log(i);
+            for (let i = 0; i < portToPortList.length; i++) {
+                yield this.sendData(portToPortList[i]['fromPortcode'], portToPortList[i]['toPortcode'], startTime, endTime, id);
             }
-        });
-    }
-    sendDataToDB(data, id) {
-        this.scrap.saveXML(id, json2xml(data));
+            console.log('finish');
+        }));
     }
     chunkArray(myArray, chunk_size) {
         var index = 0;
@@ -58,52 +66,52 @@ class oneLineService {
         }
         return tempArray;
     }
-    sendData(port, ports) {
+    sendData(from, to, start, end, id) {
         let rows = [];
         return new Promise((resolve, reject) => {
-            let t = ports.length;
-            for (let i = 0; i < ports.length; i++) {
-                // for (let j = 0; j < ports.length; j++) {
-                if (port === ports[i]['locCd']) {
-                    continue;
+            let u = porttoporturl +
+                `?f_cmd=3&por_cd=${from}&del_cd=${to}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=D&skd_tp=L`;
+            request(u, (err, res, body) => {
+                if (err) {
+                    console.log(err);
                 }
-                let u = porttoporturl +
-                    `?f_cmd=3&por_cd=${port['locCd']}&del_cd=${ports[i]['locCd']}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=2019-05-17&to_dt=2019-06-18&ts_ind=D&skd_tp=L`;
-                request(u, (err, res, body) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                    try {
-                        if (res.statusCode === 200) {
-                            let obj = JSON.parse(res.body.replace('/\n/g', ''));
-                            if (+obj['count'] !== 0) {
-                                for (let l = 0; l < obj['count']; l++) {
-                                    rows.push({
-                                        row: {
-                                            to: obj['list'][l]['n1stPodYdCd'],
-                                            from: obj['list'][l]['polYdCd'],
-                                            inlandTime: obj['list'][l]['inlandCct'],
-                                            portTime: obj['list'][l]['cct'],
-                                            depDate: obj['list'][l]['polEtdDt'],
-                                            arrivalDate: obj['list'][l]['lstPodEtaDt'],
-                                            vessel: obj['list'][l]['n1stVslNm'],
-                                            ocean: obj['list'][l]['ocnTzDys'],
-                                            total: obj['list'][l]['ttlTzDys']
-                                        }
-                                    });
-                                }
+                try {
+                    if (res.statusCode === 200) {
+                        let obj = JSON.parse(res.body.replace('/\n/g', ''));
+                        if (+obj['count'] !== 0) {
+                            for (let l = 0; l < obj['count']; l++) {
+                                let roueTemp = new scrapModel_1.Route();
+                                roueTemp.to = obj['list'][l]['n1stPodYdCd'];
+                                roueTemp.from = obj['list'][l]['polYdCd'];
+                                roueTemp.inland = obj['list'][l]['inlandCct'];
+                                roueTemp.portTime = obj['list'][l]['cct'];
+                                roueTemp.depDate = obj['list'][l]['polEtdDt'];
+                                roueTemp.arrivalDate =
+                                    obj['list'][l]['lstPodEtaDt'];
+                                roueTemp.vessel = obj['list'][l]['n1stVslNm'];
+                                roueTemp.ocean = obj['list'][l]['ocnTzDys'];
+                                roueTemp.total = obj['list'][l]['ttlTzDys'];
+                                roueTemp.siteId = id;
+                                this.scrap.saveRoute(roueTemp);
                             }
                         }
+                        resolve('ok');
                     }
-                    catch (e) {
-                        console.log(e);
-                    }
-                    if (--t === 0) {
-                        return resolve(rows);
-                    }
-                });
-            }
+                }
+                catch (e) {
+                    console.log(e);
+                    reject('ko');
+                }
+            });
         });
+    }
+    IsoTime(date) {
+        var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+        return [year, month, day].join('-');
     }
 }
 exports.default = oneLineService;
