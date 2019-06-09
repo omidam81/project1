@@ -267,6 +267,28 @@ class Scrap {
             });
         });
     }
+    deletePortToPort(id) {
+        let qry = 'Sp_DeleteDetailSetting';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(config_1.default.dbconfig)
+                .connect()
+                .then(pool => {
+                return pool
+                    .request()
+                    .input('PkDetailSetting', id)
+                    .execute(qry);
+            })
+                .then(result => {
+                let rows = result.recordset;
+                sql.close();
+                return resolve(rows);
+            })
+                .catch(err => {
+                sql.close();
+                return reject(err);
+            });
+        });
+    }
 }
 exports.default = Scrap;
 //# sourceMappingURL=scrap.js.map

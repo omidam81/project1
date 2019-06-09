@@ -30,7 +30,8 @@ class MainControler {
                     let token = autorize_1.default.createToken(data[0]['UserCo'], data[0]['FldFkTypeCo']);
                     let result = {
                         msg: 'success',
-                        token: token
+                        token: token,
+                        user: data[0]['FldFkTypeCo']
                     };
                     res.status(200).send({
                         data: result,
@@ -170,7 +171,7 @@ class MainControler {
         });
         this.router.post('/api/user/addEmail', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let masterId = req.body.masterId;
                 let email = req.body.email;
@@ -199,7 +200,7 @@ class MainControler {
         });
         this.router.post('/api/user/loadAllemails', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let emailId = req.body.emailId || -1;
                 this.user
@@ -227,7 +228,7 @@ class MainControler {
         });
         this.router.post('/api/user/saveSystemEmail', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let setting = new userModel.systemEmail();
                 setting.email = req.body.email;
@@ -260,7 +261,7 @@ class MainControler {
         });
         this.router.post('/api/user/loadSystemEmails', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let emailId = req.body.emailId || -1;
                 this.user
@@ -288,7 +289,7 @@ class MainControler {
         });
         this.router.post('/api/user/saveEmailSetting', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let masterId = req.body.masterId || -1;
                 let time = req.body.time;
@@ -319,7 +320,7 @@ class MainControler {
         });
         this.router.post('/api/user/loadEmailSetting', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let masterId = req.body.masterId || -1;
                 this.user
@@ -347,7 +348,7 @@ class MainControler {
         });
         this.router.post('/api/user/deleteEmail', (req, res) => {
             let token = req.headers['x-access-token'];
-            let status = autorize_1.default.checkTokenforAdmin(token);
+            let status = autorize_1.default.checkToken(token);
             if (status === 200) {
                 let emalId = req.body.emalId;
                 this.user

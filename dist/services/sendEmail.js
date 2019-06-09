@@ -61,7 +61,7 @@ class sendMail {
                 };
                 var htmlToSend = template(replacements);
                 let mailOptions = {
-                    from: 'Report',
+                    from: emailConfig[0]['FldEmail'],
                     to: list,
                     subject: 'Scrap Report',
                     html: htmlToSend // html body

@@ -284,6 +284,33 @@ class scrapControler {
                 });
             }
         });
+        this.router.post('/api/scrap/deletePortToPort', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkToken(token);
+            if (status === 200) {
+                let id = req.body.PortToPortId;
+                this.scrap
+                    .deletePortToPort(id)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        });
     }
 }
 
