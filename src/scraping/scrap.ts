@@ -28,7 +28,7 @@ export default class Scrap {
     insertMasterRoute(time, siteId) {
         let qry = 'Sp_InsertMasterRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -73,7 +73,7 @@ export default class Scrap {
     loadSites(siteId) {
         let qry = 'Sp_LoadSite';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -95,7 +95,7 @@ export default class Scrap {
     saveSettingForSite(siteSettingOData: ScrapModel.siteSetting) {
         let qry = 'Sp_InsertOrUpdateMasterSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -109,6 +109,10 @@ export default class Scrap {
                             siteSettingOData.LenghtToScraping
                         )
                         .input('FldString', siteSettingOData.String)
+                        .input('DisableEnable', siteSettingOData.DisableEnable)
+                        .input('Subsidiary_id', siteSettingOData.SubsidiaryId)
+                        .input('com_code', siteSettingOData.ComCode)
+
                         .execute(qry);
                 })
                 .then(result => {
@@ -125,7 +129,7 @@ export default class Scrap {
     savePorttoPort(portOPortOData: ScrapModel.PortToPort) {
         let qry = 'Sp_InsertDetailsSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -149,7 +153,7 @@ export default class Scrap {
     loadSetting(siteId) {
         let qry = 'Sp_LoadMasterSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -172,7 +176,7 @@ export default class Scrap {
     loadDetailSetting(siteId) {
         let qry = 'Sp_LoadDetailsSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -194,22 +198,43 @@ export default class Scrap {
     saveRoute(routOData: ScrapModel.Route) {
         let qry = 'Sp_InsertRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
-                    return pool
-                        .request()
-                        .input('From', routOData.from)
-                        .input('To', routOData.to)
-                        .input('Inland', routOData.inland)
-                        .input('PortTime', routOData.portTime)
-                        .input('DepDate', routOData.depDate)
-                        .input('ArrivalDate', routOData.arrivalDate)
-                        .input('Vessel', routOData.vessel)
-                        .input('Ocean', routOData.ocean)
-                        .input('Total', routOData.total)
-                        .input('PkMasterRoute', routOData.siteId)
-                        .execute(qry);
+                    return (
+                        pool
+                            .request()
+                            .input('from_port_id', routOData.from_port_id)
+                            .input('from_port_name', routOData.from_port_name)
+                            .input('to_port_id', routOData.to_port_id)
+                            .input('to_port_name', routOData.to_port_name)
+                            .input('etd', routOData.etd)
+                            .input('eta', routOData.eta)
+                            .input('vessel', routOData.vessel)
+                            .input('voyage', routOData.voyage)
+                            .input('modify_date', routOData.modify_date)
+                            .input('imp_exp', routOData.imp_exp)
+                            .input('service', routOData.service)
+                            .input('from_sch_cy', routOData.from_sch_cy)
+                            .input('from_sch_cfs', routOData.from_sch_cfs)
+                            .input('from_sch_rece', routOData.from_sch_rece)
+                            .input('from_sch_si', routOData.from_sch_si)
+                            .input('from_sch_vgm', routOData.from_sch_vgm)
+                            .input('ts_port_name', routOData.ts_port_name)
+                            .input('vessel_2', routOData.vessel_2)
+                            .input('voyage_2', routOData.voyage_2)
+                            .input('FldFkMasterRoute', routOData.siteId)
+
+                            // .input('From', routOData.from)
+                            // .input('To', routOData.to)
+                            // .input('Inland', routOData.inland)
+                            // .input('PortTime', routOData.portTime)
+                            // .input('DepDate', routOData.depDate)
+                            // .input('ArrivalDate', routOData.arrivalDate)
+                            // .input('Ocean', routOData.ocean)
+                            // .input('Total', routOData.total)
+                            .execute(qry)
+                    );
                 })
                 .then(result => {
                     let rows = result.recordset;
@@ -225,7 +250,7 @@ export default class Scrap {
     loadReport() {
         let qry = 'SP_EmailReportNumberOfPortAndScrap';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -247,7 +272,7 @@ export default class Scrap {
     ScrapReport(reportOData: ScrapModel.scrapReport) {
         let qry = 'Sp_ReportAllRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool
@@ -272,7 +297,7 @@ export default class Scrap {
     deletePortToPort(id) {
         let qry = 'Sp_DeleteDetailSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbconfig)
+            new sql.ConnectionPool(Config.dbRouteconfig)
                 .connect()
                 .then(pool => {
                     return pool

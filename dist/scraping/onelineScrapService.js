@@ -14,7 +14,7 @@ const schedule = require("node-schedule");
 const path = require("path");
 const scrap_1 = require("../scraping/scrap");
 const scrapModel_1 = require("../scraping/scrapModel");
-const globalSheduleList_1 = require("./globalSheduleList");
+const globalSheduleList_1 = require("../globalSheduleList");
 const porturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3006GS.do';
 const porttoporturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3001GS.do';
 class oneLineService {
@@ -50,7 +50,7 @@ class oneLineService {
             let id = obj[0]['PkMasterRoute'];
             console.log(new Date());
             for (let i = 0; i < portToPortList.length; i++) {
-                yield this.sendData(this.findOneLineCode(portToPortList[i]['fromPortname']), this.findOneLineCode(portToPortList[i]['toPortname']), startTime, endTime, id);
+                yield this.sendData(portToPortList[i]['fromPortcode'], portToPortList[i]['toPortcode'], startTime, endTime, id);
             }
             console.log('finish');
         }));
@@ -70,7 +70,7 @@ class oneLineService {
         let rows = [];
         return new Promise((resolve, reject) => {
             let u = porttoporturl +
-                `?f_cmd=3&por_cd=${from.trim()}&del_cd=${to.trim()}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=D&skd_tp=L`;
+                `?f_cmd=3&por_cd=${from}&del_cd=${to}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=D&skd_tp=L`;
             request(u, (err, res, body) => {
                 if (err) {
                     console.log(err);
@@ -112,18 +112,6 @@ class oneLineService {
         if (day.length < 2)
             day = '0' + day;
         return [year, month, day].join('-');
-    }
-    findOneLineCode(code) {
-        let data = fs.readFileSync(path.resolve(__dirname, '../../ports.json'), 'utf8');
-        let array = JSON.parse(data);
-        let list = array['list'];
-        let temp = list.find(x => x['locNm'].toLowerCase().startsWith(code.trim().toLowerCase()));
-        if (temp) {
-            return temp['locCd'];
-        }
-        else {
-            return '';
-        }
     }
 }
 exports.default = oneLineService;

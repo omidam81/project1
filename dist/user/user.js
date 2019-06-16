@@ -6,7 +6,7 @@ class User {
     loginUser(loginOData) {
         let qry = 'SpLogin';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -29,7 +29,7 @@ class User {
     register(user) {
         let qry = 'SpSignUp';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -58,7 +58,7 @@ class User {
     loadUsers(userId, userType) {
         let qry = 'SpLoadUsers';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -81,7 +81,7 @@ class User {
     deleteUser(id) {
         let qry = 'SpLoadUsers';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -103,7 +103,7 @@ class User {
     changePassword(id, oldPass, newPass) {
         let qry = 'SpChangePassword';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -127,7 +127,7 @@ class User {
     changeActiveUser(userId, active, newPass) {
         let qry = 'SpActiveOrInActiveUser';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -150,7 +150,7 @@ class User {
     saveEmailSetting(masterId, time) {
         let qry = 'Sp_InsertOrUpdateEmailSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -173,7 +173,7 @@ class User {
     saveEmail(masterId, email) {
         let qry = 'Sp_InsertEmail';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -196,7 +196,7 @@ class User {
     deleteEmail(emailId) {
         let qry = 'Sp_DeleteEmail';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -218,7 +218,7 @@ class User {
     loadAllEmails(emailSettingId = -1) {
         let qry = 'Sp_LoadEmail';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -240,7 +240,7 @@ class User {
     loadEmailSetting(settingId = -1) {
         let qry = 'Sp_LoadEmailSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -262,7 +262,7 @@ class User {
     saveSystemEmail(systemEmail) {
         let qry = 'Sp_InsertOrUpdateSystemEmail';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool
@@ -288,7 +288,7 @@ class User {
     loadSystemEmails(emailId = -1) {
         let qry = 'Sp_LoadSystemEmail';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbconfig)
+            new sql.ConnectionPool(config_1.default.dbRouteconfig)
                 .connect()
                 .then(pool => {
                 return pool

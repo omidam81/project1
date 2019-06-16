@@ -144,6 +144,10 @@ class scrapControler {
                 siteSetting.LenghtToScraping = req.body.LenghtToScraping;
                 siteSetting.String = req.body.String;
                 siteSetting.TypeSchedule = req.body.TypeSchedule;
+                siteSetting.ComCode = req.body.ComCode;
+                siteSetting.SubsidiaryId = req.body.SubsidiaryId;
+                siteSetting.DisableEnable = req.body.DisableEnable;
+
                 this.oneLine.loadPortToPortSchedule(siteSetting.String);
                 this.scrap
                     .saveSettingForSite(siteSetting)

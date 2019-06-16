@@ -20,6 +20,9 @@ export class siteSetting {
     DayOfMounth;
     LenghtToScraping;
     String;
+    DisableEnable;
+    SubsidiaryId;
+    ComCode;
 }
 export class Route {
     from;
@@ -32,8 +35,30 @@ export class Route {
     ocean;
     total;
     siteId;
+
+    subsidiary_id;
+    com_code;
+    from_port_id;
+    from_port_name;
+    to_port_id;
+    to_port_name;
+    etd;
+    eta;
+    voyage;
+    modify_date;
+    imp_exp;
+    service;
+    from_sch_cy;
+    from_sch_cfs;
+    from_sch_rece;
+    from_sch_si;
+    from_sch_vgm;
+    ts_port_name;
+    vessel_2;
+    voyage_2;
+    DisableEnable;
 }
-export class scrapReport{
+export class scrapReport {
     from;
     to;
     fromTime;
