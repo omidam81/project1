@@ -102,6 +102,28 @@ export default class oneLineService {
                                 roueTemp.vessel = obj['list'][l]['n1stVslNm'];
                                 roueTemp.ocean = obj['list'][l]['ocnTzDys'];
                                 roueTemp.total = obj['list'][l]['ttlTzDys'];
+
+                                roueTemp.subsidiary_id;
+                                roueTemp.com_code;
+                                roueTemp.from_port_id;
+                                roueTemp.from_port_name;
+                                roueTemp.to_port_id;
+                                roueTemp.to_port_name;
+                                roueTemp.etd;
+                                roueTemp.eta;
+                                roueTemp.voyage;
+                                roueTemp.modify_date;
+                                roueTemp.imp_exp;
+                                roueTemp.service;
+                                roueTemp.from_sch_cy;
+                                roueTemp.from_sch_cfs;
+                                roueTemp.from_sch_rece;
+                                roueTemp.from_sch_si;
+                                roueTemp.from_sch_vgm;
+                                roueTemp.ts_port_name;
+                                roueTemp.vessel_2;
+                                roueTemp.voyage_2;
+                                roueTemp.DisableEnable;
                                 roueTemp.siteId = id;
                                 this.scrap.saveRoute(roueTemp);
                             }
