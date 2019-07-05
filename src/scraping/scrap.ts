@@ -198,7 +198,7 @@ export default class Scrap {
     saveRoute(routOData: ScrapModel.Route) {
         let qry = 'Sp_InsertRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbRouteconfig)
+            new sql.ConnectionPool(Config.dbNewRout)
                 .connect()
                 .then(pool => {
                     return (
@@ -272,7 +272,7 @@ export default class Scrap {
     ScrapReport(reportOData: ScrapModel.scrapReport) {
         let qry = 'Sp_ReportAllRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbRouteconfig)
+            new sql.ConnectionPool(Config.dbNewRout)
                 .connect()
                 .then(pool => {
                     return pool

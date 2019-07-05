@@ -1,6 +1,16 @@
 export default class {
-    //Port Confog
     public static dbconfig = {
+        user: 'sa',
+
+        password: '123',
+        server: '192.168.1.16',
+
+        database: 'Port',
+        options: {
+            tdsVersion: '7_1'
+        }
+    };
+    public static dbRouteconfig = {
         user: 'sa',
 
         password: '123',
@@ -11,9 +21,7 @@ export default class {
             tdsVersion: '7_1'
         }
     };
-
-    //Route Confog
-    public static dbRouteconfig = {
+    public static dbNewRout = {
         user: 'sa',
 
         password: '123',
