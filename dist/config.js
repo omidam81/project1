@@ -2,8 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class default_1 {
 }
-//Port Confog
 default_1.dbconfig = {
+    user: 'sa',
+    password: '123',
+    server: '192.168.1.16',
+    database: 'Port',
+    options: {
+        tdsVersion: '7_1'
+    }
+};
+default_1.dbRouteconfig = {
     user: 'sa',
     password: '123',
     server: '192.168.1.16',
@@ -12,8 +20,7 @@ default_1.dbconfig = {
         tdsVersion: '7_1'
     }
 };
-//Route Confog
-default_1.dbRouteconfig = {
+default_1.dbNewRout = {
     user: 'sa',
     password: '123',
     server: '192.168.1.16',
