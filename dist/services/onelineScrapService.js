@@ -49,8 +49,9 @@ class oneLineService {
             let obj = yield this.scrap.insertMasterRoute(iso, 1);
             let id = obj[0]['PkMasterRoute'];
             console.log(new Date());
+            this.siteSettingGlobal = siteSetting[0];
             for (let i = 0; i < portToPortList.length; i++) {
-                yield this.sendData(this.findOneLineCode(portToPortList[i]['fromPortname']), this.findOneLineCode(portToPortList[i]['toPortname']), startTime, endTime, id);
+                yield this.sendData(this.findOneLineCode(portToPortList[i]['fromPortname']), this.findOneLineCode(portToPortList[i]['toPortname']), startTime, endTime, id, portToPortList[i]);
             }
             console.log('finish');
         }));
@@ -66,11 +67,11 @@ class oneLineService {
         }
         return tempArray;
     }
-    sendData(from, to, start, end, id) {
+    sendData(from, to, start, end, id, portsDetail) {
         let rows = [];
         return new Promise((resolve, reject) => {
             let u = porttoporturl +
-                `?f_cmd=3&por_cd=${from.trim()}&del_cd=${to.trim()}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=D&skd_tp=L`;
+                `?f_cmd=3&por_cd=${from.trim()}&del_cd=${to.trim()}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=&skd_tp=L`;
             request(u, (err, res, body) => {
                 if (err) {
                     console.log(err);
@@ -91,28 +92,41 @@ class oneLineService {
                                 roueTemp.vessel = obj['list'][l]['n1stVslNm'];
                                 roueTemp.ocean = obj['list'][l]['ocnTzDys'];
                                 roueTemp.total = obj['list'][l]['ttlTzDys'];
-                                roueTemp.subsidiary_id;
-                                roueTemp.com_code;
-                                roueTemp.from_port_id;
-                                roueTemp.from_port_name;
-                                roueTemp.to_port_id;
-                                roueTemp.to_port_name;
-                                roueTemp.etd;
-                                roueTemp.eta;
-                                roueTemp.voyage;
-                                roueTemp.modify_date;
-                                roueTemp.imp_exp;
-                                roueTemp.service;
-                                roueTemp.from_sch_cy;
-                                roueTemp.from_sch_cfs;
-                                roueTemp.from_sch_rece;
-                                roueTemp.from_sch_si;
-                                roueTemp.from_sch_vgm;
-                                roueTemp.ts_port_name;
-                                roueTemp.vessel_2;
-                                roueTemp.voyage_2;
-                                roueTemp.DisableEnable;
-                                roueTemp.siteId = id;
+                                let tempVessel = obj['list'][l]['n1stVslNm'].split(' ');
+                                let vesselCode = tempVessel[tempVessel.length - 1];
+                                let tempVessel2 = obj['list'][l]['n2ndVslNm']
+                                    ? obj['list'][l]['n2ndVslNm'].split(' ')
+                                    : ['', '', ''];
+                                let vesselCode2 = tempVessel2[tempVessel2.length - 1];
+                                // roueTemp.subsidiary_id;
+                                // roueTemp.com_code;
+                                roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
+                                roueTemp.from_port_name = portsDetail['fromPortname'].trim();
+                                roueTemp.to_port_id = portsDetail['fromPortcode'].trim();
+                                roueTemp.to_port_name = portsDetail['toPortname'].trim();
+                                roueTemp.etd = obj['list'][l]['polEtdDt'];
+                                roueTemp.eta = obj['list'][l]['lstPodEtaDt'];
+                                roueTemp.vessel =
+                                    tempVessel[0] + ' ' + tempVessel[1];
+                                roueTemp.voyage = vesselCode;
+                                roueTemp.modify_date = new Date().toLocaleDateString();
+                                roueTemp.imp_exp = 'E';
+                                roueTemp.service = obj['list'][l]['n1stLaneCd'];
+                                roueTemp.from_sch_cy =
+                                    obj['list'][l]['inlandCct'];
+                                roueTemp.from_sch_cfs = null;
+                                roueTemp.from_sch_rece = null;
+                                roueTemp.from_sch_si = obj['list'][l]['dct'];
+                                roueTemp.from_sch_vgm =
+                                    obj['list'][l]['vgmCct'];
+                                roueTemp.ts_port_name =
+                                    obj['list'][l]['n1stPodLocNm'];
+                                roueTemp.vessel_2 =
+                                    tempVessel2[0] + ' ' + tempVessel2[1];
+                                roueTemp.voyage_2 = vesselCode2;
+                                roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
+                                roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'].trim();
+                                roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                                 this.scrap.saveRoute(roueTemp);
                             }
                         }

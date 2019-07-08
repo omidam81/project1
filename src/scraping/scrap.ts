@@ -223,7 +223,10 @@ export default class Scrap {
                             .input('ts_port_name', routOData.ts_port_name)
                             .input('vessel_2', routOData.vessel_2)
                             .input('voyage_2', routOData.voyage_2)
-                            .input('FldFkMasterRoute', routOData.siteId)
+                            .input('FkSite', routOData.siteId)
+                            .input('Subsidiary_id', routOData.subsidiary_id)
+                            .input('com_code', routOData.com_code)
+                            .input('DisableEnable', routOData.DisableEnable)
 
                             // .input('From', routOData.from)
                             // .input('To', routOData.to)
@@ -280,7 +283,7 @@ export default class Scrap {
                         .input('FromPort', reportOData.from)
                         .input('ToPort', reportOData.to)
                         .input('ToInland', reportOData.toTime)
-                        .input('FromInlandTime', reportOData.toTime)
+                        .input('FromInlandTime', reportOData.fromTime)
                         .execute(qry);
                 })
                 .then(result => {

@@ -1,10 +1,8 @@
 export default class {
     public static dbconfig = {
         user: 'sa',
-
         password: '123',
-        server: '192.168.1.16',
-
+        server: '192.168.1.35',
         database: 'Port',
         options: {
             tdsVersion: '7_1'
@@ -12,21 +10,18 @@ export default class {
     };
     public static dbRouteconfig = {
         user: 'sa',
-
         password: '123',
-        server: '192.168.1.16',
-
-        database: 'DBPort',
+        server: '192.168.1.35',
+        // database: 'DBPort',
+        database: 'Scraper',
         options: {
             tdsVersion: '7_1'
         }
     };
     public static dbNewRout = {
         user: 'sa',
-
         password: '123',
-        server: '192.168.1.16',
-
+        server: '192.168.1.35',
         database: 'Route',
         options: {
             tdsVersion: '7_1'
