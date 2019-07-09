@@ -45,7 +45,7 @@ class sendMail {
                 let transporter = nodemailer.createTransport({
                     host: emailConfig[0]['FldServer'],
                     port: emailConfig[0]['FldPort'],
-                    secure: emailConfig[0]['FldPort'] === '465' ? true : false,
+                    secure: emailConfig[0]['FldPort'] === '465',
                     auth: {
                         user: emailConfig[0]['FldUserName'],
                         pass: emailConfig[0]['FldPass'] // generated ethereal password

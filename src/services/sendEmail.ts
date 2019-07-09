@@ -39,7 +39,7 @@ export default class sendMail {
                 let transporter = nodemailer.createTransport({
                     host: emailConfig[0]['FldServer'],
                     port: emailConfig[0]['FldPort'],
-                    secure: emailConfig[0]['FldPort'] === '465' ? true : false, // true for 465, false for other ports
+                    secure: emailConfig[0]['FldPort'] === '465', // true for 465, false for other ports
                     auth: {
                         user: emailConfig[0]['FldUserName'], // generated ethereal user
                         pass: emailConfig[0]['FldPass'] // generated ethereal password

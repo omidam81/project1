@@ -57,6 +57,7 @@ export class Route {
     vessel_2;
     voyage_2;
     DisableEnable;
+    masterSetting;
 }
 export class scrapReport {
     from;

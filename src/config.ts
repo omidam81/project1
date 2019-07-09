@@ -12,7 +12,6 @@ export default class {
         user: 'sa',
         password: '123',
         server: '192.168.1.35',
-        // database: 'DBPort',
         database: 'Scraper',
         options: {
             tdsVersion: '7_1'

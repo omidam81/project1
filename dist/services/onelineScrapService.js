@@ -125,8 +125,9 @@ class oneLineService {
                                     tempVessel2[0] + ' ' + tempVessel2[1];
                                 roueTemp.voyage_2 = vesselCode2;
                                 roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
-                                roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'].trim();
+                                roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
                                 roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
+                                roueTemp.masterSetting = id;
                                 this.scrap.saveRoute(roueTemp);
                             }
                         }

@@ -153,10 +153,11 @@ export default class oneLineService {
                                 ].trim();
                                 roueTemp.DisableEnable = this.siteSettingGlobal[
                                     'DisableEnable'
-                                ].trim();
+                                ];
                                 roueTemp.subsidiary_id = this.siteSettingGlobal[
                                     'Subsidiary_id'
                                 ].trim();
+                                roueTemp.masterSetting = id;
                                 this.scrap.saveRoute(roueTemp);
                             }
                         }

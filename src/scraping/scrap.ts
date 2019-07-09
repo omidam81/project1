@@ -227,6 +227,7 @@ export default class Scrap {
                             .input('Subsidiary_id', routOData.subsidiary_id)
                             .input('com_code', routOData.com_code)
                             .input('DisableEnable', routOData.DisableEnable)
+                            .input('FldFkMasterRoute', routOData.masterSetting)
 
                             // .input('From', routOData.from)
                             // .input('To', routOData.to)
@@ -258,7 +259,10 @@ export default class Scrap {
                 .then(pool => {
                     return pool
                         .request()
-                        .input('GetDate', new Date())
+                        .input(
+                            'GetDate',
+                            new Date().toISOString().split('T')[0]
+                        )
                         .execute(qry);
                 })
                 .then(result => {
