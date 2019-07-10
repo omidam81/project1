@@ -102,7 +102,7 @@ class oneLineService {
                                 // roueTemp.com_code;
                                 roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
                                 roueTemp.from_port_name = portsDetail['fromPortname'].trim();
-                                roueTemp.to_port_id = portsDetail['fromPortcode'].trim();
+                                roueTemp.to_port_id = portsDetail['toPortcode'].trim();
                                 roueTemp.to_port_name = portsDetail['toPortname'].trim();
                                 roueTemp.etd = obj['list'][l]['polEtdDt'];
                                 roueTemp.eta = obj['list'][l]['lstPodEtaDt'];

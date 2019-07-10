@@ -123,7 +123,7 @@ export default class oneLineService {
                                     'fromPortname'
                                 ].trim();
                                 roueTemp.to_port_id = portsDetail[
-                                    'fromPortcode'
+                                    'toPortcode'
                                 ].trim();
                                 roueTemp.to_port_name = portsDetail[
                                     'toPortname'
