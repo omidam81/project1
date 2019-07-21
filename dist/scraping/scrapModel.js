@@ -18,4 +18,7 @@ exports.Route = Route;
 class scrapReport {
 }
 exports.scrapReport = scrapReport;
+class newPort {
+}
+exports.newPort = newPort;
 //# sourceMappingURL=scrapModel.js.map

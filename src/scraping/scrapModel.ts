@@ -36,6 +36,7 @@ export class Route {
     total;
     siteId;
 
+    route_id;
     subsidiary_id;
     com_code;
     from_port_id;
@@ -64,4 +65,19 @@ export class scrapReport {
     to;
     fromTime;
     toTime;
+}
+
+export class newPort {
+    port_id;
+    port_code;
+    port_name;
+    port_chi_name;
+    ctry_id;
+    phone_fax_no;
+    create_user;
+    modify_user;
+    create_date;
+    modify_date;
+    job_id;
+    un_code;
 }

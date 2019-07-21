@@ -315,6 +315,78 @@ class scrapControler {
                 });
             }
         });
+        this.router.get('/api/scrap/getNewPort',async (req,res)=>{
+            try{
+            //get last port
+            let data = await this.scrap.getLastPort();
+            let pk = data[0][''];
+            let newPorts = await this.scrap.loadNewPorts(pk) as Array<any>;
+            for(let item of newPorts){
+                let newPort = new ScrapModel.newPort();
+                newPort.port_id = item.port_id || '';
+                newPort.create_date = item.create_date|| '';
+                newPort.create_user = item.create_user|| '';
+                newPort.modify_date = item.modify_date|| '';
+                newPort.modify_user = item.modify_user|| '';
+                newPort.phone_fax_no = item.phone_fax_no|| '';
+                newPort.port_chi_name = item.port_chi_name|| '';
+                newPort.port_code = item.port_code|| '';
+                newPort.port_id = item.port_id|| '';
+                newPort.port_name = item.port_name|| '';
+                newPort.un_code = item.un_code|| '';
+                newPort.ctry_id = item.ctry_id || '';
+                let res = await this.scrap.insertNewPorts(newPort);
+            }
+            res.status(200).send({
+                msg:'success'
+            })
+            }catch(e){
+                res.status(200).send({
+                    msg:'success'
+                })
+            }
+
+        })
+        this.router.get('/api/scrap/getNewRout',async (req,res)=>{
+            try{
+                //get last port
+                let data = await this.scrap.getLastRoute();
+                let pk = data[0][''];
+                let newRouts = await this.scrap.loadNewRouts(pk) as Array<any>;
+                for(let item of newRouts){
+                    let newRoute = new ScrapModel.Route();
+                    newRoute.DisableEnable = item.DisableEnable || '';
+                    newRoute.com_code = item.com_code|| '';
+                    newRoute.eta = item.eta|| '';
+                    newRoute.etd = item.etd|| '';
+                    newRoute.from_port_id = item.from_port_id|| '';
+                    newRoute.from_port_name = item.from_port_name|| '';
+                    newRoute.from_sch_cfs = item.from_sch_cfs|| '';
+                    newRoute.from_sch_cy = item.from_sch_cy|| '';
+                    newRoute.from_sch_rece = item.from_sch_rece || '';
+                    newRoute.from_sch_si = item.from_sch_si || '';
+                    newRoute.from_sch_vgm = item.from_sch_vgm || '';
+                    newRoute.imp_exp = item.imp_exp || '';
+                    newRoute.vessel_2 = item.vessel_2 || '';
+                    newRoute.voyage = item.voyage || '';
+                    newRoute.voyage_2 = item.voyage_2 || '';
+                    newRoute.ts_port_name = item.ts_port_name || '';
+                    newRoute.to_port_name = item.to_port_name || '';
+                    newRoute.subsidiary_id = item.subsidiary_id || '';
+                    newRoute.service = item.service || '';
+                    newRoute.modify_date = item.modify_date || '';
+                    newRoute.route_id = item.route_id;
+                    let res = await this.scrap.insertNewRoutes(newRoute);
+                }
+                res.status(200).send({
+                    msg:'success'
+                })
+                }catch(e){
+                    res.status(200).send({
+                        msg:'success'
+                    })
+                }
+        })
     }
 }
 
