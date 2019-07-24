@@ -158,6 +158,7 @@ export default class oneLineService {
                                     'Subsidiary_id'
                                 ].trim();
                                 roueTemp.masterSetting = id;
+                                roueTemp.siteId = 1;
                                 this.scrap.saveRoute(roueTemp);
                             }
                         }

@@ -128,6 +128,7 @@ class oneLineService {
                                 roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
                                 roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                                 roueTemp.masterSetting = id;
+                                roueTemp.siteId = 1;
                                 this.scrap.saveRoute(roueTemp);
                             }
                         }

@@ -420,9 +420,7 @@ export default class Scrap {
                 });
         });
     }
-
-
-
+    
     loadNewRouts(id){
         let qry = 'Sp_LoadNewRoute';
         return new Promise((resolve, reject) => {
