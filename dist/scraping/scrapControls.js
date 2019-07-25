@@ -357,7 +357,7 @@ class scrapControler {
             try {
                 //get last port
                 let data = yield this.scrap.getLastRoute();
-                let pk = data[0][''];
+                let pk = data[0][''] || 0;
                 let newRouts = yield this.scrap.loadNewRouts(pk);
                 for (let item of newRouts) {
                     let newRoute = new ScrapModel.Route();

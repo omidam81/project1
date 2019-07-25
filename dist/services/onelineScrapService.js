@@ -51,7 +51,9 @@ class oneLineService {
             console.log(new Date());
             this.siteSettingGlobal = siteSetting[0];
             for (let i = 0; i < portToPortList.length; i++) {
-                yield this.sendData(this.findOneLineCode(portToPortList[i]['fromPortname']), this.findOneLineCode(portToPortList[i]['toPortname']), startTime, endTime, id, portToPortList[i]);
+                let from = yield this.findOneLineCode(portToPortList[i]['fromPortname']);
+                let to = yield this.findOneLineCode(portToPortList[i]['toPortname']);
+                yield this.sendData(from, to, startTime, endTime, id, portToPortList[i]);
             }
             console.log('finish');
         }));
@@ -151,16 +153,23 @@ class oneLineService {
         return [year, month, day].join('-');
     }
     findOneLineCode(code) {
-        let data = fs.readFileSync(path.resolve(__dirname, '../../ports.json'), 'utf8');
-        let array = JSON.parse(data);
-        let list = array['list'];
-        let temp = list.find(x => x['locNm'].toLowerCase().startsWith(code.trim().toLowerCase()));
-        if (temp) {
-            return temp['locCd'];
-        }
-        else {
-            return '';
-        }
+        return new Promise((resolve, reject) => {
+            let url = `http://ecomm.one-line.com/ecom/CUP_HOM_3000GS.do?f_cmd=123&loc_nm=${code.trim().toLowerCase()}&oriLocNm=${code.trim().toLowerCase()}`;
+            request(url, (err, res, body) => {
+                if (err) {
+                    resolve('');
+                }
+                else {
+                    let obj = JSON.parse(body);
+                    if (obj['count'] !== "0") {
+                        resolve(obj['list'][0]['locCd']);
+                    }
+                    else {
+                        resolve('');
+                    }
+                }
+            });
+        });
     }
 }
 exports.default = oneLineService;

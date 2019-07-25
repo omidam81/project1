@@ -51,10 +51,13 @@ export default class oneLineService {
                 let id = obj[0]['PkMasterRoute'];
                 console.log(new Date());
                 this.siteSettingGlobal = siteSetting[0];
+
                 for (let i = 0; i < portToPortList.length; i++) {
+                    let from = await this.findOneLineCode(portToPortList[i]['fromPortname'])
+                    let to = await this.findOneLineCode(portToPortList[i]['toPortname']);
                     await this.sendData(
-                        this.findOneLineCode(portToPortList[i]['fromPortname']),
-                        this.findOneLineCode(portToPortList[i]['toPortname']),
+                        from,
+                        to,
                         startTime,
                         endTime,
                         id,
@@ -183,21 +186,39 @@ export default class oneLineService {
         return [year, month, day].join('-');
     }
     public findOneLineCode(code) {
-        let data = fs.readFileSync(
-            path.resolve(__dirname, '../../ports.json'),
-            'utf8'
-        );
-        let array = JSON.parse(data);
-        let list = array['list'];
-        let temp = list.find(x =>
-            x['locNm'].toLowerCase().startsWith(code.trim().toLowerCase())
-        );
-        if (temp) {
-            return temp['locCd'];
-        } else {
-            return '';
-        }
+        return new Promise((resolve,reject)=>{
+            let url = `http://ecomm.one-line.com/ecom/CUP_HOM_3000GS.do?f_cmd=123&loc_nm=${code.trim().toLowerCase()}&oriLocNm=${code.trim().toLowerCase()}`;
+            request(url,(err,res,body)=>{
+                if(err){
+                    resolve('')
+                }else{
+                    let obj = JSON.parse(body);
+                    if(obj['count'] !== "0"){
+                        resolve(obj['list'][0]['locCd'])
+                    }
+                   else{
+                    resolve('')
+                   }
+                }
+            })
+        })
+
     }
+    //     let data = fs.readFileSync(
+    //         path.resolve(__dirname, '../../ports.json'),
+    //         'utf8'
+    //     );
+    //     let array = JSON.parse(data);
+    //     let list = array['list'];
+    //     let temp = list.find(x =>
+    //         x['locNm'].toLowerCase().startsWith(code.trim().toLowerCase())
+    //     );
+    //     if (temp) {
+    //         return temp['locCd'];
+    //     } else {
+    //         return '';
+    //     }
+    // }
 }
 
 // let driver = new Builder().forBrowser('chrome').build();

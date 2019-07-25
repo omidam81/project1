@@ -351,7 +351,7 @@ class scrapControler {
             try{
                 //get last port
                 let data = await this.scrap.getLastRoute();
-                let pk = data[0][''];
+                let pk = data[0][''] || 0;
                 let newRouts = await this.scrap.loadNewRouts(pk) as Array<any>;
                 for(let item of newRouts){
                     let newRoute = new ScrapModel.Route();
