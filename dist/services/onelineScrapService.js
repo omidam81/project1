@@ -106,10 +106,10 @@ class oneLineService {
                                 roueTemp.to_port_name = portsDetail['toPortname'].trim();
                                 roueTemp.etd = obj['list'][l]['polEtdDt'];
                                 roueTemp.eta = obj['list'][l]['lstPodEtaDt'];
-                                roueTemp.vessel =
-                                    tempVessel[0] + ' ' + tempVessel[1];
+                                tempVessel.splice(-1, 1);
+                                roueTemp.vessel = tempVessel.join(' ');
                                 roueTemp.voyage = vesselCode;
-                                roueTemp.modify_date = new Date().toLocaleDateString();
+                                roueTemp.modify_date = new Date();
                                 roueTemp.imp_exp = 'E';
                                 roueTemp.service = obj['list'][l]['n1stLaneCd'];
                                 roueTemp.from_sch_cy =
@@ -119,10 +119,10 @@ class oneLineService {
                                 roueTemp.from_sch_si = obj['list'][l]['dct'];
                                 roueTemp.from_sch_vgm =
                                     obj['list'][l]['vgmCct'];
-                                roueTemp.ts_port_name =
-                                    obj['list'][l]['n1stPodLocNm'];
-                                roueTemp.vessel_2 =
-                                    tempVessel2[0] + ' ' + tempVessel2[1];
+                                roueTemp.ts_port_name = obj['list'][l]['n2ndVslNm'] ?
+                                    obj['list'][l]['n1stPodLocNm'] : null;
+                                tempVessel2.splice(-1, 1);
+                                roueTemp.vessel_2 = tempVessel2.join(' ');
                                 roueTemp.voyage_2 = vesselCode2;
                                 roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
                                 roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
