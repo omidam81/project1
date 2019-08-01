@@ -9,21 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request");
-const fs = require("fs");
 const schedule = require("node-schedule");
-const path = require("path");
 const scrap_1 = require("../scraping/scrap");
 const scrapModel_1 = require("../scraping/scrapModel");
 const globalSheduleList_1 = require("./globalSheduleList");
-const porturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3006GS.do';
+const utilService_1 = require("./utilService");
 const porttoporturl = 'http://ecomm.one-line.com/ecom/CUP_HOM_3001GS.do';
 class oneLineService {
     constructor() {
         this.scrap = new scrap_1.default();
-    }
-    static loadports() {
-        let data = fs.readFileSync(path.resolve(__dirname, '../../ports.json'), 'utf8');
-        return JSON.parse(data)['list'];
     }
     loadPortToPortSchedule(scheduleTime) {
         let scheduleString;
@@ -50,10 +44,39 @@ class oneLineService {
             let id = obj[0]['PkMasterRoute'];
             console.log(new Date());
             this.siteSettingGlobal = siteSetting[0];
+            let cath = [];
             for (let i = 0; i < portToPortList.length; i++) {
-                let from = yield this.findOneLineCode(portToPortList[i]['fromPortname']);
-                let to = yield this.findOneLineCode(portToPortList[i]['toPortname']);
-                yield this.sendData(from, to, startTime, endTime, id, portToPortList[i]);
+                let from = cath.find(x => x.name === portToPortList[i]['fromPortname']);
+                let to = cath.find(x => x.name === portToPortList[i]['toPortname']);
+                let fromCode;
+                let toCode;
+                if (!from) {
+                    fromCode = (yield this.findOneLineCode(portToPortList[i]['fromPortname'])) || 'noCode';
+                    cath.push({
+                        name: portToPortList[i]['fromPortname'],
+                        code: fromCode
+                    });
+                }
+                else {
+                    fromCode = from['code'];
+                }
+                if (fromCode === 'noCode') {
+                    continue;
+                }
+                if (!to) {
+                    toCode = (yield this.findOneLineCode(portToPortList[i]['toPortname'])) || 'noCode';
+                    cath.push({
+                        name: portToPortList[i]['toPortname'],
+                        code: toCode
+                    });
+                }
+                else {
+                    toCode = to['code'];
+                }
+                if (toCode === 'noCode') {
+                    continue;
+                }
+                yield this.sendData(fromCode, toCode, startTime, endTime, id, portToPortList[i]);
             }
             console.log('finish');
         }));
@@ -74,9 +97,9 @@ class oneLineService {
         return new Promise((resolve, reject) => {
             let u = porttoporturl +
                 `?f_cmd=3&por_cd=${from.trim()}&del_cd=${to.trim()}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=&skd_tp=L`;
-            request(u, (err, res, body) => {
+            request(u, (err, res, body) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
-                    console.log(err);
+                    utilService_1.default.writeLog(err);
                 }
                 try {
                     if (res.statusCode === 200) {
@@ -131,17 +154,18 @@ class oneLineService {
                                 roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                                 roueTemp.masterSetting = id;
                                 roueTemp.siteId = 1;
-                                this.scrap.saveRoute(roueTemp);
+                                yield this.scrap.saveRoute(roueTemp);
                             }
                         }
                         resolve('ok');
                     }
                 }
                 catch (e) {
-                    console.log(e);
-                    reject('ko');
+                    console.log('scrap problem,please check log file');
+                    utilService_1.default.writeLog(e.message);
+                    resolve('ko');
                 }
-            });
+            }));
         });
     }
     IsoTime(date) {
@@ -156,43 +180,28 @@ class oneLineService {
         return new Promise((resolve, reject) => {
             let url = `http://ecomm.one-line.com/ecom/CUP_HOM_3000GS.do?f_cmd=123&loc_nm=${code.trim().toLowerCase()}&oriLocNm=${code.trim().toLowerCase()}`;
             request(url, (err, res, body) => {
-                if (err) {
-                    resolve('');
-                }
-                else {
-                    let obj = JSON.parse(body);
-                    if (obj['count'] !== "0") {
-                        resolve(obj['list'][0]['locCd']);
-                    }
-                    else {
+                try {
+                    if (err) {
                         resolve('');
                     }
+                    else {
+                        let obj = JSON.parse(body);
+                        if (obj['count'] !== "0") {
+                            resolve(obj['list'][0]['locCd']);
+                        }
+                        else {
+                            resolve('');
+                        }
+                    }
+                }
+                catch (e) {
+                    console.log('get port code problem,please check log file');
+                    utilService_1.default.writeLog(e);
+                    resolve('');
                 }
             });
         });
     }
 }
 exports.default = oneLineService;
-// let driver = new Builder().forBrowser('chrome').build();
-// driver.get(pointUrl);
-// driver
-//     .findElement(By.id('btnSearch'))
-//     .click()
-//     .then()
-//     .catch(err => {
-//         console.log(err);
-//     });
-// (async function example() {
-//     let driver = await new Builder().forBrowser('firefox').build();
-//     try {
-//         await driver.get('http://www.google.com/ncr');
-//         await driver
-//             .findElement(By.name('q'))
-//             .sendKeys('webdriver', Key.RETURN);
-//         await driver.wait(until.titleIs('webdriver - Google Search'), 1000);
-//         await driver.findElement(By.name('btnK')).click();
-//     } finally {
-//         await driver.quit();
-//     }
-// })();
 //# sourceMappingURL=onelineScrapService.js.map

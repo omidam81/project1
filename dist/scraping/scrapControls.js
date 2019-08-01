@@ -27,19 +27,6 @@ class scrapControler {
         this.router.use(bodyParser.json());
     }
     call() {
-        this.router.get('/api/scrap/saveAllPort', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let ports = onelineScrapService_1.default.loadports();
-            for (let i = 0; i < ports.length; i++) {
-                let portOData = new ScrapModel.PortOData();
-                portOData.PortCode = ports[i]['locCd'];
-                portOData.portName = ports[i]['locNm'];
-                yield this.scrap.saveFile(portOData);
-            }
-            return res.status(200).send({
-                msg: 'success',
-                status: 200
-            });
-        }));
         this.router.post('/api/scrap/setScheduleOneLine', (req, res) => {
             let siteModel = new ScrapModel.SiteSetting();
             siteModel.Time = req.body.Time;

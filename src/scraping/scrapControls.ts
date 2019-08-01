@@ -22,19 +22,6 @@ class scrapControler {
     }
 
     private call(): void {
-        this.router.get('/api/scrap/saveAllPort', async (req, res) => {
-            let ports = oneLineService.loadports();
-            for (let i = 0; i < ports.length; i++) {
-                let portOData = new ScrapModel.PortOData();
-                portOData.PortCode = ports[i]['locCd'];
-                portOData.portName = ports[i]['locNm'];
-                await this.scrap.saveFile(portOData);
-            }
-            return res.status(200).send({
-                msg: 'success',
-                status: 200
-            });
-        });
         this.router.post('/api/scrap/setScheduleOneLine', (req, res) => {
             let siteModel = new ScrapModel.SiteSetting();
             siteModel.Time = req.body.Time;
