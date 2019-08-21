@@ -170,7 +170,7 @@ class Scrap {
             });
         });
     }
-    loadDetailSetting(siteId) {
+    loadDetailSetting(siteId, rowId) {
         let qry = 'Sp_LoadDetailsSetting';
         return new Promise((resolve, reject) => {
             new sql.ConnectionPool(config_1.default.dbRouteconfig)
@@ -179,6 +179,7 @@ class Scrap {
                 return pool
                     .request()
                     .input('FkSite', siteId)
+                    .input('RowID', rowId)
                     .execute(qry);
             })
                 .then(result => {
@@ -224,14 +225,6 @@ class Scrap {
                     .input('com_code', routOData.com_code)
                     .input('DisableEnable', routOData.DisableEnable)
                     .input('FldFkMasterRoute', routOData.masterSetting)
-                    // .input('From', routOData.from)
-                    // .input('To', routOData.to)
-                    // .input('Inland', routOData.inland)
-                    // .input('PortTime', routOData.portTime)
-                    // .input('DepDate', routOData.depDate)
-                    // .input('ArrivalDate', routOData.arrivalDate)
-                    // .input('Ocean', routOData.ocean)
-                    // .input('Total', routOData.total)
                     .execute(qry));
             })
                 .then(result => {

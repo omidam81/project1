@@ -33,67 +33,64 @@ class oneLineService {
             console.log(scheduleTime);
             console.log('service one-line call');
             //get all points
+            //init scrap proccess
             let siteSetting = yield this.scrap.loadSetting(1);
             let timeLength = siteSetting[0]['LenghtScrap'];
             let tempDate = new Date();
             let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));
             let startTime = this.IsoTime(new Date());
-            let portToPortList = yield this.scrap.loadDetailSetting(1);
             let iso = new Date().toISOString().split('T')[0];
             let obj = yield this.scrap.insertMasterRoute(iso, 1);
             let id = obj[0]['PkMasterRoute'];
             console.log(new Date());
             this.siteSettingGlobal = siteSetting[0];
             let cath = [];
-            for (let i = 0; i < portToPortList.length; i++) {
-                let from = cath.find(x => x.name === portToPortList[i]['fromPortname']);
-                let to = cath.find(x => x.name === portToPortList[i]['toPortname']);
-                let fromCode;
-                let toCode;
-                if (!from) {
-                    fromCode = (yield this.findOneLineCode(portToPortList[i]['fromPortname'])) || 'noCode';
-                    cath.push({
-                        name: portToPortList[i]['fromPortname'],
-                        code: fromCode
-                    });
+            //load  first 1000 ptp
+            let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
+            if (portToPortList[0]) {
+                while (true) {
+                    for (let ptp of portToPortList) {
+                        let from = cath.find(x => x.name === ptp['fromPortname']);
+                        let to = cath.find(x => x.name === ptp['toPortname']);
+                        let fromCode;
+                        let toCode;
+                        //check if this port not in my cache call api and get code 
+                        if (!from) {
+                            fromCode = (yield this.findOneLineCode(portToPortList[0]['fromPortname'])) || 'noCode';
+                            cath.push({
+                                name: portToPortList[0]['fromPortname'],
+                                code: fromCode
+                            });
+                        }
+                        else {
+                            fromCode = from['code'];
+                        }
+                        if (!to) {
+                            toCode = (yield this.findOneLineCode(portToPortList[0]['toPortname'])) || 'noCode';
+                            cath.push({
+                                name: portToPortList[0]['toPortname'],
+                                code: toCode
+                            });
+                        }
+                        else {
+                            toCode = to['code'];
+                        }
+                        if (toCode === 'noCode' || fromCode === 'noCode') {
+                            continue;
+                        }
+                        yield this.sendData(fromCode, toCode, startTime, endTime, id, portToPortList[0]);
+                        console.log('t');
+                    }
+                    portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                    if (!portToPortList[0]) {
+                        break;
+                    }
                 }
-                else {
-                    fromCode = from['code'];
-                }
-                if (fromCode === 'noCode') {
-                    continue;
-                }
-                if (!to) {
-                    toCode = (yield this.findOneLineCode(portToPortList[i]['toPortname'])) || 'noCode';
-                    cath.push({
-                        name: portToPortList[i]['toPortname'],
-                        code: toCode
-                    });
-                }
-                else {
-                    toCode = to['code'];
-                }
-                if (toCode === 'noCode') {
-                    continue;
-                }
-                yield this.sendData(fromCode, toCode, startTime, endTime, id, portToPortList[i]);
             }
             console.log('finish');
         }));
     }
-    chunkArray(myArray, chunk_size) {
-        var index = 0;
-        var arrayLength = myArray.length;
-        var tempArray = [];
-        for (index = 0; index < arrayLength; index += chunk_size) {
-            let myChunk = myArray.slice(index, index + chunk_size);
-            // Do something if you want with the group
-            tempArray.push(myChunk);
-        }
-        return tempArray;
-    }
     sendData(from, to, start, end, id, portsDetail) {
-        let rows = [];
         return new Promise((resolve, reject) => {
             let u = porttoporturl +
                 `?f_cmd=3&por_cd=${from.trim()}&del_cd=${to.trim()}&rcv_term_cd=Y&de_term_cd=Y&frm_dt=${start}&to_dt=${end}&ts_ind=&skd_tp=L`;
@@ -104,7 +101,6 @@ class oneLineService {
                 else {
                     try {
                         if (res.statusCode === 200) {
-                            res.body = "application uploading !";
                             if (res.body.indexOf("application uploading !") !== -1) {
                                 throw { message: "sleep system" };
                             }
@@ -158,6 +154,10 @@ class oneLineService {
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
                                     yield this.scrap.saveRoute(roueTemp);
+                                    //dispose variables
+                                    roueTemp = null;
+                                    tempVessel = null;
+                                    tempVessel2 = null;
                                 }
                             }
                             resolve('ok');
@@ -211,10 +211,8 @@ class oneLineService {
         });
     }
     sleep() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve('ok');
-            }, 900000);
+        return new Promise((resolve) => {
+            setTimeout(resolve, 900000);
         });
     }
 }

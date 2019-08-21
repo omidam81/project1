@@ -191,7 +191,7 @@ class scrapControler {
                 let siteId = req.body.siteId;
 
                 this.scrap
-                    .loadDetailSetting(siteId)
+                    .loadDetailSetting(siteId,-1)
                     .then(data => {
                         res.status(200).send({
                             data: data,

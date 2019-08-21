@@ -27,6 +27,7 @@ export default class oneLineService {
                 console.log(scheduleTime);
                 console.log('service one-line call');
                 //get all points
+                //init scrap proccess
                 let siteSetting = await this.scrap.loadSetting(1);
                 let timeLength = siteSetting[0]['LenghtScrap'];
                 let tempDate = new Date();
@@ -34,73 +35,65 @@ export default class oneLineService {
                     tempDate.setDate(tempDate.getDate() + timeLength)
                 );
                 let startTime = this.IsoTime(new Date());
-                let portToPortList = await this.scrap.loadDetailSetting(1);
                 let iso = new Date().toISOString().split('T')[0];
                 let obj = await this.scrap.insertMasterRoute(iso, 1);
                 let id = obj[0]['PkMasterRoute'];
                 console.log(new Date());
                 this.siteSettingGlobal = siteSetting[0];
                 let cath = [];
-                for (let i = 0; i < portToPortList.length; i++) {
-
-
-                    let from = cath.find(x => x.name === portToPortList[i]['fromPortname']);
-                    let to = cath.find(x => x.name === portToPortList[i]['toPortname']);
-                    let fromCode;
-                    let toCode;
-                    if (!from) {
-                        fromCode = await this.findOneLineCode(portToPortList[i]['fromPortname']) || 'noCode'
-                        cath.push({
-                            name: portToPortList[i]['fromPortname'],
-                            code: fromCode
-                        })
-
-                    } else {
-                        fromCode = from['code'];
+                //load  first 1000 ptp
+                let portToPortList = await this.scrap.loadDetailSetting(1,0);
+                if(portToPortList[0]){
+                    while(true){
+                        for(let ptp of portToPortList) {
+                            let from = cath.find(x => x.name === ptp['fromPortname']);
+                            let to = cath.find(x => x.name === ptp['toPortname']);
+                            let fromCode;
+                            let toCode;
+                            //check if this port not in my cache call api and get code 
+                            if (!from) {
+                                fromCode = await this.findOneLineCode(portToPortList[0]['fromPortname']) || 'noCode'
+                                cath.push({
+                                    name: portToPortList[0]['fromPortname'],
+                                    code: fromCode
+                                })
+                            } else {
+                                fromCode = from['code'];
+                            }
+                            if (!to) {
+                                toCode = await this.findOneLineCode(portToPortList[0]['toPortname']) || 'noCode'
+                                cath.push({
+                                    name: portToPortList[0]['toPortname'],
+                                    code: toCode
+                                })
+                            } else {
+                                toCode = to['code'];
+                            }
+                            if (toCode === 'noCode' || fromCode === 'noCode') {
+                                continue
+                            }
+                            await this.sendData(
+                                fromCode,
+                                toCode,
+                                startTime,
+                                endTime,
+                                id,
+                                portToPortList[0]
+                            );
+                        }
+                        portToPortList = await this.scrap.loadDetailSetting(1,portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                        if(!portToPortList[0]){
+                            break;
+                        } 
                     }
-                    if (fromCode === 'noCode') {
-                        continue;
-                    }
-                    if (!to) {
-                        toCode = await this.findOneLineCode(portToPortList[i]['toPortname']) || 'noCode'
-                        cath.push({
-                            name: portToPortList[i]['toPortname'],
-                            code: toCode
-                        })
-                    } else {
-                        toCode = to['code'];
-                    }
-                    if (toCode === 'noCode') {
-                        continue;
-                    }
-                    await this.sendData(
-                        fromCode,
-                        toCode,
-                        startTime,
-                        endTime,
-                        id,
-                        portToPortList[i]
-                    );
+                    
                 }
+
                 console.log('finish');
             }
         );
     }
-    public chunkArray(myArray, chunk_size) {
-        var index = 0;
-        var arrayLength = myArray.length;
-        var tempArray = [];
-
-        for (index = 0; index < arrayLength; index += chunk_size) {
-            let myChunk = myArray.slice(index, index + chunk_size);
-            // Do something if you want with the group
-            tempArray.push(myChunk);
-        }
-
-        return tempArray;
-    }
     public sendData(from, to, start, end, id, portsDetail) {
-        let rows = [];
         return new Promise((resolve, reject) => {
             let u =
                 porttoporturl +
@@ -179,6 +172,10 @@ export default class oneLineService {
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
                                     await this.scrap.saveRoute(roueTemp);
+                                    //dispose variables
+                                    roueTemp = null;
+                                    tempVessel = null;
+                                    tempVessel2 = null;
                                 }
                             }
                             resolve('ok');
@@ -234,10 +231,8 @@ export default class oneLineService {
 
     }
     public sleep(){
-        return new Promise((resolve,reject)=>{
-            setTimeout(()=>{
-                resolve('ok');
-            },900000)
+        return new Promise((resolve)=>{
+            setTimeout(resolve,900000)
         })
     }
 }
