@@ -42,31 +42,37 @@ export default class oneLineService {
                 this.siteSettingGlobal = siteSetting[0];
                 let cath = [];
                 //load  first 1000 ptp
-                let portToPortList = await this.scrap.loadDetailSetting(1,0);
-                if(portToPortList[0]){
-                    while(true){
-                        for(let ptp of portToPortList) {
+                let portToPortList = await this.scrap.loadDetailSetting(1, 0);
+                if (portToPortList[0]) {
+                    while (true) {
+                        for (let ptp of portToPortList) {
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
                             let toCode;
                             //check if this port not in my cache call api and get code 
                             if (!from) {
-                                fromCode = await this.findOneLineCode(portToPortList[0]['fromPortname']) || 'noCode'
+                                fromCode = await this.findOneLineCode(ptp['fromPortname']) || 'noCode'
                                 cath.push({
-                                    name: portToPortList[0]['fromPortname'],
+                                    name: ptp['fromPortname'],
                                     code: fromCode
                                 })
                             } else {
+                                if (from['code'] === 'noCode') {
+                                    continue;
+                                }
                                 fromCode = from['code'];
                             }
                             if (!to) {
-                                toCode = await this.findOneLineCode(portToPortList[0]['toPortname']) || 'noCode'
+                                toCode = await this.findOneLineCode(ptp['toPortname']) || 'noCode'
                                 cath.push({
-                                    name: portToPortList[0]['toPortname'],
+                                    name: ptp['toPortname'],
                                     code: toCode
                                 })
                             } else {
+                                if (to['code'] === 'noCode') {
+                                    continue;
+                                }
                                 toCode = to['code'];
                             }
                             if (toCode === 'noCode' || fromCode === 'noCode') {
@@ -78,15 +84,15 @@ export default class oneLineService {
                                 startTime,
                                 endTime,
                                 id,
-                                portToPortList[0]
+                                ptp
                             );
                         }
-                        portToPortList = await this.scrap.loadDetailSetting(1,portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
-                        if(!portToPortList[0]){
+                        portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                        if (!portToPortList[0]) {
                             break;
-                        } 
+                        }
                     }
-                    
+
                 }
 
                 console.log('finish');
@@ -104,8 +110,8 @@ export default class oneLineService {
                 } else {
                     try {
                         if (res.statusCode === 200) {
-                            if(res.body.indexOf("application uploading !")!== -1){
-                                throw {message:"sleep system"};
+                            if (res.body.indexOf("application uploading !") !== -1) {
+                                throw { message: "sleep system" };
                             }
                             let obj = JSON.parse(res.body.replace('/\n/g', ''));
                             if (+obj['count'] !== 0) {
@@ -181,14 +187,14 @@ export default class oneLineService {
                             resolve('ok');
                         }
                     } catch (e) {
-                        if(e.message.indexOf("sleep system")!==-1){
+                        if (e.message.indexOf("sleep system") !== -1) {
                             console.log('one-line is updating ,waiting ...');
                             await this.sleep();
                             console.log('start again!');
-                        }else{
+                        } else {
                             util.writeLog(e.message);
                         }
-                        
+
                         resolve('ko');
                     }
                 }
@@ -230,9 +236,9 @@ export default class oneLineService {
         })
 
     }
-    public sleep(){
-        return new Promise((resolve)=>{
-            setTimeout(resolve,900000)
+    public sleep() {
+        return new Promise((resolve) => {
+            setTimeout(resolve, 900000)
         })
     }
 }

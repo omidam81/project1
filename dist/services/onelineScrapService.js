@@ -56,30 +56,35 @@ class oneLineService {
                         let toCode;
                         //check if this port not in my cache call api and get code 
                         if (!from) {
-                            fromCode = (yield this.findOneLineCode(portToPortList[0]['fromPortname'])) || 'noCode';
+                            fromCode = (yield this.findOneLineCode(ptp['fromPortname'])) || 'noCode';
                             cath.push({
-                                name: portToPortList[0]['fromPortname'],
+                                name: ptp['fromPortname'],
                                 code: fromCode
                             });
                         }
                         else {
+                            if (from['code'] === 'noCode') {
+                                continue;
+                            }
                             fromCode = from['code'];
                         }
                         if (!to) {
-                            toCode = (yield this.findOneLineCode(portToPortList[0]['toPortname'])) || 'noCode';
+                            toCode = (yield this.findOneLineCode(ptp['toPortname'])) || 'noCode';
                             cath.push({
-                                name: portToPortList[0]['toPortname'],
+                                name: ptp['toPortname'],
                                 code: toCode
                             });
                         }
                         else {
+                            if (to['code'] === 'noCode') {
+                                continue;
+                            }
                             toCode = to['code'];
                         }
                         if (toCode === 'noCode' || fromCode === 'noCode') {
                             continue;
                         }
-                        yield this.sendData(fromCode, toCode, startTime, endTime, id, portToPortList[0]);
-                        console.log('t');
+                        yield this.sendData(fromCode, toCode, startTime, endTime, id, ptp);
                     }
                     portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                     if (!portToPortList[0]) {
@@ -153,6 +158,7 @@ class oneLineService {
                                     roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
+                                    yield this.scrap.saveRoute(roueTemp);
                                     yield this.scrap.saveRoute(roueTemp);
                                     //dispose variables
                                     roueTemp = null;
