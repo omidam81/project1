@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sql = require("mssql");
 const config_1 = require("../config");
 class Scrap {
+    constructor() {
+        this.RouteConnection = new sql.ConnectionPool(config_1.default.dbNewRout);
+    }
     saveFile(portOData) {
         let qry = 'Sp_InsertPort';
         return new Promise((resolve, reject) => {
@@ -196,7 +199,7 @@ class Scrap {
     saveRoute(routOData) {
         let qry = 'Sp_InsertRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(config_1.default.dbNewRout)
+            this.RouteConnection
                 .connect()
                 .then(pool => {
                 return (pool
@@ -229,11 +232,11 @@ class Scrap {
             })
                 .then(result => {
                 let rows = result.recordset;
-                sql.close();
+                this.RouteConnection.close();
                 return resolve(rows);
             })
                 .catch(err => {
-                sql.close();
+                this.RouteConnection.close();
                 return reject(err);
             });
         });

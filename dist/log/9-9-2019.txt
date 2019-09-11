@@ -1,0 +1,8 @@
+
+7:24:10 PM:Error: read ECONNRESET
+8:17:15 PM:Error: read ECONNRESET
+8:55:32 PM:Error: read ECONNRESET
+9:39:02 PM:Error: read ECONNRESET
+9:54:53 PM:Error: read ECONNRESET
+10:15:35 PM:Error: read ECONNRESET
+11:46:11 PM:Error: read ECONNRESET

@@ -1,0 +1,119 @@
+
+12:07:57 AM:Error: read ECONNRESET
+12:10:15 AM:Error: read ECONNRESET
+12:33:58 AM:Error: read ECONNRESET
+12:37:19 AM:Error: read ECONNRESET
+12:54:50 AM:Error: read ECONNRESET
+1:13:32 AM:Error: read ECONNRESET
+1:24:45 AM:Error: read ECONNRESET
+2:13:43 AM:Error: read ECONNRESET
+2:16:43 AM:Error: read ECONNRESET
+2:29:42 AM:Error: read ECONNRESET
+2:33:18 AM:Error: read ECONNRESET
+2:45:08 AM:Error: read ECONNRESET
+2:48:50 AM:Error: read ECONNRESET
+3:04:31 AM:Error: read ECONNRESET
+3:11:21 AM:Error: read ECONNRESET
+3:20:59 AM:Error: read ECONNRESET
+3:29:15 AM:Error: read ECONNRESET
+3:38:01 AM:Error: read ECONNRESET
+4:02:10 AM:Error: read ECONNRESET
+4:02:45 AM:Error: read ECONNRESET
+4:24:04 AM:Error: read ECONNRESET
+4:27:50 AM:Error: read ECONNRESET
+4:43:05 AM:Error: read ECONNRESET
+5:33:59 AM:Error: read ECONNRESET
+10:22:03 AM:Error: read ECONNRESET
+12:08:47 PM:Error: read ECONNRESET
+12:55:50 PM:Database is already connected! Call close before connecting to different database.
+12:56:07 PM:Database is already connected! Call close before connecting to different database.
+12:56:13 PM:Database is already connected! Call close before connecting to different database.
+12:56:23 PM:Database is already connected! Call close before connecting to different database.
+12:56:28 PM:Database is already connected! Call close before connecting to different database.
+12:56:32 PM:Database is already connected! Call close before connecting to different database.
+12:56:49 PM:Database is already connected! Call close before connecting to different database.
+12:56:55 PM:Database is already connected! Call close before connecting to different database.
+12:57:04 PM:Database is already connected! Call close before connecting to different database.
+12:57:11 PM:Database is already connected! Call close before connecting to different database.
+12:57:20 PM:Database is already connected! Call close before connecting to different database.
+12:57:28 PM:Database is already connected! Call close before connecting to different database.
+12:57:35 PM:Database is already connected! Call close before connecting to different database.
+12:57:42 PM:Database is already connected! Call close before connecting to different database.
+12:57:47 PM:Database is already connected! Call close before connecting to different database.
+12:57:56 PM:Database is already connected! Call close before connecting to different database.
+12:58:01 PM:Database is already connected! Call close before connecting to different database.
+12:58:06 PM:Database is already connected! Call close before connecting to different database.
+12:58:15 PM:Database is already connected! Call close before connecting to different database.
+12:58:22 PM:Database is already connected! Call close before connecting to different database.
+12:58:36 PM:Database is already connected! Call close before connecting to different database.
+12:58:43 PM:Database is already connected! Call close before connecting to different database.
+12:58:48 PM:Database is already connected! Call close before connecting to different database.
+12:58:55 PM:Database is already connected! Call close before connecting to different database.
+12:59:04 PM:Database is already connected! Call close before connecting to different database.
+12:59:12 PM:Database is already connected! Call close before connecting to different database.
+12:59:21 PM:Database is already connected! Call close before connecting to different database.
+12:59:26 PM:Database is already connected! Call close before connecting to different database.
+12:59:40 PM:Database is already connected! Call close before connecting to different database.
+12:59:50 PM:Database is already connected! Call close before connecting to different database.
+12:59:59 PM:Database is already connected! Call close before connecting to different database.
+1:00:05 PM:Database is already connected! Call close before connecting to different database.
+1:00:12 PM:Database is already connected! Call close before connecting to different database.
+1:00:18 PM:Database is already connected! Call close before connecting to different database.
+1:00:25 PM:Database is already connected! Call close before connecting to different database.
+1:00:39 PM:Database is already connected! Call close before connecting to different database.
+1:00:47 PM:Database is already connected! Call close before connecting to different database.
+1:00:53 PM:Database is already connected! Call close before connecting to different database.
+1:01:00 PM:Database is already connected! Call close before connecting to different database.
+1:01:04 PM:Database is already connected! Call close before connecting to different database.
+1:01:14 PM:Database is already connected! Call close before connecting to different database.
+1:01:17 PM:Database is already connected! Call close before connecting to different database.
+1:01:26 PM:Database is already connected! Call close before connecting to different database.
+1:01:30 PM:Database is already connected! Call close before connecting to different database.
+1:01:36 PM:Database is already connected! Call close before connecting to different database.
+1:01:40 PM:Database is already connected! Call close before connecting to different database.
+1:01:45 PM:Database is already connected! Call close before connecting to different database.
+1:01:51 PM:Database is already connected! Call close before connecting to different database.
+1:02:01 PM:Database is already connected! Call close before connecting to different database.
+1:02:20 PM:Database is already connected! Call close before connecting to different database.
+1:02:30 PM:Database is already connected! Call close before connecting to different database.
+1:02:35 PM:Database is already connected! Call close before connecting to different database.
+1:02:43 PM:Database is already connected! Call close before connecting to different database.
+1:02:50 PM:Database is already connected! Call close before connecting to different database.
+1:02:54 PM:Database is already connected! Call close before connecting to different database.
+1:02:58 PM:Database is already connected! Call close before connecting to different database.
+1:03:05 PM:Database is already connected! Call close before connecting to different database.
+1:03:12 PM:Database is already connected! Call close before connecting to different database.
+1:03:17 PM:Database is already connected! Call close before connecting to different database.
+1:03:26 PM:Database is already connected! Call close before connecting to different database.
+1:03:32 PM:Database is already connected! Call close before connecting to different database.
+1:03:40 PM:Database is already connected! Call close before connecting to different database.
+1:03:45 PM:Database is already connected! Call close before connecting to different database.
+1:03:52 PM:Database is already connected! Call close before connecting to different database.
+1:04:01 PM:Database is already connected! Call close before connecting to different database.
+1:04:05 PM:Database is already connected! Call close before connecting to different database.
+1:04:09 PM:Database is already connected! Call close before connecting to different database.
+1:04:21 PM:Database is already connected! Call close before connecting to different database.
+1:04:26 PM:Database is already connected! Call close before connecting to different database.
+1:04:32 PM:Database is already connected! Call close before connecting to different database.
+1:04:36 PM:Database is already connected! Call close before connecting to different database.
+1:04:46 PM:Database is already connected! Call close before connecting to different database.
+1:04:49 PM:Database is already connected! Call close before connecting to different database.
+1:04:58 PM:Database is already connected! Call close before connecting to different database.
+1:05:09 PM:Database is already connected! Call close before connecting to different database.
+1:05:13 PM:Database is already connected! Call close before connecting to different database.
+1:05:19 PM:Database is already connected! Call close before connecting to different database.
+1:05:23 PM:Database is already connected! Call close before connecting to different database.
+1:05:33 PM:Database is already connected! Call close before connecting to different database.
+1:05:43 PM:Database is already connected! Call close before connecting to different database.
+1:05:49 PM:Database is already connected! Call close before connecting to different database.
+1:05:55 PM:Database is already connected! Call close before connecting to different database.
+1:06:00 PM:Database is already connected! Call close before connecting to different database.
+1:06:04 PM:Database is already connected! Call close before connecting to different database.
+1:06:07 PM:Database is already connected! Call close before connecting to different database.
+1:06:11 PM:Database is already connected! Call close before connecting to different database.
+1:06:16 PM:Database is already connected! Call close before connecting to different database.
+1:06:24 PM:Database is already connected! Call close before connecting to different database.
+1:06:30 PM:Database is already connected! Call close before connecting to different database.
+1:06:39 PM:Database is already connected! Call close before connecting to different database.
+1:06:45 PM:Database is already connected! Call close before connecting to different database.
+1:09:40 PM:Database is already connected! Call close before connecting to different database.

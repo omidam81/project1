@@ -2,6 +2,11 @@ import * as sql from 'mssql';
 import Config from '../config';
 import * as ScrapModel from './scrapModel';
 export default class Scrap {
+    RouteConnection;
+    constructor() {
+        this.RouteConnection = new sql.ConnectionPool(Config.dbNewRout);
+
+    }
     saveFile(portOData: ScrapModel.PortOData) {
         let qry = 'Sp_InsertPort';
         return new Promise((resolve, reject) => {
@@ -199,7 +204,7 @@ export default class Scrap {
     saveRoute(routOData: ScrapModel.Route) {
         let qry = 'Sp_InsertRoute';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbNewRout)
+            this.RouteConnection
                 .connect()
                 .then(pool => {
                     return (
@@ -234,11 +239,11 @@ export default class Scrap {
                 })
                 .then(result => {
                     let rows = result.recordset;
-                    sql.close();
+                    this.RouteConnection.close();
                     return resolve(rows);
                 })
                 .catch(err => {
-                    sql.close();
+                    this.RouteConnection.close();
                     return reject(err);
                 });
         });

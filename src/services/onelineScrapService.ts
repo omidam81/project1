@@ -107,6 +107,7 @@ export default class oneLineService {
             request(u, async (err, res, body) => {
                 if (err) {
                     util.writeLog(err);
+                    resolve('ko');
                 } else {
                     try {
                         if (res.statusCode === 200) {
@@ -177,12 +178,18 @@ export default class oneLineService {
                                     ].trim();
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
+                                    //!!!!
                                     await this.scrap.saveRoute(roueTemp);
-                                    //dispose variables
+                                    // //dispose variables
                                     roueTemp = null;
                                     tempVessel = null;
                                     tempVessel2 = null;
+
                                 }
+                                //dispose api result;
+                                err = null;
+                                body = null;
+                                res = null;
                             }
                             resolve('ok');
                         }

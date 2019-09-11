@@ -102,6 +102,7 @@ class oneLineService {
             request(u, (err, res, body) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
                     utilService_1.default.writeLog(err);
+                    resolve('ko');
                 }
                 else {
                     try {
@@ -158,13 +159,17 @@ class oneLineService {
                                     roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
+                                    //!!!!
                                     yield this.scrap.saveRoute(roueTemp);
-                                    yield this.scrap.saveRoute(roueTemp);
-                                    //dispose variables
+                                    // //dispose variables
                                     roueTemp = null;
                                     tempVessel = null;
                                     tempVessel2 = null;
                                 }
+                                //dispose api result;
+                                err = null;
+                                body = null;
+                                res = null;
                             }
                             resolve('ok');
                         }
