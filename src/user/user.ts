@@ -1,3 +1,4 @@
+  
 import * as sql from 'mssql';
 import Config from '../config';
 import * as Model from './userModel';

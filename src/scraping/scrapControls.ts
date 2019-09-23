@@ -4,15 +4,20 @@ import Scrap from './scrap';
 import { constants } from 'os';
 import Jwt from '../autorize';
 import oneLineService from '../services/onelineScrapService';
+import maerskScrapService from '../services/maerskScrapService';
+
 import * as ScrapModel from './scrapModel';
 class scrapControler {
     public router: express.router;
     public scrap: Scrap;
-    public oneLine;
+    public oneLine: oneLineService;
+    public maersk: maerskScrapService;
+
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
         this.oneLine = new oneLineService();
+        this.maersk = new maerskScrapService();
         this.config();
         this.call();
     }
@@ -134,7 +139,12 @@ class scrapControler {
                 siteSetting.ComCode = req.body.ComCode;
                 siteSetting.SubsidiaryId = req.body.SubsidiaryId;
                 siteSetting.DisableEnable = req.body.DisableEnable;
-
+                switch(siteSetting.SiteId){
+                    case 1: 
+                    this.oneLine.loadPortToPortSchedule(siteSetting.String);
+                    case 2 :
+                    this.maersk.loadPortToPortSchedule(siteSetting.String);    
+                }
                 this.oneLine.loadPortToPortSchedule(siteSetting.String);
                 this.scrap
                     .saveSettingForSite(siteSetting)
@@ -191,7 +201,7 @@ class scrapControler {
                 let siteId = req.body.siteId;
 
                 this.scrap
-                    .loadDetailSetting(siteId,-1)
+                    .loadDetailSetting(siteId, -1)
                     .then(data => {
                         res.status(200).send({
                             data: data,
@@ -302,54 +312,55 @@ class scrapControler {
                 });
             }
         });
-        this.router.get('/api/scrap/getNewPort',async (req,res)=>{
-            try{
-            //get last port
-            let data = await this.scrap.getLastPort();
-            let pk = data[0][''];
-            let newPorts = await this.scrap.loadNewPorts(pk) as Array<any>;
-            for(let item of newPorts){
-                let newPort = new ScrapModel.newPort();
-                newPort.port_id = item.port_id || '';
-                newPort.create_date = item.create_date|| '';
-                newPort.create_user = item.create_user|| '';
-                newPort.modify_date = item.modify_date|| '';
-                newPort.modify_user = item.modify_user|| '';
-                newPort.phone_fax_no = item.phone_fax_no|| '';
-                newPort.port_chi_name = item.port_chi_name|| '';
-                newPort.port_code = item.port_code|| '';
-                newPort.port_id = item.port_id|| '';
-                newPort.port_name = item.port_name|| '';
-                newPort.un_code = item.un_code|| '';
-                newPort.ctry_id = item.ctry_id || '';
-                let res = await this.scrap.insertNewPorts(newPort);
-            }
-            res.status(200).send({
-                msg:'success'
-            })
-            }catch(e){
+        this.router.get('/api/scrap/getNewPort', async (req, res) => {
+            try {
+                //get last port
+                let data = await this.scrap.getLastPort();
+                let pk = data[0][''];
+                let newPorts = await this.scrap.loadNewPorts(pk) as Array<any>;
+                for (let item of newPorts) {
+                    let newPort = new ScrapModel.newPort();
+                    newPort.port_id = item.port_id || '';
+                    newPort.create_date = item.create_date || '';
+                    newPort.create_user = item.create_user || '';
+                    newPort.modify_date = item.modify_date || '';
+                    newPort.modify_user = item.modify_user || '';
+                    newPort.phone_fax_no = item.phone_fax_no || '';
+                    newPort.port_chi_name = item.port_chi_name || '';
+                    newPort.port_code = item.port_code || '';
+                    newPort.port_id = item.port_id || '';
+                    newPort.port_name = item.port_name || '';
+                    newPort.un_code = item.un_code || '';
+                    newPort.ctry_id = item.ctry_id || '';
+                    let res = await this.scrap.insertNewPorts(newPort);
+                }
                 res.status(200).send({
-                    msg:'success'
+                    msg: 'success'
+                })
+            } catch (e) {
+                res.status(200).send({
+                    msg: 'success'
                 })
             }
 
         })
-        this.router.get('/api/scrap/getNewRout',async (req,res)=>{
-            try{
+
+        this.router.get('/api/scrap/getNewRout', async (req, res) => {
+            try {
                 //get last port
                 let data = await this.scrap.getLastRoute();
                 let pk = data[0][''] || 0;
                 let newRouts = await this.scrap.loadNewRouts(pk) as Array<any>;
-                for(let item of newRouts){
+                for (let item of newRouts) {
                     let newRoute = new ScrapModel.Route();
                     newRoute.DisableEnable = item.DisableEnable || '';
-                    newRoute.com_code = item.com_code|| '';
-                    newRoute.eta = item.eta|| '';
-                    newRoute.etd = item.etd|| '';
-                    newRoute.from_port_id = item.from_port_id|| '';
-                    newRoute.from_port_name = item.from_port_name|| '';
-                    newRoute.from_sch_cfs = item.from_sch_cfs|| '';
-                    newRoute.from_sch_cy = item.from_sch_cy|| '';
+                    newRoute.com_code = item.com_code || '';
+                    newRoute.eta = item.eta || '';
+                    newRoute.etd = item.etd || '';
+                    newRoute.from_port_id = item.from_port_id || '';
+                    newRoute.from_port_name = item.from_port_name || '';
+                    newRoute.from_sch_cfs = item.from_sch_cfs || '';
+                    newRoute.from_sch_cy = item.from_sch_cy || '';
                     newRoute.from_sch_rece = item.from_sch_rece || '';
                     newRoute.from_sch_si = item.from_sch_si || '';
                     newRoute.from_sch_vgm = item.from_sch_vgm || '';
@@ -366,15 +377,72 @@ class scrapControler {
                     let res = await this.scrap.insertNewRoutes(newRoute);
                 }
                 res.status(200).send({
-                    msg:'success'
+                    msg: 'success'
                 })
-                }catch(e){
-                    res.status(200).send({
-                        msg:'success'
+            } catch (e) {
+                res.status(200).send({
+                    msg: 'success'
+                })
+            }
+        })
+
+        this.router.get('/api/scrap/scrapMaersk', async (req, res) => {
+            this.maersk.findOneLineCode("abijan");
+        })
+
+        this.router.post('/api/scrap/portPairPaging/',(req,res)=>{
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkToken(token);
+            if (status === 200) {
+                let id = req.body.id;
+                this.scrap
+                    .loadPagindPortPair(id)
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
                     })
-                }
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        })
+        this.router.get('/api/scrap/loadNewPorts/',(req,res)=>{
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkToken(token);
+            if (status === 200) {
+                this.scrap
+                    .newPorts()
+                    .then(data => {
+                        res.status(200).send({
+                            data: data,
+                            status: 200,
+                            msg: 'success'
+                        });
+                    })
+                    .catch(err => {
+                        res.status(200).send({
+                            data: err,
+                            status: 400,
+                            msg: 'fail'
+                        });
+                    });
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
         })
     }
 }
-
 export default new scrapControler().router;

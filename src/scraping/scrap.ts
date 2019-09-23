@@ -1,11 +1,13 @@
 import * as sql from 'mssql';
 import Config from '../config';
 import * as ScrapModel from './scrapModel';
+import config from '../config';
 export default class Scrap {
     RouteConnection;
+    RouteConfig;
     constructor() {
         this.RouteConnection = new sql.ConnectionPool(Config.dbNewRout);
-
+        this.RouteConfig = new sql.ConnectionPool(config.dbRouteconfig);
     }
     saveFile(portOData: ScrapModel.PortOData) {
         let qry = 'Sp_InsertPort';
@@ -181,7 +183,7 @@ export default class Scrap {
     loadDetailSetting(siteId,rowId) {
         let qry = 'Sp_LoadDetailsSetting';
         return new Promise((resolve, reject) => {
-            new sql.ConnectionPool(Config.dbRouteconfig)
+            this.RouteConfig
                 .connect()
                 .then(pool => {
                     return pool
@@ -192,11 +194,11 @@ export default class Scrap {
                 })
                 .then(result => {
                     let rows = result.recordset;
-                    sql.close();
+                    this.RouteConfig.close();
                     return resolve(rows);
                 })
                 .catch(err => {
-                    sql.close();
+                    this.RouteConfig.close();
                     return reject(err);
                 });
         });
@@ -474,6 +476,49 @@ export default class Scrap {
                             .input('FldFkMasterRoute', routOData.masterSetting)
                             .input('route_id', routOData.route_id)
 
+                        .execute(qry);
+                })
+                .then(result => {
+                    let rows = result.recordset;
+                    sql.close();
+                    return resolve(rows);
+                })
+                .catch(err => {
+                    sql.close();
+                    return reject(err);
+                });
+        });
+    }
+    loadPagindPortPair(id){
+        let qry = 'Sp_LoadAllPortPair';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(Config.dbRouteconfig)
+                .connect()
+                .then(pool => {
+                    return pool
+                        .request()
+                        .input('RowID', id)
+                        .execute(qry);
+                })
+                .then(result => {
+                    let rows = result.recordset;
+                    sql.close();
+                    return resolve(rows);
+                })
+                .catch(err => {
+                    sql.close();
+                    return reject(err);
+                });
+        });
+    }
+    newPorts(){
+        let qry = 'Sp_LoadNewPort';
+        return new Promise((resolve, reject) => {
+            new sql.ConnectionPool(Config.dbRouteconfig)
+                .connect()
+                .then(pool => {
+                    return pool
+                        .request()
                         .execute(qry);
                 })
                 .then(result => {
