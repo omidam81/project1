@@ -33,7 +33,7 @@ export default class maeskScrapService {
                 console.log('service maersk call');
                 //get all points
                 //init scrap proccess
-                let siteSetting = await this.scrap.loadSetting(2);
+                let siteSetting = await this.scrap.loadSetting(3);
                 let timeLength = siteSetting[0]['LenghtScrap'];
                 let tempDate = new Date();
                 let endTime = Math.floor(timeLength / 7) + 1;
@@ -177,7 +177,7 @@ export default class maeskScrapService {
                                         'Subsidiary_id'
                                     ].trim();
                                     roueTemp.masterSetting = id;
-                                    roueTemp.siteId = 2;
+                                    roueTemp.siteId = 3;
                                     //!!!!
                                     await this.scrap.saveRoute(roueTemp);
                                     // //dispose variables
@@ -201,7 +201,6 @@ export default class maeskScrapService {
                         resolve('ko');
                     }
                 }
-
             });
         });
     }

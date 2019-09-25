@@ -4,19 +4,20 @@ import Scrap from './scrap';
 import { constants } from 'os';
 import Jwt from '../autorize';
 import oneLineService from '../services/onelineScrapService';
+import aplScrapService from '../services/aplScrapService';
 import maerskScrapService from '../services/maerskScrapService';
-
 import * as ScrapModel from './scrapModel';
 class scrapControler {
     public router: express.router;
     public scrap: Scrap;
     public oneLine: oneLineService;
+    public apl: aplScrapService;
     public maersk: maerskScrapService;
-
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
         this.oneLine = new oneLineService();
+        this.apl = new aplScrapService();
         this.maersk = new maerskScrapService();
         this.config();
         this.call();
@@ -142,10 +143,14 @@ class scrapControler {
                 switch(siteSetting.SiteId){
                     case 1: 
                     this.oneLine.loadPortToPortSchedule(siteSetting.String);
+                    break;
                     case 2 :
-                    this.maersk.loadPortToPortSchedule(siteSetting.String);    
+                    this.apl.loadPortToPortSchedule(siteSetting.String);   
+                    break; 
+                    case 3 :
+                    this.maersk.loadPortToPortSchedule(siteSetting.String);   
+                    break; 
                 }
-                this.oneLine.loadPortToPortSchedule(siteSetting.String);
                 this.scrap
                     .saveSettingForSite(siteSetting)
                     .then(data => {
@@ -386,8 +391,8 @@ class scrapControler {
             }
         })
 
-        this.router.get('/api/scrap/scrapMaersk', async (req, res) => {
-            this.maersk.findOneLineCode("abijan");
+        this.router.get('/api/scrap/scrapapl', async (req, res) => {
+            this.apl.findCode("abijan");
         })
 
         this.router.post('/api/scrap/portPairPaging/',(req,res)=>{

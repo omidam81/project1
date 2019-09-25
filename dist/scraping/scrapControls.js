@@ -13,6 +13,7 @@ const bodyParser = require("body-parser");
 const scrap_1 = require("./scrap");
 const autorize_1 = require("../autorize");
 const onelineScrapService_1 = require("../services/onelineScrapService");
+const aplScrapService_1 = require("../services/aplScrapService");
 const maerskScrapService_1 = require("../services/maerskScrapService");
 const ScrapModel = require("./scrapModel");
 class scrapControler {
@@ -20,6 +21,7 @@ class scrapControler {
         this.router = express.Router();
         this.scrap = new scrap_1.default();
         this.oneLine = new onelineScrapService_1.default();
+        this.apl = new aplScrapService_1.default();
         this.maersk = new maerskScrapService_1.default();
         this.config();
         this.call();
@@ -144,10 +146,14 @@ class scrapControler {
                 switch (siteSetting.SiteId) {
                     case 1:
                         this.oneLine.loadPortToPortSchedule(siteSetting.String);
+                        break;
                     case 2:
+                        this.apl.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 3:
                         this.maersk.loadPortToPortSchedule(siteSetting.String);
+                        break;
                 }
-                this.oneLine.loadPortToPortSchedule(siteSetting.String);
                 this.scrap
                     .saveSettingForSite(siteSetting)
                     .then(data => {
@@ -389,8 +395,8 @@ class scrapControler {
                 });
             }
         }));
-        this.router.get('/api/scrap/scrapMaersk', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            this.maersk.findOneLineCode("abijan");
+        this.router.get('/api/scrap/scrapapl', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            this.apl.findCode("abijan");
         }));
         this.router.post('/api/scrap/portPairPaging/', (req, res) => {
             let token = req.headers['x-access-token'];
