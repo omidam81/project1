@@ -7,9 +7,6 @@ import { GlobalSchedule } from './globalSheduleList';
 import util from './utilService';
 const porttoporturl = 'https://api.maersk.com/oceanProducts/maeu/futureschedules';
 
-
-
-
 export default class maeskScrapService {
     publicCode;
     scrap;

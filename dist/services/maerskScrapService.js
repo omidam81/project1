@@ -35,7 +35,7 @@ class maeskScrapService {
             console.log('service maersk call');
             //get all points
             //init scrap proccess
-            let siteSetting = yield this.scrap.loadSetting(2);
+            let siteSetting = yield this.scrap.loadSetting(3);
             let timeLength = siteSetting[0]['LenghtScrap'];
             let tempDate = new Date();
             let endTime = Math.floor(timeLength / 7) + 1;
@@ -156,7 +156,7 @@ class maeskScrapService {
                                     roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
                                     roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                                     roueTemp.masterSetting = id;
-                                    roueTemp.siteId = 2;
+                                    roueTemp.siteId = 3;
                                     //!!!!
                                     yield this.scrap.saveRoute(roueTemp);
                                     // //dispose variables
