@@ -1,0 +1,14 @@
+
+11:18:20 AM:TypeError: page.waitForNavigate is not a function
+11:19:13 AM:TypeError: page.waitForNavigate is not a function
+11:19:54 AM:TypeError: page.waitForNavigate is not a function
+11:24:45 AM:Error: Evaluation failed: TypeError: Cannot read property 'children' of null
+    at __puppeteer_evaluation_script__:2:87
+12:05:58 PM:TypeError: page.go is not a function
+12:08:33 PM:TimeoutError: Navigation Timeout Exceeded: 30000ms exceeded
+1:01:58 PM:TimeoutError: Navigation Timeout Exceeded: 30000ms exceeded
+1:35:16 PM:TimeoutError: Navigation Timeout Exceeded: 30000ms exceeded
+2:24:03 PM:TimeoutError: Navigation Timeout Exceeded: 30000ms exceeded
+3:48:43 PM:TimeoutError: Navigation Timeout Exceeded: 30000ms exceeded
+4:00:22 PM:TypeError: Cannot read property 'querySelectorAll' of undefined
+4:29:43 PM:TimeoutError: Navigation Timeout Exceeded: 30000ms exceeded

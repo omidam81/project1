@@ -16,6 +16,7 @@ const scrapModel_1 = require("../scraping/scrapModel");
 const globalSheduleList_1 = require("./globalSheduleList");
 const utilService_1 = require("./utilService");
 const porttoporturl = 'https://api.maersk.com/oceanProducts/maeu/futureschedules';
+const pageUrl = 'https://www.maersk.com/schedules/#';
 class maeskScrapService {
     constructor() {
         this.scrap = new scrap_1.default();
@@ -31,14 +32,19 @@ class maeskScrapService {
             globalSheduleList_1.GlobalSchedule.maerskSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.maerskSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(3);
+            if (!siteSetting[0]['DisableEnable']) {
+                return;
+            }
             console.log(scheduleTime);
             console.log('service maersk call');
             //get all points
             //init scrap proccess
-            let siteSetting = yield this.scrap.loadSetting(3);
             let timeLength = siteSetting[0]['LenghtScrap'];
             let tempDate = new Date();
-            let endTime = Math.floor(timeLength / 7) + 1;
+            let endTime = Math.floor(timeLength / 7);
+            if (endTime === 0)
+                endTime++;
             let startTime = this.IsoTime(new Date());
             let iso = new Date().toISOString().split('T')[0];
             let obj = yield this.scrap.insertMasterRoute(iso, 1);
@@ -98,8 +104,10 @@ class maeskScrapService {
     }
     sendData(from, to, startDate, NOW, id, portsDetail) {
         return new Promise((resolve, reject) => {
+            //1PLJHUYRVY2ZD
+            //2LMUYHDQXMRNJ
             let u = porttoporturl +
-                `?from=${from}&to=${to}&cargoType=DRY&containerTypeName=40%27+Dry+Standard&containerType=DRY&containerLength=40&containerIsoCode=42G1&containerTempControl=false&fromServiceMode=CY&toServiceMode=CY&numberOfWeeks=${NOW}&dateType=A&date=${startDate}&vesselFlag=&vesselFlagName=&originServiceMode=CY&destinationServiceMode=SD`;
+                `?from=${'09B2WXKA3I3R3'}&to=${'2LMUYHDQXMRNJ'}&cargoType=DRY&containerTypeName=40%27+Dry+Standard&containerType=DRY&containerLength=40&containerIsoCode=42G1&containerTempControl=false&fromServiceMode=CY&toServiceMode=CY&numberOfWeeks=${NOW}&dateType=D&date=${startDate}&vesselFlag=&vesselFlagName=&originServiceMode=CY&destinationServiceMode=SD`;
             request(u, (err, res, body) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
                     utilService_1.default.writeLog(err);
@@ -111,56 +119,86 @@ class maeskScrapService {
                             let obj = JSON.parse(res.body.replace('/\n/g', ''));
                             let products = obj['products'];
                             if (products.length !== 0) {
-                                let schedules = products[0]['schedules'];
-                                for (let l = 0; l < schedules.length; l++) {
-                                    let schedule = schedules[l];
-                                    let roueTemp = new scrapModel_1.Route();
-                                    // roueTemp.to = route['n1stPodYdCd'];
-                                    // roueTemp.from = route['polYdCd'];
-                                    // roueTemp.inland = route['inlandCct'];
-                                    // roueTemp.portTime = route['cct'];
-                                    // roueTemp.depDate = route['polEtdDt'];
-                                    // roueTemp.arrivalDate = route['lstPodEtaDt'];
-                                    // roueTemp.vessel = route['n1stVslNm'];
-                                    // roueTemp.ocean = route['ocnTzDys'];
-                                    // roueTemp.total = route['ttlTzDys'];
-                                    roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
-                                    roueTemp.from_port_name = portsDetail['fromPortname'].trim();
-                                    roueTemp.to_port_id = portsDetail['toPortcode'].trim();
-                                    roueTemp.to_port_name = portsDetail['toPortname'].trim();
-                                    //Departure Date
-                                    roueTemp.etd = schedule['fromLocation']['date'];
-                                    //Arrival Date
-                                    roueTemp.eta = schedule['toLocation']['date'];
-                                    //
-                                    roueTemp.vessel = schedule['vessel']['name'];
-                                    roueTemp.voyage = schedule['scheduleDetails'][0]['transport']['voyageNumber'];
-                                    roueTemp.modify_date = new Date();
-                                    roueTemp.imp_exp = 'E';
-                                    roueTemp.service = schedule['scheduleDetails'][0]['serviceName'];
-                                    roueTemp.from_sch_cy = null;
-                                    roueTemp.from_sch_cfs = null;
-                                    roueTemp.from_sch_rece = null;
-                                    roueTemp.from_sch_si = null;
-                                    roueTemp.from_sch_vgm = null;
-                                    roueTemp.ts_port_name = null;
-                                    roueTemp.vessel_2 = null;
-                                    roueTemp.voyage_2 = null;
-                                    //check
-                                    if (schedule['scheduleDetails'].length > 1) {
-                                        roueTemp.ts_port_name = yield this.getDeatilsGet(schedule['scheduleDetails'][1]['fromLocation']['siteGeoId']);
-                                        roueTemp.vessel_2 = schedule['scheduleDetails'][1]['transport']['vessel']['name'];
-                                        roueTemp.voyage_2 = schedule['scheduleDetails'][1]['transport']['voyageNumber'];
+                                for (let p = 0; p < products.length; p++) {
+                                    let schedules = products[p]['schedules'];
+                                    for (let l = 0; l < schedules.length; l++) {
+                                        let schedule = schedules[l];
+                                        let roueTemp = new scrapModel_1.Route();
+                                        roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
+                                        roueTemp.from_port_name = portsDetail['fromPortname'].trim();
+                                        roueTemp.to_port_id = portsDetail['toPortcode'].trim();
+                                        roueTemp.to_port_name = portsDetail['toPortname'].trim();
+                                        //Departure Date
+                                        roueTemp.etd = schedule['fromLocation']['date'];
+                                        //Arrival Date
+                                        roueTemp.eta = schedule['toLocation']['date'];
+                                        //
+                                        roueTemp.vessel = schedule['vessel']['name'];
+                                        roueTemp.voyage = schedule['scheduleDetails'][0]['transport']['voyageNumber'];
+                                        roueTemp.modify_date = new Date();
+                                        roueTemp.imp_exp = 'E';
+                                        roueTemp.service = schedule['scheduleDetails'][0]['serviceName'];
+                                        roueTemp.from_sch_cy = null;
+                                        roueTemp.from_sch_cfs = null;
+                                        roueTemp.from_sch_rece = null;
+                                        roueTemp.from_sch_si = null;
+                                        roueTemp.from_sch_vgm = null;
+                                        roueTemp.ts_port_name = null;
+                                        roueTemp.vessel_2 = null;
+                                        roueTemp.voyage_2 = null;
+                                        //find DeadLines
+                                        //create params
+                                        if (schedule['scheduleDetails'].length > 0) {
+                                            let sc = null;
+                                            const vC = schedule['vessel']['code'];
+                                            const vN = schedule['scheduleDetails'][0]['transport']['voyageNumber'] || schedule['scheduleDetails'][1]['transport']['voyageNumber'];
+                                            if (schedule['scheduleDetails'][0]['transport']['voyageNumber']) {
+                                                sc = schedule['scheduleDetails'][0]['fromLocation']['siteGeoId'];
+                                            }
+                                            else {
+                                                sc = schedule['scheduleDetails'][0]['toLocation']['siteGeoId'];
+                                            }
+                                            let params = [];
+                                            params.push({
+                                                sC: sc,
+                                                vC: vC,
+                                                vN: vN,
+                                                "cargoType": "CY",
+                                                "serviceMode": "DRY"
+                                            });
+                                            let finalP = { params: params };
+                                            const deadLines = yield this.findDeadLine(JSON.stringify(finalP));
+                                            if (deadLines) {
+                                                const SINONAMS = deadLines[0].filter(x => x.deadlineKey === 'SINONAMS');
+                                                if (SINONAMS.length > 0) {
+                                                    roueTemp.from_sch_si = new Date(SINONAMS[0]['deadline']);
+                                                }
+                                                const cvr = deadLines[0].filter(x => x.deadlineKey === 'CY');
+                                                if (cvr.length > 0 && schedule['scheduleDetails'][0]['transport']['voyageNumber'] !== null) {
+                                                    roueTemp.from_sch_cy = new Date(cvr[0]['deadline']);
+                                                }
+                                                const vgmr = deadLines[0].filter(x => x.deadlineKey === 'VGM');
+                                                if (vgmr.length > 0) {
+                                                    roueTemp.from_sch_vgm = new Date(vgmr[0]['deadline']);
+                                                }
+                                            }
+                                        }
+                                        //check
+                                        if (schedule['scheduleDetails'].length > 1) {
+                                            roueTemp.ts_port_name = yield this.getDeatilsGet(schedule['scheduleDetails'][1]['fromLocation']['siteGeoId']);
+                                            roueTemp.vessel_2 = schedule['scheduleDetails'][1]['transport']['vessel']['name'];
+                                            roueTemp.voyage_2 = schedule['scheduleDetails'][1]['transport']['voyageNumber'];
+                                        }
+                                        roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
+                                        roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
+                                        roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
+                                        roueTemp.masterSetting = id;
+                                        roueTemp.siteId = 3;
+                                        //!!!!
+                                        yield this.scrap.saveRoute(roueTemp);
+                                        // //dispose variables
+                                        roueTemp = null;
                                     }
-                                    roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
-                                    roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
-                                    roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
-                                    roueTemp.masterSetting = id;
-                                    roueTemp.siteId = 3;
-                                    //!!!!
-                                    yield this.scrap.saveRoute(roueTemp);
-                                    // //dispose variables
-                                    roueTemp = null;
                                 }
                                 //dispose api result;
                                 err = null;
@@ -239,6 +277,29 @@ class maeskScrapService {
                     }
                 }
                 catch (e) {
+                    resolve('');
+                }
+            });
+        });
+    }
+    findDeadLine(params) {
+        return new Promise((resolve, reject) => {
+            var options = {
+                method: 'POST',
+                url: 'https://schedule.api.maersk.com/maeu/deadlines',
+                headers: { Host: 'schedule.api.maersk.com' },
+                body: params
+            };
+            request(options, function (error, response, body) {
+                try {
+                    if (error) {
+                        resolve('');
+                    }
+                    else {
+                        resolve(JSON.parse(body));
+                    }
+                }
+                catch (_a) {
                     resolve('');
                 }
             });

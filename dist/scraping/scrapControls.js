@@ -395,9 +395,6 @@ class scrapControler {
                 });
             }
         }));
-        this.router.get('/api/scrap/scrapapl', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            this.apl.findCode("abijan");
-        }));
         this.router.post('/api/scrap/portPairPaging/', (req, res) => {
             let token = req.headers['x-access-token'];
             let status = autorize_1.default.checkToken(token);

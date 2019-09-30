@@ -1,0 +1,8 @@
+
+12:48:45 PM:Validation failed for parameter 'from_sch_cy'. Invalid date.
+12:49:26 PM:Validation failed for parameter 'from_sch_cy'. Invalid date.
+12:52:52 PM:Validation failed for parameter 'from_sch_cy'. Invalid date.
+12:53:15 PM:Validation failed for parameter 'from_sch_cy'. Invalid date.
+12:54:10 PM:Validation failed for parameter 'from_sch_cy'. Invalid date.
+12:55:31 PM:Validation failed for parameter 'from_sch_cy'. Invalid date.
+1:06:09 PM:Validation failed for parameter 'from_sch_vgm'. Invalid date.

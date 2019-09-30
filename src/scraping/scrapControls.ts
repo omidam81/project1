@@ -140,16 +140,16 @@ class scrapControler {
                 siteSetting.ComCode = req.body.ComCode;
                 siteSetting.SubsidiaryId = req.body.SubsidiaryId;
                 siteSetting.DisableEnable = req.body.DisableEnable;
-                switch(siteSetting.SiteId){
-                    case 1: 
-                    this.oneLine.loadPortToPortSchedule(siteSetting.String);
-                    break;
-                    case 2 :
-                    this.apl.loadPortToPortSchedule(siteSetting.String);   
-                    break; 
-                    case 3 :
-                    this.maersk.loadPortToPortSchedule(siteSetting.String);   
-                    break; 
+                switch (siteSetting.SiteId) {
+                    case 1:
+                        this.oneLine.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 2:
+                        this.apl.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 3:
+                        this.maersk.loadPortToPortSchedule(siteSetting.String);
+                        break;
                 }
                 this.scrap
                     .saveSettingForSite(siteSetting)
@@ -390,12 +390,7 @@ class scrapControler {
                 })
             }
         })
-
-        this.router.get('/api/scrap/scrapapl', async (req, res) => {
-            this.apl.findCode("abijan");
-        })
-
-        this.router.post('/api/scrap/portPairPaging/',(req,res)=>{
+        this.router.post('/api/scrap/portPairPaging/', (req, res) => {
             let token = req.headers['x-access-token'];
             let status = Jwt.checkToken(token);
             if (status === 200) {
@@ -422,7 +417,7 @@ class scrapControler {
                 });
             }
         })
-        this.router.get('/api/scrap/loadNewPorts/',(req,res)=>{
+        this.router.get('/api/scrap/loadNewPorts/', (req, res) => {
             let token = req.headers['x-access-token'];
             let status = Jwt.checkToken(token);
             if (status === 200) {
