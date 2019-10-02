@@ -15,6 +15,8 @@ const autorize_1 = require("../autorize");
 const onelineScrapService_1 = require("../services/onelineScrapService");
 const aplScrapService_1 = require("../services/aplScrapService");
 const maerskScrapService_1 = require("../services/maerskScrapService");
+const zimScrapService_1 = require("../services/zimScrapService");
+const pilScrapService_1 = require("../services/pilScrapService");
 const ScrapModel = require("./scrapModel");
 class scrapControler {
     constructor() {
@@ -23,6 +25,8 @@ class scrapControler {
         this.oneLine = new onelineScrapService_1.default();
         this.apl = new aplScrapService_1.default();
         this.maersk = new maerskScrapService_1.default();
+        this.zim = new zimScrapService_1.default();
+        this.pil = new pilScrapService_1.default();
         this.config();
         this.call();
     }
@@ -153,6 +157,10 @@ class scrapControler {
                     case 3:
                         this.maersk.loadPortToPortSchedule(siteSetting.String);
                         break;
+                    case 4:
+                        this.pil.loadPortToPortSchedule(siteSetting.String);
+                    case 5:
+                        this.zim.loadPortToPortSchedule(siteSetting.String);
                 }
                 this.scrap
                     .saveSettingForSite(siteSetting)

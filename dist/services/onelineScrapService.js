@@ -30,11 +30,14 @@ class oneLineService {
             globalSheduleList_1.GlobalSchedule.oneLineSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.oneLineSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(1);
+            if (!siteSetting[0]['DisableEnable']) {
+                return;
+            }
             console.log(scheduleTime);
             console.log('service one-line call');
             //get all points
             //init scrap proccess
-            let siteSetting = yield this.scrap.loadSetting(1);
             let timeLength = siteSetting[0]['LenghtScrap'];
             let tempDate = new Date();
             let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));

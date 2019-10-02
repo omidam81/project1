@@ -24,11 +24,14 @@ export default class oneLineService {
         GlobalSchedule.oneLineSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(1);
+                if (!siteSetting[0]['DisableEnable']) {
+                    return;
+                }
                 console.log(scheduleTime);
                 console.log('service one-line call');
                 //get all points
                 //init scrap proccess
-                let siteSetting = await this.scrap.loadSetting(1);
                 let timeLength = siteSetting[0]['LenghtScrap'];
                 let tempDate = new Date();
                 let endTime = this.IsoTime(

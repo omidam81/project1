@@ -33,11 +33,14 @@ class aplScrapService {
             globalSheduleList_1.GlobalSchedule.aplSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.aplSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(2);
+            if (!siteSetting[0]['DisableEnable']) {
+                return;
+            }
             console.log(scheduleTime);
             console.log('service apl call');
             //get all points
             //init scrap proccess
-            let siteSetting = yield this.scrap.loadSetting(2);
             let timeLength = siteSetting[0]['LenghtScrap'];
             let tempDate = new Date();
             let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));
@@ -115,86 +118,105 @@ class aplScrapService {
                     return Tables;
                 });
                 for (let table of tables) {
-                    let roueTemp = new scrapModel_1.Route();
                     const tempTable = node_html_parser_1.parse(table);
-                    //get Arrival (eta)
-                    let ArrivalRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Arrival') !== -1);
-                    let ArrivalDates = ArrivalRow[ArrivalRow.length - 1].querySelectorAll('strong');
-                    let arrival = new Date(ArrivalDates[0].innerHTML);
-                    //get Departure (etd)
-                    let DepartureRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Departure') !== -1);
-                    let DepartureDates = DepartureRow[DepartureRow.length - 1].querySelectorAll('strong');
-                    let Departure = new Date(DepartureDates[0].innerHTML);
-                    //service , vessel and Voyage
-                    let vesselRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Vessel') !== -1);
-                    let vesselData = vesselRow[0].querySelectorAll('td')[0];
-                    //get vessel 
-                    let vesselHtml = vesselData.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                    let vesel = vesselHtml.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '');
-                    //get Voyage
-                    let voyage = null;
-                    if (vesselData.querySelectorAll('a').length > 0) {
-                        voyage = vesselData.querySelectorAll('a').slice(-1).pop().text;
-                    }
-                    //get service 
-                    let service = vesselData.childNodes.filter(x => x.text !== "\n")[0].text;
-                    //port cutoff and vga cutoff
-                    let portCutOff = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Port Cutoff') !== -1);
-                    let cutOffData = portCutOff[0].querySelectorAll('td')[0].innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                    //get Port Cutoff (from_sch_cy)
-                    let cutOff = cutOffData.split('<br />')[2];
-                    //get vgm cutoff (from_sch_vgm)
-                    let vgmCutoff = cutOffData.split('<br />')[1];
-                    //get to/from (ts_port_name) 
-                    let toFrom = null;
-                    let toFromRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('To / From') !== -1);
-                    if (toFromRow > 0) {
-                        let toFrom = toFromRow[0].querySelectorAll('td')[0].querySelectorAll('a')[0].text;
-                    }
-                    //vessel and Voyage 2
-                    let vessel_2 = null;
-                    let voyage_2 = null;
-                    let vessel2Row = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Local Voyage Ref') !== -1);
-                    if (vessel2Row.length > 1) {
-                        let vessel2Data = vessel2Row[1].querySelectorAll('td')[0];
-                        //get vessel2
-                        let vessel2Html = vessel2Data.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                        vessel_2 = vessel2Html.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '');
-                        //get Voyage2
-                        voyage_2 = null;
-                        if (vessel2Data.querySelectorAll('a').length > 0) {
-                            voyage_2 = vessel2Data.querySelectorAll('a').slice(-1).pop().text;
+                    //find schedule part
+                    let part = tempTable.querySelectorAll('th').filter(x => x.innerHTML.indexOf('Schedule') !== -1);
+                    for (let p = 0; p < part.length; p++) {
+                        let roueTemp = new scrapModel_1.Route();
+                        //get Arrival (eta)
+                        let ArrivalRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Arrival') !== -1);
+                        let ArrivalDates = ArrivalRow[ArrivalRow.length - 1].querySelectorAll('strong');
+                        let arrival = new Date(ArrivalDates[p].innerHTML);
+                        //get Departure (etd)
+                        let DepartureRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Departure') !== -1);
+                        let DepartureDates = DepartureRow[1].querySelectorAll('strong');
+                        let Departure = new Date(DepartureDates[p].innerHTML);
+                        //service , vessel and Voyage
+                        let vesselRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Vessel') !== -1);
+                        let vesselData = vesselRow[0].querySelectorAll('td')[p];
+                        //get vessel 
+                        let vesselHtml = vesselData.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
+                        let vesel = vesselHtml.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '');
+                        //get Voyage
+                        let voyage = null;
+                        if (vesselData.querySelectorAll('a').length > 0) {
+                            voyage = vesselData.querySelectorAll('a').slice(-1).pop().text;
                         }
+                        //get service 
+                        let service = vesselData.childNodes.filter(x => x.text !== "\n")[0].text;
+                        //port cutoff and vga cutoff
+                        let portCutOff = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Port Cutoff') !== -1);
+                        let cutOffData = portCutOff[0].querySelectorAll('td')[p].innerHTML.replace(/\n/g, '').replace(/\t/g, '');
+                        //get Port Cutoff (from_sch_cy)
+                        let cutOff = cutOffData.split('<br />')[2];
+                        if (new Date(cutOff).toString() !== "Invalid Date") {
+                            cutOff = new Date(cutOff);
+                        }
+                        else {
+                            cutOff = null;
+                        }
+                        //get vgm cutoff (from_sch_vgm)
+                        let vgmCutoff = cutOffData.split('<br />')[1];
+                        if (new Date(vgmCutoff).toString() !== "Invalid Date") {
+                            vgmCutoff = new Date(vgmCutoff);
+                        }
+                        else {
+                            vgmCutoff = null;
+                        }
+                        //get to/from (ts_port_name) 
+                        let toFrom = null;
+                        let toFromRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('To / From') !== -1);
+                        if (toFromRow.length > 0) {
+                            toFrom = toFromRow[0].querySelectorAll('td')[p].querySelectorAll('a')[0].text;
+                        }
+                        //vessel and Voyage 2
+                        let vessel_2 = null;
+                        let voyage_2 = null;
+                        let vessel2Row = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Local Voyage Ref') !== -1);
+                        if (vessel2Row.length > 1) {
+                            let vessel2Data = vessel2Row[1].querySelectorAll('td')[p];
+                            //get vessel2
+                            let vessel2Html = vessel2Data.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
+                            vessel_2 = vessel2Html.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '').split('<i')[0];
+                            if (vessel_2.indexOf('<i') !== -1) {
+                                vessel_2 = vessel_2.split('<i')[0];
+                            }
+                            //get Voyage2
+                            voyage_2 = null;
+                            if (vessel2Data.querySelectorAll('a').length > 0) {
+                                voyage_2 = vessel2Data.querySelectorAll('a').slice(-1).pop().text;
+                            }
+                        }
+                        //fill data
+                        roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
+                        roueTemp.from_port_name = portsDetail['fromPortname'].trim();
+                        roueTemp.to_port_id = portsDetail['toPortcode'].trim();
+                        roueTemp.to_port_name = portsDetail['toPortname'].trim();
+                        roueTemp.etd = Departure;
+                        roueTemp.eta = arrival;
+                        roueTemp.vessel = vesel;
+                        roueTemp.voyage = voyage;
+                        roueTemp.modify_date = new Date();
+                        roueTemp.imp_exp = 'E';
+                        roueTemp.service = service.trim();
+                        roueTemp.from_sch_cy = cutOff;
+                        roueTemp.from_sch_cfs = null;
+                        roueTemp.from_sch_rece = null;
+                        roueTemp.from_sch_si = null;
+                        roueTemp.from_sch_vgm = vgmCutoff;
+                        roueTemp.vessel_2 = vessel_2;
+                        roueTemp.voyage_2 = voyage_2;
+                        roueTemp.ts_port_name = toFrom;
+                        roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
+                        roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
+                        roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
+                        roueTemp.masterSetting = id;
+                        roueTemp.siteId = 2;
+                        //!!!!
+                        yield this.scrap.saveRoute(roueTemp);
+                        // //dispose variables
+                        roueTemp = null;
                     }
-                    //fill data
-                    roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
-                    roueTemp.from_port_name = portsDetail['fromPortname'].trim();
-                    roueTemp.to_port_id = portsDetail['toPortcode'].trim();
-                    roueTemp.to_port_name = portsDetail['toPortname'].trim();
-                    roueTemp.etd = Departure;
-                    roueTemp.eta = arrival;
-                    roueTemp.vessel = vesel;
-                    roueTemp.voyage = voyage;
-                    roueTemp.modify_date = new Date();
-                    roueTemp.imp_exp = 'E';
-                    roueTemp.service = service.trim();
-                    roueTemp.from_sch_cy = null;
-                    roueTemp.from_sch_cfs = null;
-                    roueTemp.from_sch_rece = null;
-                    roueTemp.from_sch_si = null;
-                    roueTemp.from_sch_vgm = null;
-                    roueTemp.vessel_2 = vessel_2;
-                    roueTemp.voyage_2 = voyage_2;
-                    roueTemp.ts_port_name = toFrom;
-                    roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
-                    roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
-                    roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
-                    roueTemp.masterSetting = id;
-                    roueTemp.siteId = 2;
-                    //!!!!
-                    yield this.scrap.saveRoute(roueTemp);
-                    // //dispose variables
-                    roueTemp = null;
                 }
             }
             catch (e) {

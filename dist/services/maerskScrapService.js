@@ -106,8 +106,9 @@ class maeskScrapService {
         return new Promise((resolve, reject) => {
             //1PLJHUYRVY2ZD
             //2LMUYHDQXMRNJ
+            //09B2WXKA3I3R3
             let u = porttoporturl +
-                `?from=${'09B2WXKA3I3R3'}&to=${'2LMUYHDQXMRNJ'}&cargoType=DRY&containerTypeName=40%27+Dry+Standard&containerType=DRY&containerLength=40&containerIsoCode=42G1&containerTempControl=false&fromServiceMode=CY&toServiceMode=CY&numberOfWeeks=${NOW}&dateType=D&date=${startDate}&vesselFlag=&vesselFlagName=&originServiceMode=CY&destinationServiceMode=SD`;
+                `?from=${from}&to=${to}&cargoType=DRY&containerTypeName=40%27+Dry+Standard&containerType=DRY&containerLength=40&containerIsoCode=42G1&containerTempControl=false&fromServiceMode=CY&toServiceMode=CY&numberOfWeeks=${NOW}&dateType=D&date=${startDate}&vesselFlag=&vesselFlagName=&originServiceMode=CY&destinationServiceMode=SD`;
             request(u, (err, res, body) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
                     utilService_1.default.writeLog(err);

@@ -35,7 +35,7 @@ class pilScrapService {
         }
         globalSheduleList_1.GlobalSchedule.pilSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
             console.log(scheduleTime);
-            console.log('service apl call');
+            console.log('service pil call');
             //get all points
             //init scrap proccess
             let siteSetting = yield this.scrap.loadSetting(2);
