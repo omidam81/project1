@@ -8,8 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-//import depemdencyes
-const request = require("request");
 const schedule = require("node-schedule");
 const scrap_1 = require("../scraping/scrap");
 const scrapModel_1 = require("../scraping/scrapModel");
@@ -19,6 +17,7 @@ const puppeteer = require("puppeteer");
 const node_html_parser_1 = require("node-html-parser");
 const porttoporturl = 'https://www.pilship.com/shared/ajax/';
 const mainUrl = 'https://www.pilship.com/en-point2point-pil-pacific-international-lines/119.html';
+const pilPorts = require('../../assets/pilPorts.json');
 class pilScrapService {
     constructor() {
         this.scrap = new scrap_1.default();
@@ -34,14 +33,18 @@ class pilScrapService {
             globalSheduleList_1.GlobalSchedule.pilSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.pilSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(4);
+            if (!siteSetting[0]['DisableEnable']) {
+                return;
+            }
             console.log(scheduleTime);
             console.log('service pil call');
             //get all points
             //init scrap proccess
-            let siteSetting = yield this.scrap.loadSetting(2);
             let timeLength = siteSetting[0]['LenghtScrap'];
-            let tempDate = new Date();
-            let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));
+            let endTime = Math.floor(timeLength / 7);
+            if (endTime === 0)
+                endTime++;
             let startTime = this.IsoTime(new Date());
             let iso = new Date().toISOString().split('T')[0];
             let obj = yield this.scrap.insertMasterRoute(iso, 1);
@@ -54,38 +57,9 @@ class pilScrapService {
             if (portToPortList[0]) {
                 while (true) {
                     for (let ptp of portToPortList) {
-                        let from = cath.find(x => x.name === ptp['fromPortname']);
-                        let to = cath.find(x => x.name === ptp['toPortname']);
-                        let fromCode;
-                        let toCode;
-                        //check if this port not in my cache call api and get code 
-                        if (!from) {
-                            fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
-                            cath.push({
-                                name: ptp['fromPortname'],
-                                code: fromCode
-                            });
-                        }
-                        else {
-                            if (from['code'] === 'noCode') {
-                                continue;
-                            }
-                            fromCode = from['code'];
-                        }
-                        if (!to) {
-                            toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
-                            cath.push({
-                                name: ptp['toPortname'],
-                                code: toCode
-                            });
-                        }
-                        else {
-                            if (to['code'] === 'noCode') {
-                                continue;
-                            }
-                            toCode = to['code'];
-                        }
-                        if (toCode === 'noCode' || fromCode === 'noCode') {
+                        let from = this.findCode(ptp['fromPortname']);
+                        let to = this.findCode(ptp['toPortname']);
+                        if (!from || !to) {
                             continue;
                         }
                         yield this.sendData(from, to, startTime, endTime, id, ptp);
@@ -101,9 +75,7 @@ class pilScrapService {
     }
     sendData(from, to, startDate, range, id, portsDetail) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            const browser = yield puppeteer.launch({
-                headless: false
-            });
+            const browser = yield puppeteer.launch({});
             const page = yield browser.newPage();
             //port_origin port_destination
             //find from and to and assign then
@@ -174,7 +146,7 @@ class pilScrapService {
                         roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
                         roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                         roueTemp.masterSetting = id;
-                        roueTemp.siteId = 2;
+                        roueTemp.siteId = 4;
                         //!!!!
                         yield this.scrap.saveRoute(roueTemp);
                         // //dispose variables
@@ -197,31 +169,19 @@ class pilScrapService {
             month = '0' + month;
         if (day.length < 2)
             day = '0' + day;
-        return [month, day, year].join('/');
+        return [year, month, day].join('-');
     }
     findCode(code) {
-        return new Promise((resolve, reject) => {
-            let url = `http://www.apl.com/api/PortsWithInlands/GetAll?id=${code.trim().toLowerCase()}`;
-            request(url, (err, res, body) => {
-                try {
-                    if (err) {
-                        resolve('');
-                    }
-                    else {
-                        let obj = JSON.parse(body);
-                        if (obj.length !== 0) {
-                            resolve(obj[0]['Name']);
-                        }
-                        else {
-                            resolve('');
-                        }
-                    }
-                }
-                catch (e) {
-                    resolve('');
-                }
-            });
-        });
+        try {
+            let res = pilPorts.filter(x => x.name.trim().toLowerCase().indexOf(code.trim().toLowerCase()) !== -1);
+            if (res.length > 0) {
+                return res[0]['value'];
+            }
+            return '';
+        }
+        catch (_a) {
+            return '';
+        }
     }
     sleep() {
         return new Promise((resolve) => {

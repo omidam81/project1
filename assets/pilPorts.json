@@ -1,0 +1,3234 @@
+[
+    {
+        "name": "",
+        "value": ""
+    },
+    {
+        "name": "Ajman, UAE [AEAJM]",
+        "value": "AEAJM"
+    },
+    {
+        "name": "Abu Dhabi, UAE [AEAUH]",
+        "value": "AEAUH"
+    },
+    {
+        "name": "Dubai, UAE [AEDXB]",
+        "value": "AEDXB"
+    },
+    {
+        "name": "Alfujairah, UAE [AEFJR]",
+        "value": "AEFJR"
+    },
+    {
+        "name": "Jebel Ali, UAE [AEJEA]",
+        "value": "AEJEA"
+    },
+    {
+        "name": "Khor Fakkan, UAE [AEKLF]",
+        "value": "AEKLF"
+    },
+    {
+        "name": "Umm Al Qaiwain, UAE [AEQIW]",
+        "value": "AEQIW"
+    },
+    {
+        "name": "Ras Al Khaimah Container Terminal, UAE [AERKT]",
+        "value": "AERKT"
+    },
+    {
+        "name": "Sharjah, UAE [AESHJ]",
+        "value": "AESHJ"
+    },
+    {
+        "name": "Eslam Qal'eh, Afghanistan [AFISQ]",
+        "value": "AFISQ"
+    },
+    {
+        "name": "Jalalabad, Afghanistan [AFJAA]",
+        "value": "AFJAA"
+    },
+    {
+        "name": "Kabul, Afghanistan [AFKBL]",
+        "value": "AFKBL"
+    },
+    {
+        "name": "Kandhar, Afghanistan [AFKDH]",
+        "value": "AFKDH"
+    },
+    {
+        "name": "Mazar-E-Sharif, Afghanistan [AFMZR]",
+        "value": "AFMZR"
+    },
+    {
+        "name": "Yerevan, Armenia [AMEVN]",
+        "value": "AMEVN"
+    },
+    {
+        "name": "Luanda, Angola [AOLAD]",
+        "value": "AOLAD"
+    },
+    {
+        "name": "Lobito, Angola [AOLOB]",
+        "value": "AOLOB"
+    },
+    {
+        "name": "Luanda, Angola [AOLUA]",
+        "value": "AOLUA"
+    },
+    {
+        "name": "Buenos Aires, Argentina [ARBUE]",
+        "value": "ARBUE"
+    },
+    {
+        "name": "Rosario, Argentina [ARROS]",
+        "value": "ARROS"
+    },
+    {
+        "name": "Pago Pago, American Samoa [ASPPG]",
+        "value": "ASPPG"
+    },
+    {
+        "name": "Adelaide, Australia [AUADL]",
+        "value": "AUADL"
+    },
+    {
+        "name": "Bell Bay, Australia [AUBEL]",
+        "value": "AUBEL"
+    },
+    {
+        "name": "Brisbane, Australia [AUBNE]",
+        "value": "AUBNE"
+    },
+    {
+        "name": "Burnie, Australia [AUBWT]",
+        "value": "AUBWT"
+    },
+    {
+        "name": "Devonport, Australia [AUDPO]",
+        "value": "AUDPO"
+    },
+    {
+        "name": "Darwin, Australia [AUDRW]",
+        "value": "AUDRW"
+    },
+    {
+        "name": "Fremantle, Australia [AUFRE]",
+        "value": "AUFRE"
+    },
+    {
+        "name": "Gladstone, Australia [AUGLT]",
+        "value": "AUGLT"
+    },
+    {
+        "name": "Hobart, Australia [AUHBA]",
+        "value": "AUHBA"
+    },
+    {
+        "name": "Launceston, Australia [AULST]",
+        "value": "AULST"
+    },
+    {
+        "name": "Melbourne, Australia [AUMEL]",
+        "value": "AUMEL"
+    },
+    {
+        "name": "Mildura, Australia [AUMQL]",
+        "value": "AUMQL"
+    },
+    {
+        "name": "Newcastle, Australia [AUNTL]",
+        "value": "AUNTL"
+    },
+    {
+        "name": "Port Alma, Australia [AUPTL]",
+        "value": "AUPTL"
+    },
+    {
+        "name": "Sydney, Australia [AUSYD]",
+        "value": "AUSYD"
+    },
+    {
+        "name": "Townsville, Australia [AUTSV]",
+        "value": "AUTSV"
+    },
+    {
+        "name": "Baku, Azerbaijan [AZBAK]",
+        "value": "AZBAK"
+    },
+    {
+        "name": "Chittagong, Bangladesh [BDCGP]",
+        "value": "BDCGP"
+    },
+    {
+        "name": "Dhaka, Bangladesh [BDDAC]",
+        "value": "BDDAC"
+    },
+    {
+        "name": "Mongla, Bangladesh [BDMGL]",
+        "value": "BDMGL"
+    },
+    {
+        "name": ", Bangladesh [BDSIT]",
+        "value": "BDSIT"
+    },
+    {
+        "name": "Antwerp, Belgium [BEANR]",
+        "value": "BEANR"
+    },
+    {
+        "name": "Bobo Dioulassovia Lome, Burkina Faso [BFBOY]",
+        "value": "BFBOY"
+    },
+    {
+        "name": "Ouagadougouvia Lome, Burkina Faso [BFOUA]",
+        "value": "BFOUA"
+    },
+    {
+        "name": "Bahrain Khalifa Bin Salman Port, Bahrain [BHKBS]",
+        "value": "BHKBS"
+    },
+    {
+        "name": "Bujumbura Burundi, Burundi [BIBJM]",
+        "value": "BIBJM"
+    },
+    {
+        "name": "Gitega, Burundi [BIGID]",
+        "value": "BIGID"
+    },
+    {
+        "name": "Kirundo, Burundi [BIKRE]",
+        "value": "BIKRE"
+    },
+    {
+        "name": "Cotonou, Benin [BJCOO]",
+        "value": "BJCOO"
+    },
+    {
+        "name": "Muara, Brunei [BNMUA]",
+        "value": "BNMUA"
+    },
+    {
+        "name": "Itaguai, Brazil [BRIGI]",
+        "value": "BRIGI"
+    },
+    {
+        "name": "Itapoa, Brazil [BRIOA]",
+        "value": "BRIOA"
+    },
+    {
+        "name": "Itajai, Brazil [BRITJ]",
+        "value": "BRITJ"
+    },
+    {
+        "name": "Navegantes, Brazil [BRNVT]",
+        "value": "BRNVT"
+    },
+    {
+        "name": "Paranagua, Brazil [BRPNG]",
+        "value": "BRPNG"
+    },
+    {
+        "name": "Rio Grande, Brazil [BRRIG]",
+        "value": "BRRIG"
+    },
+    {
+        "name": "Rio De Janeiro, Brazil [BRRIO]",
+        "value": "BRRIO"
+    },
+    {
+        "name": "Rio De Janeiro, Brazil [BRRJO]",
+        "value": "BRRJO"
+    },
+    {
+        "name": "Sao Paulo, Brazil [BRSAO]",
+        "value": "BRSAO"
+    },
+    {
+        "name": "Sao Paulo, Brazil [BRSPO]",
+        "value": "BRSPO"
+    },
+    {
+        "name": "Santos, Brazil [BRSSZ]",
+        "value": "BRSSZ"
+    },
+    {
+        "name": "Thimpu, Bhutan [BTTHI]",
+        "value": "BTTHI"
+    },
+    {
+        "name": "Gaborone, Botswana [BWGBE]",
+        "value": "BWGBE"
+    },
+    {
+        "name": "Calgary, Canada [CACAL]",
+        "value": "CACAL"
+    },
+    {
+        "name": "Edmonton, Canada [CAEDM]",
+        "value": "CAEDM"
+    },
+    {
+        "name": "Montreal, Canada [CAMTR]",
+        "value": "CAMTR"
+    },
+    {
+        "name": "Saskatoon, Canada [CASAK]",
+        "value": "CASAK"
+    },
+    {
+        "name": "Saintalbert, Canada [CASBT]",
+        "value": "CASBT"
+    },
+    {
+        "name": "Toronto, Canada [CATOR]",
+        "value": "CATOR"
+    },
+    {
+        "name": "Vancouver, Canada [CAVAN]",
+        "value": "CAVAN"
+    },
+    {
+        "name": "Winnipeg, Canada [CAWNP]",
+        "value": "CAWNP"
+    },
+    {
+        "name": "Bukavu, DRC Congo [CDBKY]",
+        "value": "CDBKY"
+    },
+    {
+        "name": "Lubumbashi, DRC Congo [CDFBM]",
+        "value": "CDFBM"
+    },
+    {
+        "name": "Kinshasa, DRC Congo [CDFIH]",
+        "value": "CDFIH"
+    },
+    {
+        "name": "Goma, DRC Congo [CDGOM]",
+        "value": "CDGOM"
+    },
+    {
+        "name": "Kolwezi, DRC Congo [CDKWZ]",
+        "value": "CDKWZ"
+    },
+    {
+        "name": "Likasi, DRC Congo [CDLKS]",
+        "value": "CDLKS"
+    },
+    {
+        "name": "Matadi, DRC Congo [CDMAT]",
+        "value": "CDMAT"
+    },
+    {
+        "name": "Bangui, Central African Republic [CFBGF]",
+        "value": "CFBGF"
+    },
+    {
+        "name": "Brazzaville, Congo [CGBZV]",
+        "value": "CGBZV"
+    },
+    {
+        "name": "Dolisie, Congo [CGDOL]",
+        "value": "CGDOL"
+    },
+    {
+        "name": "Pointe Noire, Congo [CGPNR]",
+        "value": "CGPNR"
+    },
+    {
+        "name": "Muttenz, Switzerland [CHMUT]",
+        "value": "CHMUT"
+    },
+    {
+        "name": "Abidjan, Cote D'Ivoire [CIABJ]",
+        "value": "CIABJ"
+    },
+    {
+        "name": "Aitutaki, Cook Islands [CKAIT]",
+        "value": "CKAIT"
+    },
+    {
+        "name": "Rarotonga, Cook Islands [CKRAR]",
+        "value": "CKRAR"
+    },
+    {
+        "name": "Arica, Chile [CLARI]",
+        "value": "CLARI"
+    },
+    {
+        "name": "Iquique, Chile [CLIQQ]",
+        "value": "CLIQQ"
+    },
+    {
+        "name": "San Antonio, Chile [CLSAI]",
+        "value": "CLSAI"
+    },
+    {
+        "name": "Santiago, Chile [CLSCL]",
+        "value": "CLSCL"
+    },
+    {
+        "name": "Valparaiso, Chile [CLVAP]",
+        "value": "CLVAP"
+    },
+    {
+        "name": "Douala, Cameroon [CMDLA]",
+        "value": "CMDLA"
+    },
+    {
+        "name": "Kribi, Cameroon [CMKBI]",
+        "value": "CMKBI"
+    },
+    {
+        "name": "Yaounde, Cameroon [CMYAO]",
+        "value": "CMYAO"
+    },
+    {
+        "name": "Anji, China [CNANJ]",
+        "value": "CNANJ"
+    },
+    {
+        "name": "Anqing, China [CNAQG]",
+        "value": "CNAQG"
+    },
+    {
+        "name": "Beihai, China [CNBHY]",
+        "value": "CNBHY"
+    },
+    {
+        "name": "Beijing, China [CNBJS]",
+        "value": "CNBJS"
+    },
+    {
+        "name": "Huangpu, China [CNCAN]",
+        "value": "CNCAN"
+    },
+    {
+        "name": "Zhengzhou, China [CNCGO]",
+        "value": "CNCGO"
+    },
+    {
+        "name": "Changshu, China [CNCGU]",
+        "value": "CNCGU"
+    },
+    {
+        "name": "Chongqing, China [CNCKG]",
+        "value": "CNCKG"
+    },
+    {
+        "name": "Changsha, China [CNCSX]",
+        "value": "CNCSX"
+    },
+    {
+        "name": "Chengdu, China [CNCTU]",
+        "value": "CNCTU"
+    },
+    {
+        "name": "Changzhou, China [CNCZX]",
+        "value": "CNCZX"
+    },
+    {
+        "name": "Da Chan Bay, China [CNDCB]",
+        "value": "CNDCB"
+    },
+    {
+        "name": "Dandong, China [CNDDZ]",
+        "value": "CNDDZ"
+    },
+    {
+        "name": "Deqing, China [CNDEI]",
+        "value": "CNDEI"
+    },
+    {
+        "name": "Dafeng, China [CNDFG]",
+        "value": "CNDFG"
+    },
+    {
+        "name": "Dongguan, China [CNDGG]",
+        "value": "CNDGG"
+    },
+    {
+        "name": "Dalian, China [CNDLC]",
+        "value": "CNDLC"
+    },
+    {
+        "name": "Doumen, China [CNDOU]",
+        "value": "CNDOU"
+    },
+    {
+        "name": "Fangcheng, China [CNFAN]",
+        "value": "CNFAN"
+    },
+    {
+        "name": "Fuzhou, China [CNFOC]",
+        "value": "CNFOC"
+    },
+    {
+        "name": "Foshan, China [CNFOS]",
+        "value": "CNFOS"
+    },
+    {
+        "name": "Gaolan, China [CNGAN]",
+        "value": "CNGAN"
+    },
+    {
+        "name": "Gaoshajiangmen, China [CNGAS]",
+        "value": "CNGAS"
+    },
+    {
+        "name": "Gaoming, China [CNGOM]",
+        "value": "CNGOM"
+    },
+    {
+        "name": "Haikou, China [CNHAK]",
+        "value": "CNHAK"
+    },
+    {
+        "name": "Hefei, China [CNHFI]",
+        "value": "CNHFI"
+    },
+    {
+        "name": "Hangzhou, China [CNHGH]",
+        "value": "CNHGH"
+    },
+    {
+        "name": "Hongwan, China [CNHGW]",
+        "value": "CNHGW"
+    },
+    {
+        "name": "Huangshi, China [CNHSI]",
+        "value": "CNHSI"
+    },
+    {
+        "name": "Huangpu, China [CNHUA]",
+        "value": "CNHUA"
+    },
+    {
+        "name": "Jiangyin, China [CNJIA]",
+        "value": "CNJIA"
+    },
+    {
+        "name": "Jiujiang Nanhai, China [CNJIJ]",
+        "value": "CNJIJ"
+    },
+    {
+        "name": "Jiujiang Jiangxi, China [CNJIU]",
+        "value": "CNJIU"
+    },
+    {
+        "name": "Waihaijiangmen, China [CNJMN]",
+        "value": "CNJMN"
+    },
+    {
+        "name": "Jinzhou, China [CNJNZ]",
+        "value": "CNJNZ"
+    },
+    {
+        "name": "Jiaoxin, China [CNJXN]",
+        "value": "CNJXN"
+    },
+    {
+        "name": "Kunshan, China [CNKUS]",
+        "value": "CNKUS"
+    },
+    {
+        "name": "Lian Hua Shan, China [CNLIH]",
+        "value": "CNLIH"
+    },
+    {
+        "name": "Leliu, China [CNLIU]",
+        "value": "CNLIU"
+    },
+    {
+        "name": "Longkou, China [CNLKU]",
+        "value": "CNLKU"
+    },
+    {
+        "name": "Lanshi, China [CNLSI]",
+        "value": "CNLSI"
+    },
+    {
+        "name": "Luzhou, China [CNLUZ]",
+        "value": "CNLUZ"
+    },
+    {
+        "name": "Lianyungang, China [CNLYG]",
+        "value": "CNLYG"
+    },
+    {
+        "name": "Fuzhou Mawei, China [CNMAW]",
+        "value": "CNMAW"
+    },
+    {
+        "name": "Nanchang, China [CNNCH]",
+        "value": "CNNCH"
+    },
+    {
+        "name": "Ningbo, China [CNNGB]",
+        "value": "CNNGB"
+    },
+    {
+        "name": "Nangang, China [CNNGG]",
+        "value": "CNNGG"
+    },
+    {
+        "name": "Nanjing, China [CNNKG]",
+        "value": "CNNKG"
+    },
+    {
+        "name": "Nanning, China [CNNNG]",
+        "value": "CNNNG"
+    },
+    {
+        "name": "Nansha, China [CNNSA]",
+        "value": "CNNSA"
+    },
+    {
+        "name": "Nantong, China [CNNTG]",
+        "value": "CNNTG"
+    },
+    {
+        "name": "Putian, China [CNPUT]",
+        "value": "CNPUT"
+    },
+    {
+        "name": "Qingyuan, China [CNQYN]",
+        "value": "CNQYN"
+    },
+    {
+        "name": "Qinzhou, China [CNQZH]",
+        "value": "CNQZH"
+    },
+    {
+        "name": "Quanzhou, China [CNQZJ]",
+        "value": "CNQZJ"
+    },
+    {
+        "name": "Rongqi, China [CNROQ]",
+        "value": "CNROQ"
+    },
+    {
+        "name": "Rugao, China [CNRUG]",
+        "value": "CNRUG"
+    },
+    {
+        "name": "Rizhao, China [CNRZH]",
+        "value": "CNRZH"
+    },
+    {
+        "name": "Shanghai, China [CNSHA]",
+        "value": "CNSHA"
+    },
+    {
+        "name": "Shidao, China [CNSHD]",
+        "value": "CNSHD"
+    },
+    {
+        "name": "Sanshan, China [CNSHG]",
+        "value": "CNSHG"
+    },
+    {
+        "name": "Shekou, China [CNSHK]",
+        "value": "CNSHK"
+    },
+    {
+        "name": "Qinhuangdao, China [CNSHP]",
+        "value": "CNSHP"
+    },
+    {
+        "name": "Shashi, China [CNSHS]",
+        "value": "CNSHS"
+    },
+    {
+        "name": "Shatian, China [CNSHT]",
+        "value": "CNSHT"
+    },
+    {
+        "name": "Xi An, China [CNSIA]",
+        "value": "CNSIA"
+    },
+    {
+        "name": "Sanshui, China [CNSJQ]",
+        "value": "CNSJQ"
+    },
+    {
+        "name": "Shijiazhuang, China [CNSJW]",
+        "value": "CNSJW"
+    },
+    {
+        "name": "Shantou, China [CNSWA]",
+        "value": "CNSWA"
+    },
+    {
+        "name": "Suzhou, China [CNSZH]",
+        "value": "CNSZH"
+    },
+    {
+        "name": "Shenzhen, China [CNSZX]",
+        "value": "CNSZX"
+    },
+    {
+        "name": "Taicang, China [CNTAG]",
+        "value": "CNTAG"
+    },
+    {
+        "name": "Qingdao, China [CNTAO]",
+        "value": "CNTAO"
+    },
+    {
+        "name": "Taiping, China [CNTAP]",
+        "value": "CNTAP"
+    },
+    {
+        "name": "Taizhou, China [CNTAZ]",
+        "value": "CNTAZ"
+    },
+    {
+        "name": "Gongyi, China [CNTSG]",
+        "value": "CNTSG"
+    },
+    {
+        "name": "Tianjin, China [CNTSN]",
+        "value": "CNTSN"
+    },
+    {
+        "name": "Xingang, China [CNTXG]",
+        "value": "CNTXG"
+    },
+    {
+        "name": "Wei Hai, China [CNWEI]",
+        "value": "CNWEI"
+    },
+    {
+        "name": "Wuhu, China [CNWHI]",
+        "value": "CNWHI"
+    },
+    {
+        "name": "Wenzhou, China [CNWNZ]",
+        "value": "CNWNZ"
+    },
+    {
+        "name": "Wuhan, China [CNWUH]",
+        "value": "CNWUH"
+    },
+    {
+        "name": "Wuzhou, China [CNWUZ]",
+        "value": "CNWUZ"
+    },
+    {
+        "name": "Xiao Lan, China [CNXAO]",
+        "value": "CNXAO"
+    },
+    {
+        "name": "Xinsha, China [CNXIA]",
+        "value": "CNXIA"
+    },
+    {
+        "name": "Xinhui, China [CNXIN]",
+        "value": "CNXIN"
+    },
+    {
+        "name": "Xiamen, China [CNXMN]",
+        "value": "CNXMN"
+    },
+    {
+        "name": "Yibin, China [CNYIB]",
+        "value": "CNYIB"
+    },
+    {
+        "name": "Yichang, China [CNYIC]",
+        "value": "CNYIC"
+    },
+    {
+        "name": "Yingkou, China [CNYIK]",
+        "value": "CNYIK"
+    },
+    {
+        "name": "Yiwu, China [CNYIU]",
+        "value": "CNYIU"
+    },
+    {
+        "name": "Yantai, China [CNYNT]",
+        "value": "CNYNT"
+    },
+    {
+        "name": "Beijiao, China [CNYQS]",
+        "value": "CNYQS"
+    },
+    {
+        "name": "Yantian, China [CNYTN]",
+        "value": "CNYTN"
+    },
+    {
+        "name": "Yunfu, China [CNYUF]",
+        "value": "CNYUF"
+    },
+    {
+        "name": "Yue Yang, China [CNYYA]",
+        "value": "CNYYA"
+    },
+    {
+        "name": "Yangzhou, China [CNYZH]",
+        "value": "CNYZH"
+    },
+    {
+        "name": "Zhongshan Waimao, China [CNZGA]",
+        "value": "CNZGA"
+    },
+    {
+        "name": "Zhanjiang, China [CNZHA]",
+        "value": "CNZHA"
+    },
+    {
+        "name": "Zhenjiang, China [CNZHE]",
+        "value": "CNZHE"
+    },
+    {
+        "name": "Zhangjiagang, China [CNZJG]",
+        "value": "CNZJG"
+    },
+    {
+        "name": "Zhoushan, China [CNZOS]",
+        "value": "CNZOS"
+    },
+    {
+        "name": "Zhapu, China [CNZPU]",
+        "value": "CNZPU"
+    },
+    {
+        "name": "Zhaoqing, China [CNZQG]",
+        "value": "CNZQG"
+    },
+    {
+        "name": "Zhongshan Gang, China [CNZSN]",
+        "value": "CNZSN"
+    },
+    {
+        "name": "Xiyuzhuhai, China [CNZUH]",
+        "value": "CNZUH"
+    },
+    {
+        "name": "Zhangzhou, China [CNZZU]",
+        "value": "CNZZU"
+    },
+    {
+        "name": "Bogota, Colombia [COBOG]",
+        "value": "COBOG"
+    },
+    {
+        "name": "Buenaventura, Colombia [COBUN]",
+        "value": "COBUN"
+    },
+    {
+        "name": "Cali, Colombia [COCLO]",
+        "value": "COCLO"
+    },
+    {
+        "name": "Medellin, Colombia [COMDE]",
+        "value": "COMDE"
+    },
+    {
+        "name": "Willemstad, Curacao [CWWIL]",
+        "value": "CWWIL"
+    },
+    {
+        "name": "Limassol, [CYLMS]",
+        "value": "CYLMS"
+    },
+    {
+        "name": "Bad Salzuflen, Germany [DEBFN]",
+        "value": "DEBFN"
+    },
+    {
+        "name": "Bremen, Germany [DEBRE]",
+        "value": "DEBRE"
+    },
+    {
+        "name": "Duisburg, Germany [DEDUI]",
+        "value": "DEDUI"
+    },
+    {
+        "name": "Elmshorn, Germany [DEELM]",
+        "value": "DEELM"
+    },
+    {
+        "name": "Frankfurtmain, Germany [DEFRA]",
+        "value": "DEFRA"
+    },
+    {
+        "name": "Hamburg, Germany [DEHAM]",
+        "value": "DEHAM"
+    },
+    {
+        "name": "Kehl, Germany [DEKEH]",
+        "value": "DEKEH"
+    },
+    {
+        "name": "Kornwestheim, Germany [DEKOR]",
+        "value": "DEKOR"
+    },
+    {
+        "name": "Mainz, Germany [DEMAI]",
+        "value": "DEMAI"
+    },
+    {
+        "name": "Mannheim, Germany [DEMHG]",
+        "value": "DEMHG"
+    },
+    {
+        "name": "Munchen, Germany [DEMUC]",
+        "value": "DEMUC"
+    },
+    {
+        "name": "Neuss, Germany [DENSS]",
+        "value": "DENSS"
+    },
+    {
+        "name": "Nurnberg, Germany [DENUE]",
+        "value": "DENUE"
+    },
+    {
+        "name": "Djibouti, Djibouti [DJJIB]",
+        "value": "DJJIB"
+    },
+    {
+        "name": "Guayaquil, Ecuador [ECGYE]",
+        "value": "ECGYE"
+    },
+    {
+        "name": "Alexandria Dekheila, Egypt [EGALY]",
+        "value": "EGALY"
+    },
+    {
+        "name": "Cairo, Egypt [EGCAI]",
+        "value": "EGCAI"
+    },
+    {
+        "name": "Damietta, Egypt [EGDAM]",
+        "value": "EGDAM"
+    },
+    {
+        "name": "Alexandria Old Port, Egypt [EGOLD]",
+        "value": "EGOLD"
+    },
+    {
+        "name": "Port Said, Egypt [EGPSD]",
+        "value": "EGPSD"
+    },
+    {
+        "name": "Ain Sokhna, Egypt [EGSOK]",
+        "value": "EGSOK"
+    },
+    {
+        "name": "Massawa, Eritrea [ERMSW]",
+        "value": "ERMSW"
+    },
+    {
+        "name": "Barcelona, Spain [ESBCN]",
+        "value": "ESBCN"
+    },
+    {
+        "name": "Valencia, Spain [ESVLC]",
+        "value": "ESVLC"
+    },
+    {
+        "name": "Addis Ababa, Ethiopia [ETADD]",
+        "value": "ETADD"
+    },
+    {
+        "name": "Awassa, Ethiopia [ETAWA]",
+        "value": "ETAWA"
+    },
+    {
+        "name": "Bahar Dar, Ethiopia [ETBJR]",
+        "value": "ETBJR"
+    },
+    {
+        "name": "Commet, Ethiopia [ETCOM]",
+        "value": "ETCOM"
+    },
+    {
+        "name": "Diredawa, Ethiopia [ETDIR]",
+        "value": "ETDIR"
+    },
+    {
+        "name": "Dukem, Ethiopia [ETDKM]",
+        "value": "ETDKM"
+    },
+    {
+        "name": "Holeta Genet, Ethiopia [ETHOG]",
+        "value": "ETHOG"
+    },
+    {
+        "name": "Mojo, Ethiopia [ETMOJ]",
+        "value": "ETMOJ"
+    },
+    {
+        "name": "Makale, Ethiopia [ETMQX]",
+        "value": "ETMQX"
+    },
+    {
+        "name": "Kembolcha, Ethiopia [ETOKA]",
+        "value": "ETOKA"
+    },
+    {
+        "name": "Semera, Ethiopia [ETSEM]",
+        "value": "ETSEM"
+    },
+    {
+        "name": "Lautoka, Fiji [FJLTK]",
+        "value": "FJLTK"
+    },
+    {
+        "name": "Suva, Fiji [FJSUV]",
+        "value": "FJSUV"
+    },
+    {
+        "name": "Kosrae, Micronesia [FMKSA]",
+        "value": "FMKSA"
+    },
+    {
+        "name": "Pohnpei, Micronesia [FMPNI]",
+        "value": "FMPNI"
+    },
+    {
+        "name": "Chuuk, Micronesia [FMTKK]",
+        "value": "FMTKK"
+    },
+    {
+        "name": "Yap, Micronesia [FMYAP]",
+        "value": "FMYAP"
+    },
+    {
+        "name": "Dunkerque, France [FRDKK]",
+        "value": "FRDKK"
+    },
+    {
+        "name": "Le Havre, France [FRLEH]",
+        "value": "FRLEH"
+    },
+    {
+        "name": "Paris, France [FRPAR]",
+        "value": "FRPAR"
+    },
+    {
+        "name": "Strasbourg, France [FRSXB]",
+        "value": "FRSXB"
+    },
+    {
+        "name": "Libreville, Gabon [GALBV]",
+        "value": "GALBV"
+    },
+    {
+        "name": "Franceville, Gabon [GAMVB]",
+        "value": "GAMVB"
+    },
+    {
+        "name": "Port Gentil, Gabon [GAPOG]",
+        "value": "GAPOG"
+    },
+    {
+        "name": "London, United Kingdom [GBLON]",
+        "value": "GBLON"
+    },
+    {
+        "name": "Kumasi, Ghana [GHKMS]",
+        "value": "GHKMS"
+    },
+    {
+        "name": "Tema, Ghana [GHTEM]",
+        "value": "GHTEM"
+    },
+    {
+        "name": "Takoradi, Ghana [GHTKD]",
+        "value": "GHTKD"
+    },
+    {
+        "name": "Gibraltar, Gibraltar [GIGIB]",
+        "value": "GIGIB"
+    },
+    {
+        "name": "Conakry, Guinea [GNCKY]",
+        "value": "GNCKY"
+    },
+    {
+        "name": "Bata, Equatorial Guinea [GQBSG]",
+        "value": "GQBSG"
+    },
+    {
+        "name": "Piraeus, Greece [GRPIR]",
+        "value": "GRPIR"
+    },
+    {
+        "name": "Guatemala City, Guatemala [GTGUA]",
+        "value": "GTGUA"
+    },
+    {
+        "name": "Puerto Quetzal, Guatemala [GTPRQ]",
+        "value": "GTPRQ"
+    },
+    {
+        "name": "Retalhuleu, Guatemala [GTRTE]",
+        "value": "GTRTE"
+    },
+    {
+        "name": "Puerto Quetzal, Guatemala [GTTCQ]",
+        "value": "GTTCQ"
+    },
+    {
+        "name": "Guam, Guam [GUGUM]",
+        "value": "GUGUM"
+    },
+    {
+        "name": "Hong Kong, Hong Kong [HKHKG]",
+        "value": "HKHKG"
+    },
+    {
+        "name": "Banjarmasin, Indonesia [IDBDJ]",
+        "value": "IDBDJ"
+    },
+    {
+        "name": "Belawan, Indonesia [IDBLW]",
+        "value": "IDBLW"
+    },
+    {
+        "name": "Balikpapan, Indonesia [IDBPN]",
+        "value": "IDBPN"
+    },
+    {
+        "name": "Batam, Indonesia [IDBTM]",
+        "value": "IDBTM"
+    },
+    {
+        "name": "Buatan, Indonesia [IDBUN]",
+        "value": "IDBUN"
+    },
+    {
+        "name": "Jakarta (UTC3), Indonesia [IDJK3]",
+        "value": "IDJK3"
+    },
+    {
+        "name": "Jakarta, Indonesia [IDJKT]",
+        "value": "IDJKT"
+    },
+    {
+        "name": "Kabil, Pulau Batam, Indonesia [IDKAB]",
+        "value": "IDKAB"
+    },
+    {
+        "name": "Kidjang Bintan, Indonesia [IDKID]",
+        "value": "IDKID"
+    },
+    {
+        "name": "Pangkal Balam Banka, Indonesia [IDPGX]",
+        "value": "IDPGX"
+    },
+    {
+        "name": "Palembang, Indonesia [IDPLM]",
+        "value": "IDPLM"
+    },
+    {
+        "name": "Panjang, Indonesia [IDPNJ]",
+        "value": "IDPNJ"
+    },
+    {
+        "name": "Pontianak, Indonesia [IDPNK]",
+        "value": "IDPNK"
+    },
+    {
+        "name": "Semarang, Indonesia [IDSRG]",
+        "value": "IDSRG"
+    },
+    {
+        "name": "Samarinda, Indonesia [IDSRI]",
+        "value": "IDSRI"
+    },
+    {
+        "name": "Surabaya, Indonesia [IDSUB]",
+        "value": "IDSUB"
+    },
+    {
+        "name": "Ujung Pandangmakassar, Indonesia [IDUPG]",
+        "value": "IDUPG"
+    },
+    {
+        "name": "Icd Ankleshwar, India [INAKV]",
+        "value": "INAKV"
+    },
+    {
+        "name": "Ahmedabad, India [INAMD]",
+        "value": "INAMD"
+    },
+    {
+        "name": "Bangalore, India [INBLR]",
+        "value": "INBLR"
+    },
+    {
+        "name": "Mumbai, India [INBOM]",
+        "value": "INBOM"
+    },
+    {
+        "name": "Icd Baroda Icd Dashrath, India [INBRC]",
+        "value": "INBRC"
+    },
+    {
+        "name": "Calcutta, India [INCCU]",
+        "value": "INCCU"
+    },
+    {
+        "name": "Coimbatore, India [INCJB]",
+        "value": "INCJB"
+    },
+    {
+        "name": "Cochin, India [INCOK]",
+        "value": "INCOK"
+    },
+    {
+        "name": "New Delhi, India [INDEL]",
+        "value": "INDEL"
+    },
+    {
+        "name": "Dadri, India [INDRI]",
+        "value": "INDRI"
+    },
+    {
+        "name": "Durgapur, India [INDUR]",
+        "value": "INDUR"
+    },
+    {
+        "name": "Faridabad, India [INFBD]",
+        "value": "INFBD"
+    },
+    {
+        "name": "Garhi Harsaru, India [INGHR]",
+        "value": "INGHR"
+    },
+    {
+        "name": "Haldia, India [INHAL]",
+        "value": "INHAL"
+    },
+    {
+        "name": "Hyderabad, India [INHYD]",
+        "value": "INHYD"
+    },
+    {
+        "name": "Hazira, India [INHZR]",
+        "value": "INHZR"
+    },
+    {
+        "name": "Irungattukottai, India [INILP]",
+        "value": "INILP"
+    },
+    {
+        "name": "Mangalore, India [INIXE]",
+        "value": "INIXE"
+    },
+    {
+        "name": "Jaipur, India [INJAI]",
+        "value": "INJAI"
+    },
+    {
+        "name": "Kattupalli, India [INKAT]",
+        "value": "INKAT"
+    },
+    {
+        "name": "Krishnapatnam, India [INKRI]",
+        "value": "INKRI"
+    },
+    {
+        "name": "Icd Loni, India [INLON]",
+        "value": "INLON"
+    },
+    {
+        "name": "Ludhianasahnewal, India [INLUH]",
+        "value": "INLUH"
+    },
+    {
+        "name": "Chennai, India [INMAA]",
+        "value": "INMAA"
+    },
+    {
+        "name": "Mulund, India [INMUL]",
+        "value": "INMUL"
+    },
+    {
+        "name": "Mundra, India [INMUN]",
+        "value": "INMUN"
+    },
+    {
+        "name": "Nagpur, India [INNAG]",
+        "value": "INNAG"
+    },
+    {
+        "name": "Nhava Sheva, India [INNSA]",
+        "value": "INNSA"
+    },
+    {
+        "name": "Pipavav, India [INPAV]",
+        "value": "INPAV"
+    },
+    {
+        "name": "Icd Pithampur Icd Indore, India [INPIR]",
+        "value": "INPIR"
+    },
+    {
+        "name": "Pune, India [INPNQ]",
+        "value": "INPNQ"
+    },
+    {
+        "name": "Pondicherry, India [INPNY]",
+        "value": "INPNY"
+    },
+    {
+        "name": "Paradeep, India [INPRT]",
+        "value": "INPRT"
+    },
+    {
+        "name": "Dict Sonepat, India [INSON]",
+        "value": "INSON"
+    },
+    {
+        "name": "Tughlakabad, India [INTKD]",
+        "value": "INTKD"
+    },
+    {
+        "name": "Tuticorin, India [INTUT]",
+        "value": "INTUT"
+    },
+    {
+        "name": "Visakhapatnam, India [INVTZ]",
+        "value": "INVTZ"
+    },
+    {
+        "name": "Basra, Iraq [IQBSR]",
+        "value": "IQBSR"
+    },
+    {
+        "name": "Erbil International Apt, Iraq [IQEBL]",
+        "value": "IQEBL"
+    },
+    {
+        "name": "Iraq Project Terminal, Iraq [IQIPT]",
+        "value": "IQIPT"
+    },
+    {
+        "name": "Umm Qasr South Terminal, Iraq [IQIQS]",
+        "value": "IQIQS"
+    },
+    {
+        "name": "Khor Al Zubair, Iraq [IQKAZ]",
+        "value": "IQKAZ"
+    },
+    {
+        "name": "Umm Qasr, Iraq [IQUQR]",
+        "value": "IQUQR"
+    },
+    {
+        "name": "Genoa, Italy [ITGOA]",
+        "value": "ITGOA"
+    },
+    {
+        "name": "Milano, Italy [ITMIL]",
+        "value": "ITMIL"
+    },
+    {
+        "name": "Casalnuovo Di Napoli, Italy [ITOVO]",
+        "value": "ITOVO"
+    },
+    {
+        "name": "Amman, Jordan [JOAMM]",
+        "value": "JOAMM"
+    },
+    {
+        "name": "Aqaba Special Economic Zoneaseza, Jordan [JOAQB]",
+        "value": "JOAQB"
+    },
+    {
+        "name": "Aqaba, Jordan [JOAQJ]",
+        "value": "JOAQJ"
+    },
+    {
+        "name": "Maan, Jordan [JOMPQ]",
+        "value": "JOMPQ"
+    },
+    {
+        "name": "Irbid, Jordan [JOQIR]",
+        "value": "JOQIR"
+    },
+    {
+        "name": "Az Zarqa, Jordan [JOZAR]",
+        "value": "JOZAR"
+    },
+    {
+        "name": "Zerka Free Zone, Jordan [JOZFZ]",
+        "value": "JOZFZ"
+    },
+    {
+        "name": "Hachinohe, Japan [JPHHE]",
+        "value": "JPHHE"
+    },
+    {
+        "name": "Hakata, Japan [JPHKT]",
+        "value": "JPHKT"
+    },
+    {
+        "name": "Niigata, Japan [JPKIJ]",
+        "value": "JPKIJ"
+    },
+    {
+        "name": "Moji, Japan [JPMOJ]",
+        "value": "JPMOJ"
+    },
+    {
+        "name": "Naha, Japan [JPNAH]",
+        "value": "JPNAH"
+    },
+    {
+        "name": "Nagoya, Japan [JPNGO]",
+        "value": "JPNGO"
+    },
+    {
+        "name": "Osaka, Japan [JPOSA]",
+        "value": "JPOSA"
+    },
+    {
+        "name": "Sendai Miyagi, Japan [JPSDJ]",
+        "value": "JPSDJ"
+    },
+    {
+        "name": "Shimizu, Japan [JPSMZ]",
+        "value": "JPSMZ"
+    },
+    {
+        "name": "Tomakomai, Japan [JPTMK]",
+        "value": "JPTMK"
+    },
+    {
+        "name": "Toyama, Japan [JPTOY]",
+        "value": "JPTOY"
+    },
+    {
+        "name": "Tokyo, Japan [JPTYO]",
+        "value": "JPTYO"
+    },
+    {
+        "name": "Kobe, Japan [JPUKB]",
+        "value": "JPUKB"
+    },
+    {
+        "name": "Yokohama, Japan [JPYOK]",
+        "value": "JPYOK"
+    },
+    {
+        "name": "Embakasi, Kenya [KEEMB]",
+        "value": "KEEMB"
+    },
+    {
+        "name": "Kisumu, Kenya [KEKIS]",
+        "value": "KEKIS"
+    },
+    {
+        "name": "Mombasa, Kenya [KEMBA]",
+        "value": "KEMBA"
+    },
+    {
+        "name": "Nairobi, Kenya [KENBO]",
+        "value": "KENBO"
+    },
+    {
+        "name": "Sihanoukville, Cambodia [KHKOS]",
+        "value": "KHKOS"
+    },
+    {
+        "name": "Phnom Penh, Cambodia [KHPNH]",
+        "value": "KHPNH"
+    },
+    {
+        "name": "Christmas Island, Kiribati [KICXI]",
+        "value": "KICXI"
+    },
+    {
+        "name": "Tarawa, Kiribati [KITRW]",
+        "value": "KITRW"
+    },
+    {
+        "name": "Hwaseong, Korea [KRHWS]",
+        "value": "KRHWS"
+    },
+    {
+        "name": "Icheon, Korea [KRICE]",
+        "value": "KRICE"
+    },
+    {
+        "name": "Incheon, Korea [KRINC]",
+        "value": "KRINC"
+    },
+    {
+        "name": "Kwanyang, Korea [KRKAN]",
+        "value": "KRKAN"
+    },
+    {
+        "name": "Pohang, Korea [KRKPO]",
+        "value": "KRKPO"
+    },
+    {
+        "name": "Gwangju, Korea [KRKWJ]",
+        "value": "KRKWJ"
+    },
+    {
+        "name": "Pusan, Korea [KRPUS]",
+        "value": "KRPUS"
+    },
+    {
+        "name": "Seoul, Korea [KRSEL]",
+        "value": "KRSEL"
+    },
+    {
+        "name": "Ulsan, Korea [KRUSN]",
+        "value": "KRUSN"
+    },
+    {
+        "name": "Yongin, Korea [KRYNG]",
+        "value": "KRYNG"
+    },
+    {
+        "name": "Kuwaitshuwaikh, Kuwait [KWKWI]",
+        "value": "KWKWI"
+    },
+    {
+        "name": "Shuaiba, Kuwait [KWSAA]",
+        "value": "KWSAA"
+    },
+    {
+        "name": "Grand Cayman, Cayman Islands [KYGCM]",
+        "value": "KYGCM"
+    },
+    {
+        "name": "Vientiane, Laos [LAVTE]",
+        "value": "LAVTE"
+    },
+    {
+        "name": "Colombo, Sri Lanka [LKCMB]",
+        "value": "LKCMB"
+    },
+    {
+        "name": "Monrovia, Liberia [LRMLW]",
+        "value": "LRMLW"
+    },
+    {
+        "name": "Tamatave, Madagascar [MGTMM]",
+        "value": "MGTMM"
+    },
+    {
+        "name": "Antananarivo, Madagascar [MGTNR]",
+        "value": "MGTNR"
+    },
+    {
+        "name": "Majuro, Marshall Islands [MHMAJ]",
+        "value": "MHMAJ"
+    },
+    {
+        "name": "Ebeye, Marshall Islands [MHQEE]",
+        "value": "MHQEE"
+    },
+    {
+        "name": "Bamako, Mali [MLBKO]",
+        "value": "MLBKO"
+    },
+    {
+        "name": "Yangon, Myanmar [MMRGN]",
+        "value": "MMRGN"
+    },
+    {
+        "name": "Mitt, Myanmar [MMTLA]",
+        "value": "MMTLA"
+    },
+    {
+        "name": "Ulaan Baatar, Mongolia [MNULN]",
+        "value": "MNULN"
+    },
+    {
+        "name": "Saipan, Northern Mariana Islands [MPSPN]",
+        "value": "MPSPN"
+    },
+    {
+        "name": "Port Louis, Mauritius [MUPLU]",
+        "value": "MUPLU"
+    },
+    {
+        "name": "Male, Maldives [MVMLE]",
+        "value": "MVMLE"
+    },
+    {
+        "name": "Blantyre, Malawi [MWBLZ]",
+        "value": "MWBLZ"
+    },
+    {
+        "name": "Lilongwe, Malawi [MWLLW]",
+        "value": "MWLLW"
+    },
+    {
+        "name": ", Malawi [MWLMB]",
+        "value": "MWLMB"
+    },
+    {
+        "name": "Uruapan, Mexico [MX2NB]",
+        "value": "MX2NB"
+    },
+    {
+        "name": "Aguascalientes, Mexico [MXAGU]",
+        "value": "MXAGU"
+    },
+    {
+        "name": "Guadalajara, Mexico [MXGDL]",
+        "value": "MXGDL"
+    },
+    {
+        "name": "Huejotzing Puebla, Mexico [MXHJT]",
+        "value": "MXHJT"
+    },
+    {
+        "name": "Leon, Mexico [MXLEN]",
+        "value": "MXLEN"
+    },
+    {
+        "name": "Los Reyes, Mexico [MXLRY]",
+        "value": "MXLRY"
+    },
+    {
+        "name": "Lazaro Cardenas, Mexico [MXLZC]",
+        "value": "MXLZC"
+    },
+    {
+        "name": "Mexico City, Mexico [MXMEX]",
+        "value": "MXMEX"
+    },
+    {
+        "name": "Monterrey, Mexico [MXMTY]",
+        "value": "MXMTY"
+    },
+    {
+        "name": "Puebla, Mexico [MXPBC]",
+        "value": "MXPBC"
+    },
+    {
+        "name": "Poncitlan, Mexico [MXPTN]",
+        "value": "MXPTN"
+    },
+    {
+        "name": "Patzcuaro, Mexico [MXPTZ]",
+        "value": "MXPTZ"
+    },
+    {
+        "name": "Queretaro, Mexico [MXQRO]",
+        "value": "MXQRO"
+    },
+    {
+        "name": "Salinas Victoria, Mexico [MXSAV]",
+        "value": "MXSAV"
+    },
+    {
+        "name": "San Juan Del Rio, Mexico [MXSJR]",
+        "value": "MXSJR"
+    },
+    {
+        "name": "San Luis Potosi, Mexico [MXSLP]",
+        "value": "MXSLP"
+    },
+    {
+        "name": "Tecoman, Mexico [MXTCM]",
+        "value": "MXTCM"
+    },
+    {
+        "name": "Tinguindin, Mexico [MXTIN]",
+        "value": "MXTIN"
+    },
+    {
+        "name": "Toluca, Mexico [MXTLC]",
+        "value": "MXTLC"
+    },
+    {
+        "name": "Teapa, Mexico [MXTPA]",
+        "value": "MXTPA"
+    },
+    {
+        "name": "Manzanillo, Mexico [MXZLO]",
+        "value": "MXZLO"
+    },
+    {
+        "name": "Periban, Mexico [MXZPN]",
+        "value": "MXZPN"
+    },
+    {
+        "name": "Kota Kinabalu, Malaysia [MYBKI]",
+        "value": "MYBKI"
+    },
+    {
+        "name": "Bintulu, Malaysia [MYBTU]",
+        "value": "MYBTU"
+    },
+    {
+        "name": "Kuching, Malaysia [MYKCH]",
+        "value": "MYKCH"
+    },
+    {
+        "name": "Kuantan, Malaysia [MYKUA]",
+        "value": "MYKUA"
+    },
+    {
+        "name": "Labuan, Malaysia [MYLBU]",
+        "value": "MYLBU"
+    },
+    {
+        "name": "Miri, Malaysia [MYMYY]",
+        "value": "MYMYY"
+    },
+    {
+        "name": "Penang, Malaysia [MYPEN]",
+        "value": "MYPEN"
+    },
+    {
+        "name": "Pasir Gudang, Malaysia [MYPGU]",
+        "value": "MYPGU"
+    },
+    {
+        "name": "Port Kelang, Malaysia [MYPKG]",
+        "value": "MYPKG"
+    },
+    {
+        "name": "Sibu, Malaysia [MYSBW]",
+        "value": "MYSBW"
+    },
+    {
+        "name": "Sandakan, Malaysia [MYSDK]",
+        "value": "MYSDK"
+    },
+    {
+        "name": "Tanjung Manis, Malaysia [MYTMP]",
+        "value": "MYTMP"
+    },
+    {
+        "name": "Tanjung Pelepas, Malaysia [MYTPP]",
+        "value": "MYTPP"
+    },
+    {
+        "name": "Tawau, Malaysia [MYTWU]",
+        "value": "MYTWU"
+    },
+    {
+        "name": "Port Kelang West Port, Malaysia [MYWSP]",
+        "value": "MYWSP"
+    },
+    {
+        "name": "Beira, Mozambique [MZBEW]",
+        "value": "MZBEW"
+    },
+    {
+        "name": "Nacala, Mozambique [MZMNC]",
+        "value": "MZMNC"
+    },
+    {
+        "name": "Maputo, Mozambique [MZMPM]",
+        "value": "MZMPM"
+    },
+    {
+        "name": "Pemba, Mozambique [MZPOL]",
+        "value": "MZPOL"
+    },
+    {
+        "name": "Walvis Bay, Namibia [NAWVB]",
+        "value": "NAWVB"
+    },
+    {
+        "name": "Noumea, New Caledonia [NCNOU]",
+        "value": "NCNOU"
+    },
+    {
+        "name": "Maradi, Niger [NEMFQ]",
+        "value": "NEMFQ"
+    },
+    {
+        "name": "Niameyvia Cotonou, Niger [NENIM]",
+        "value": "NENIM"
+    },
+    {
+        "name": "Norfolk Island, Norfolk Island [NFNLK]",
+        "value": "NFNLK"
+    },
+    {
+        "name": "Calabar, Nigeria [NGCBQ]",
+        "value": "NGCBQ"
+    },
+    {
+        "name": "Kano, Nigeria [NGKAN]",
+        "value": "NGKAN"
+    },
+    {
+        "name": "Lagos / Apapa, Nigeria [NGLOS]",
+        "value": "NGLOS"
+    },
+    {
+        "name": "Onne, Nigeria [NGONN]",
+        "value": "NGONN"
+    },
+    {
+        "name": "Tincan, Nigeria [NGTIN]",
+        "value": "NGTIN"
+    },
+    {
+        "name": "Amsterdam, Netherlands [NLAMS]",
+        "value": "NLAMS"
+    },
+    {
+        "name": "The Hague, Netherlands [NLHA9]",
+        "value": "NLHA9"
+    },
+    {
+        "name": "Rotterdam, Netherlands [NLRTM]",
+        "value": "NLRTM"
+    },
+    {
+        "name": ", Nepal [NPBRG]",
+        "value": "NPBRG"
+    },
+    {
+        "name": "Kathmandu, Nepal [NPKTM]",
+        "value": "NPKTM"
+    },
+    {
+        "name": "Auckland, New Zealand [NZAKL]",
+        "value": "NZAKL"
+    },
+    {
+        "name": "Belfast, New Zealand [NZBEL]",
+        "value": "NZBEL"
+    },
+    {
+        "name": "Bluff, New Zealand [NZBLU]",
+        "value": "NZBLU"
+    },
+    {
+        "name": "Dunedin, New Zealand [NZDUD]",
+        "value": "NZDUD"
+    },
+    {
+        "name": "Hamilton, New Zealand [NZHLZ]",
+        "value": "NZHLZ"
+    },
+    {
+        "name": "Invercargill, New Zealand [NZIVC]",
+        "value": "NZIVC"
+    },
+    {
+        "name": "Lyttelton, New Zealand [NZLYT]",
+        "value": "NZLYT"
+    },
+    {
+        "name": "Marsden Point, New Zealand [NZMAP]",
+        "value": "NZMAP"
+    },
+    {
+        "name": "Metroport/Auckland, New Zealand [NZMKL]",
+        "value": "NZMKL"
+    },
+    {
+        "name": "Napier, New Zealand [NZNPE]",
+        "value": "NZNPE"
+    },
+    {
+        "name": "New Plymouth, New Zealand [NZNPL]",
+        "value": "NZNPL"
+    },
+    {
+        "name": "Nelson, New Zealand [NZNSN]",
+        "value": "NZNSN"
+    },
+    {
+        "name": "Palmerston North, New Zealand [NZPMR]",
+        "value": "NZPMR"
+    },
+    {
+        "name": "Port Chalmers, New Zealand [NZPOE]",
+        "value": "NZPOE"
+    },
+    {
+        "name": "Timaru, New Zealand [NZTIU]",
+        "value": "NZTIU"
+    },
+    {
+        "name": "Temuka, New Zealand [NZTKA]",
+        "value": "NZTKA"
+    },
+    {
+        "name": "Tauranga, New Zealand [NZTRG]",
+        "value": "NZTRG"
+    },
+    {
+        "name": "Wellington, New Zealand [NZWLG]",
+        "value": "NZWLG"
+    },
+    {
+        "name": "Whangarei, New Zealand [NZWRE]",
+        "value": "NZWRE"
+    },
+    {
+        "name": "Duqm, Oman [OMDQM]",
+        "value": "OMDQM"
+    },
+    {
+        "name": "Salalah, Oman [OMSLL]",
+        "value": "OMSLL"
+    },
+    {
+        "name": "Sohar, Oman [OMSOH]",
+        "value": "OMSOH"
+    },
+    {
+        "name": "Panama City, Panama [PAPTY]",
+        "value": "PAPTY"
+    },
+    {
+        "name": "Callao, Peru [PECLL]",
+        "value": "PECLL"
+    },
+    {
+        "name": "Lima, Peru [PELIM]",
+        "value": "PELIM"
+    },
+    {
+        "name": "Paita, Peru [PEPAI]",
+        "value": "PEPAI"
+    },
+    {
+        "name": "Papeete, French Polynesia [PFPPT]",
+        "value": "PFPPT"
+    },
+    {
+        "name": "Alotau, Papua New Guinea [PGGUR]",
+        "value": "PGGUR"
+    },
+    {
+        "name": "Kimbe, Papua New Guinea [PGKIM]",
+        "value": "PGKIM"
+    },
+    {
+        "name": "Kavieng, Papua New Guinea [PGKVG]",
+        "value": "PGKVG"
+    },
+    {
+        "name": "Lae, Papua New Guinea [PGLAE]",
+        "value": "PGLAE"
+    },
+    {
+        "name": "Madang, Papua New Guinea [PGMAG]",
+        "value": "PGMAG"
+    },
+    {
+        "name": "Port Moresby, Papua New Guinea [PGPOM]",
+        "value": "PGPOM"
+    },
+    {
+        "name": "Rabaul, Papua New Guinea [PGRAB]",
+        "value": "PGRAB"
+    },
+    {
+        "name": "Wewak, Papua New Guinea [PGWWK]",
+        "value": "PGWWK"
+    },
+    {
+        "name": "Batangas, Philippines [PHBTG]",
+        "value": "PHBTG"
+    },
+    {
+        "name": "Cebu, Philippines [PHCEB]",
+        "value": "PHCEB"
+    },
+    {
+        "name": "Cagayan De Oro, Philippines [PHCGY]",
+        "value": "PHCGY"
+    },
+    {
+        "name": "Davao, Philippines [PHDCT]",
+        "value": "PHDCT"
+    },
+    {
+        "name": "General Santos, Philippines [PHGES]",
+        "value": "PHGES"
+    },
+    {
+        "name": "Manila North Port, Philippines [PHMNL]",
+        "value": "PHMNL"
+    },
+    {
+        "name": "Manila (South Harbour), Philippines [PHMNS]",
+        "value": "PHMNS"
+    },
+    {
+        "name": "Port Qasim, Pakistan [PKBQM]",
+        "value": "PKBQM"
+    },
+    {
+        "name": "Karachi International Container Terminal Ltd, Pakistan [PKKCT]",
+        "value": "PKKCT"
+    },
+    {
+        "name": "Karachi, Pakistan [PKKHI]",
+        "value": "PKKHI"
+    },
+    {
+        "name": "Lahore, Pakistan [PKLHE]",
+        "value": "PKLHE"
+    },
+    {
+        "name": "Faisalabad, Pakistan [PKLYP]",
+        "value": "PKLYP"
+    },
+    {
+        "name": "South Asia Pakistan Terminal, Pakistan [PKSAP]",
+        "value": "PKSAP"
+    },
+    {
+        "name": "Koror, Palau [PWROR]",
+        "value": "PWROR"
+    },
+    {
+        "name": "Hamad, QAT [QAHMD]",
+        "value": "QAHMD"
+    },
+    {
+        "name": "Reunion, Reunion Island [REREU]",
+        "value": "REREU"
+    },
+    {
+        "name": "Constantza, Romania [ROCND]",
+        "value": "ROCND"
+    },
+    {
+        "name": "St Petersburg, Russian Federation [RULED]",
+        "value": "RULED"
+    },
+    {
+        "name": "Moscow, Russian Federation [RUMOW]",
+        "value": "RUMOW"
+    },
+    {
+        "name": "Nakhodka, Russian Federation [RUNJK]",
+        "value": "RUNJK"
+    },
+    {
+        "name": "Novorossiysk, Russian Federation [RUNVS]",
+        "value": "RUNVS"
+    },
+    {
+        "name": "Vladivostok, Russian Federation [RUVVO]",
+        "value": "RUVVO"
+    },
+    {
+        "name": "Vostochny, Russian Federation [RUVYP]",
+        "value": "RUVYP"
+    },
+    {
+        "name": "Kigali, Rwanda [RWKGL]",
+        "value": "RWKGL"
+    },
+    {
+        "name": "Ad Dammam, Saudi Arabia [SADMM]",
+        "value": "SADMM"
+    },
+    {
+        "name": "Jizan, Saudi Arabia [SAGIZ]",
+        "value": "SAGIZ"
+    },
+    {
+        "name": "Jeddah, Saudi Arabia [SAJED]",
+        "value": "SAJED"
+    },
+    {
+        "name": "Jubail, Saudi Arabia [SAJUB]",
+        "value": "SAJUB"
+    },
+    {
+        "name": "Riyadh, Saudi Arabia [SARUH]",
+        "value": "SARUH"
+    },
+    {
+        "name": "Honiara, Solomon Islands [SBHIR]",
+        "value": "SBHIR"
+    },
+    {
+        "name": "Khartoum, Sudan [SDKRT]",
+        "value": "SDKRT"
+    },
+    {
+        "name": "Port Sudan, Sudan [SDPZU]",
+        "value": "SDPZU"
+    },
+    {
+        "name": ", Sudan [SDZZZ]",
+        "value": "SDZZZ"
+    },
+    {
+        "name": "Djibouti (ESL Billing), Singapore [SGJIB]",
+        "value": "SGJIB"
+    },
+    {
+        "name": "Singapore, Singapore [SGSIN]",
+        "value": "SGSIN"
+    },
+    {
+        "name": "MELL Singapore, Singapore [SGTPG]",
+        "value": "SGTPG"
+    },
+    {
+        "name": "Freetown, Sierra Leone [SLFNA]",
+        "value": "SLFNA"
+    },
+    {
+        "name": "Berbera, Somalia [SOBBO]",
+        "value": "SOBBO"
+    },
+    {
+        "name": "Mogadishu, Somalia [SOMGQ]",
+        "value": "SOMGQ"
+    },
+    {
+        "name": "Juba, South Sudan [SSJUB]",
+        "value": "SSJUB"
+    },
+    {
+        "name": "Ndjamenavia Douala, Chad [TDNDJ]",
+        "value": "TDNDJ"
+    },
+    {
+        "name": "Lome, Togo [TGLFW]",
+        "value": "TGLFW"
+    },
+    {
+        "name": "Bangkok, Thailand [THBKK]",
+        "value": "THBKK"
+    },
+    {
+        "name": "Bangkok (BMTP), Thailand [THBMT]",
+        "value": "THBMT"
+    },
+    {
+        "name": "Laem Chabang, Thailand [THLCH]",
+        "value": "THLCH"
+    },
+    {
+        "name": "Lat Krabang, Thailand [THLKR]",
+        "value": "THLKR"
+    },
+    {
+        "name": "Rayong, Thailand [THRYG]",
+        "value": "THRYG"
+    },
+    {
+        "name": "Siam Container Terminal, Thailand [THSCT]",
+        "value": "THSCT"
+    },
+    {
+        "name": "Songkhla, Thailand [THSGZ]",
+        "value": "THSGZ"
+    },
+    {
+        "name": "Sahathai Terminal Co Ltd, Thailand [THSHT]",
+        "value": "THSHT"
+    },
+    {
+        "name": "Thai Prosperity Terminal, Thailand [THTPT]",
+        "value": "THTPT"
+    },
+    {
+        "name": "Unithai Container Terminal, Thailand [THUCT]",
+        "value": "THUCT"
+    },
+    {
+        "name": "Dushanbe, Tajikistan [TJDYU]",
+        "value": "TJDYU"
+    },
+    {
+        "name": "Dili, Timor-Leste [TLDIL]",
+        "value": "TLDIL"
+    },
+    {
+        "name": "Ashkhabad, Turkmenistan [TMASB]",
+        "value": "TMASB"
+    },
+    {
+        "name": "Nukualofa, Tonga [TOTBU]",
+        "value": "TOTBU"
+    },
+    {
+        "name": "Vavau, Tonga [TOVAV]",
+        "value": "TOVAV"
+    },
+    {
+        "name": "Istanbul, Turkey [TRIST]",
+        "value": "TRIST"
+    },
+    {
+        "name": "Izmir, Turkey [TRIZM]",
+        "value": "TRIZM"
+    },
+    {
+        "name": "Mersin, Turkey [TRMER]",
+        "value": "TRMER"
+    },
+    {
+        "name": "Funafuti, Tuvalu [TVFUN]",
+        "value": "TVFUN"
+    },
+    {
+        "name": "Keelung, Taiwan [TWKEL]",
+        "value": "TWKEL"
+    },
+    {
+        "name": "Kaohsiung, Taiwan [TWKHH]",
+        "value": "TWKHH"
+    },
+    {
+        "name": "Taipei, Taiwan [TWTPE]",
+        "value": "TWTPE"
+    },
+    {
+        "name": "Taichung, Taiwan [TWTXG]",
+        "value": "TWTXG"
+    },
+    {
+        "name": "Taoyuan, Taiwan [TWTYN]",
+        "value": "TWTYN"
+    },
+    {
+        "name": "Arusha, Tanzania [TZARK]",
+        "value": "TZARK"
+    },
+    {
+        "name": "Dar Es Salaam, Tanzania [TZDAR]",
+        "value": "TZDAR"
+    },
+    {
+        "name": "Mwanza, Tanzania [TZMWZ]",
+        "value": "TZMWZ"
+    },
+    {
+        "name": "Mtwara, Tanzania [TZMYW]",
+        "value": "TZMYW"
+    },
+    {
+        "name": "Tanga, Tanzania [TZTGT]",
+        "value": "TZTGT"
+    },
+    {
+        "name": "Zanzibar, Tanzania [TZZNZ]",
+        "value": "TZZNZ"
+    },
+    {
+        "name": "Ilichevsk, Ukraine [UAILK]",
+        "value": "UAILK"
+    },
+    {
+        "name": "Odessa, Ukraine [UAODS]",
+        "value": "UAODS"
+    },
+    {
+        "name": "Entebbe, Uganda [UGEBB]",
+        "value": "UGEBB"
+    },
+    {
+        "name": "Jinja, Uganda [UGJIN]",
+        "value": "UGJIN"
+    },
+    {
+        "name": "Kampala, Uganda [UGKLA]",
+        "value": "UGKLA"
+    },
+    {
+        "name": "Mbale, Uganda [UGMBA]",
+        "value": "UGMBA"
+    },
+    {
+        "name": "Masaka, Uganda [UGMSK]",
+        "value": "UGMSK"
+    },
+    {
+        "name": "Argos, In, United States [USAGJ]",
+        "value": "USAGJ"
+    },
+    {
+        "name": ", United States [USAIC]",
+        "value": "USAIC"
+    },
+    {
+        "name": "Napa, CA, United States [USAPC]",
+        "value": "USAPC"
+    },
+    {
+        "name": "Arlington, Tx, United States [USARJ]",
+        "value": "USARJ"
+    },
+    {
+        "name": ", United States [USARO]",
+        "value": "USARO"
+    },
+    {
+        "name": "Atlanta, United States [USATL]",
+        "value": "USATL"
+    },
+    {
+        "name": "Athens, United States [USAWX]",
+        "value": "USAWX"
+    },
+    {
+        "name": "Algona, United States [USAXG]",
+        "value": "USAXG"
+    },
+    {
+        "name": "Bluffton In, United States [USBFE]",
+        "value": "USBFE"
+    },
+    {
+        "name": "Bluffton, OH, United States [USBHK]",
+        "value": "USBHK"
+    },
+    {
+        "name": "Wooster, Oh, United States [USBJJ]",
+        "value": "USBJJ"
+    },
+    {
+        "name": "Bensenville, United States [USBNV]",
+        "value": "USBNV"
+    },
+    {
+        "name": "Boston, United States [USBOS]",
+        "value": "USBOS"
+    },
+    {
+        "name": "Berlin WI, United States [USBRB]",
+        "value": "USBRB"
+    },
+    {
+        "name": "Brownsville, Tn, United States [USBSD]",
+        "value": "USBSD"
+    },
+    {
+        "name": "Brownsville, IN, United States [USBW8]",
+        "value": "USBW8"
+    },
+    {
+        "name": "Brownsburg, United States [USBWB]",
+        "value": "USBWB"
+    },
+    {
+        "name": "Brownwood, TX, United States [USBWD]",
+        "value": "USBWD"
+    },
+    {
+        "name": "Chicago, United States [USCHI]",
+        "value": "USCHI"
+    },
+    {
+        "name": ", United States [USCHK]",
+        "value": "USCHK"
+    },
+    {
+        "name": "Cleveland Oh, United States [USCLE]",
+        "value": "USCLE"
+    },
+    {
+        "name": "Columbus, United States [USCMH]",
+        "value": "USCMH"
+    },
+    {
+        "name": "Chino, United States [USCNO]",
+        "value": "USCNO"
+    },
+    {
+        "name": "Colorado Springs, CO, United States [USCOS]",
+        "value": "USCOS"
+    },
+    {
+        "name": ", United States [USCPK]",
+        "value": "USCPK"
+    },
+    {
+        "name": "Compton, CA, United States [USCPM]",
+        "value": "USCPM"
+    },
+    {
+        "name": "Commerce/Los Angeles, United States [USCRC]",
+        "value": "USCRC"
+    },
+    {
+        "name": "Carson, CA, United States [USCRU]",
+        "value": "USCRU"
+    },
+    {
+        "name": "Coshocton, United States [USCSC]",
+        "value": "USCSC"
+    },
+    {
+        "name": "Crete, United States [USCTF]",
+        "value": "USCTF"
+    },
+    {
+        "name": "Cincinnati, United States [USCVG]",
+        "value": "USCVG"
+    },
+    {
+        "name": ", United States [USCWI]",
+        "value": "USCWI"
+    },
+    {
+        "name": "Clearwater, NE, United States [USCWR]",
+        "value": "USCWR"
+    },
+    {
+        "name": "Dallas Tx, United States [USDAL]",
+        "value": "USDAL"
+    },
+    {
+        "name": "Denver, United States [USDEN]",
+        "value": "USDEN"
+    },
+    {
+        "name": "Des Plaines, United States [USDES]",
+        "value": "USDES"
+    },
+    {
+        "name": "De Pere, United States [USDRW]",
+        "value": "USDRW"
+    },
+    {
+        "name": "Des Moines, United States [USDSM]",
+        "value": "USDSM"
+    },
+    {
+        "name": "Eastlake - OH, United States [USE2L]",
+        "value": "USE2L"
+    },
+    {
+        "name": "Eau Claire, WI, United States [USEAU]",
+        "value": "USEAU"
+    },
+    {
+        "name": "Edgerton - K, United States [USEEU]",
+        "value": "USEEU"
+    },
+    {
+        "name": "Elgin, United States [USEGN]",
+        "value": "USEGN"
+    },
+    {
+        "name": "Elkhart, United States [USEKI]",
+        "value": "USEKI"
+    },
+    {
+        "name": "Elkhorn, WI, United States [USELH]",
+        "value": "USELH"
+    },
+    {
+        "name": "Emporia, United States [USEMP]",
+        "value": "USEMP"
+    },
+    {
+        "name": "Edinburgh, United States [USENB]",
+        "value": "USENB"
+    },
+    {
+        "name": "Erie, United States [USERI]",
+        "value": "USERI"
+    },
+    {
+        "name": "Elk Grove Village, United States [USEVI]",
+        "value": "USEVI"
+    },
+    {
+        "name": "Fresno, CA, United States [USFAT]",
+        "value": "USFAT"
+    },
+    {
+        "name": "Franklin, IN, United States [USFKA]",
+        "value": "USFKA"
+    },
+    {
+        "name": "Florence KY, United States [USFKY]",
+        "value": "USFKY"
+    },
+    {
+        "name": "Franklin Park, United States [USFLI]",
+        "value": "USFLI"
+    },
+    {
+        "name": "Franklin, United States [USFLK]",
+        "value": "USFLK"
+    },
+    {
+        "name": "Fort Collins, CO, United States [USFNL]",
+        "value": "USFNL"
+    },
+    {
+        "name": "Falmouth, United States [USFQZ]",
+        "value": "USFQZ"
+    },
+    {
+        "name": "Fullerton, United States [USFUL]",
+        "value": "USFUL"
+    },
+    {
+        "name": "Fort Worth, United States [USFWT]",
+        "value": "USFWT"
+    },
+    {
+        "name": "Gardena, United States [USGAC]",
+        "value": "USGAC"
+    },
+    {
+        "name": "Gilroy, United States [USGIR]",
+        "value": "USGIR"
+    },
+    {
+        "name": "Green Bay, United States [USGRB]",
+        "value": "USGRB"
+    },
+    {
+        "name": "Greencastle, PA, United States [USGRP]",
+        "value": "USGRP"
+    },
+    {
+        "name": "Garland, United States [USGRX]",
+        "value": "USGRX"
+    },
+    {
+        "name": "Goshen, United States [USGSH]",
+        "value": "USGSH"
+    },
+    {
+        "name": "Groveport, United States [USGVP]",
+        "value": "USGVP"
+    },
+    {
+        "name": "Goodyear, United States [USGYR]",
+        "value": "USGYR"
+    },
+    {
+        "name": "Hesston, United States [USHET]",
+        "value": "USHET"
+    },
+    {
+        "name": ", United States [USHMO]",
+        "value": "USHMO"
+    },
+    {
+        "name": "Honolulu, United States [USHNL]",
+        "value": "USHNL"
+    },
+    {
+        "name": "Hodgkins, United States [USHOK]",
+        "value": "USHOK"
+    },
+    {
+        "name": "Houston Tx, United States [USHOU]",
+        "value": "USHOU"
+    },
+    {
+        "name": "Huntington Beach, CA, United States [USHTD]",
+        "value": "USHTD"
+    },
+    {
+        "name": "Terre Haute, United States [USHUF]",
+        "value": "USHUF"
+    },
+    {
+        "name": "Hudson, United States [USHUO]",
+        "value": "USHUO"
+    },
+    {
+        "name": "Wichita, United States [USICT]",
+        "value": "USICT"
+    },
+    {
+        "name": "Silver Lake, United States [USILK]",
+        "value": "USILK"
+    },
+    {
+        "name": "Wilmington, United States [USILN]",
+        "value": "USILN"
+    },
+    {
+        "name": "Mokena, IL, United States [USIMK]",
+        "value": "USIMK"
+    },
+    {
+        "name": "Indianapolis, United States [USIND]",
+        "value": "USIND"
+    },
+    {
+        "name": "Iowa, United States [USIOW]",
+        "value": "USIOW"
+    },
+    {
+        "name": "Sturgis, United States [USIRS]",
+        "value": "USIRS"
+    },
+    {
+        "name": "Hilo, United States [USITO]",
+        "value": "USITO"
+    },
+    {
+        "name": "Irvineca, United States [USIVN]",
+        "value": "USIVN"
+    },
+    {
+        "name": "Middletown, IN, United States [USJDD]",
+        "value": "USJDD"
+    },
+    {
+        "name": "Jefferson, WI, United States [USJFS]",
+        "value": "USJFS"
+    },
+    {
+        "name": "Jeffersonville In, United States [USJFV]",
+        "value": "USJFV"
+    },
+    {
+        "name": "City Of Industry, United States [USJID]",
+        "value": "USJID"
+    },
+    {
+        "name": "Kansas City Ks, United States [USKCK]",
+        "value": "USKCK"
+    },
+    {
+        "name": "Kendalville, United States [USKDV]",
+        "value": "USKDV"
+    },
+    {
+        "name": "Katy, TX, United States [USKTX]",
+        "value": "USKTX"
+    },
+    {
+        "name": "Kawaihae, United States [USKWH]",
+        "value": "USKWH"
+    },
+    {
+        "name": "Los Angeles, United States [USLAX]",
+        "value": "USLAX"
+    },
+    {
+        "name": "Lebanon, United States [USLBD]",
+        "value": "USLBD"
+    },
+    {
+        "name": "Lincolnwood, United States [USLCW]",
+        "value": "USLCW"
+    },
+    {
+        "name": "Long Beach, United States [USLGB]",
+        "value": "USLGB"
+    },
+    {
+        "name": "Lake Zurich, United States [USLKZ]",
+        "value": "USLKZ"
+    },
+    {
+        "name": "La Mirada, CA, United States [USLMI]",
+        "value": "USLMI"
+    },
+    {
+        "name": "Lincoln, United States [USLNK]",
+        "value": "USLNK"
+    },
+    {
+        "name": "Lathrop, CA, United States [USLRO]",
+        "value": "USLRO"
+    },
+    {
+        "name": ", United States [USLTX]",
+        "value": "USLTX"
+    },
+    {
+        "name": "Louisville, KY, United States [USLUI]",
+        "value": "USLUI"
+    },
+    {
+        "name": "Lawrenceburg, United States [USLVU]",
+        "value": "USLVU"
+    },
+    {
+        "name": "Clyman, WI, United States [USLZA]",
+        "value": "USLZA"
+    },
+    {
+        "name": "Mishawaka, United States [USMCJ]",
+        "value": "USMCJ"
+    },
+    {
+        "name": "Middlebury In, United States [USMDU]",
+        "value": "USMDU"
+    },
+    {
+        "name": "Mentor, United States [USMEA]",
+        "value": "USMEA"
+    },
+    {
+        "name": "Memphis, United States [USMEM]",
+        "value": "USMEM"
+    },
+    {
+        "name": "McHenry,IL, United States [USMHB]",
+        "value": "USMHB"
+    },
+    {
+        "name": "Mira Loma, CA, United States [USMIK]",
+        "value": "USMIK"
+    },
+    {
+        "name": "Milan, United States [USMIQ]",
+        "value": "USMIQ"
+    },
+    {
+        "name": "Muskegon, United States [USMKG]",
+        "value": "USMKG"
+    },
+    {
+        "name": "Momence, United States [USMME]",
+        "value": "USMME"
+    },
+    {
+        "name": "Montpelier, OH, United States [USMMP]",
+        "value": "USMMP"
+    },
+    {
+        "name": "Minneapolis Minnesota, United States [USMSP]",
+        "value": "USMSP"
+    },
+    {
+        "name": "Mesquite, United States [USMSQ]",
+        "value": "USMSQ"
+    },
+    {
+        "name": "Manteno, United States [USMTR]",
+        "value": "USMTR"
+    },
+    {
+        "name": "Nawiliwili, United States [USNIJ]",
+        "value": "USNIJ"
+    },
+    {
+        "name": ", United States [USNNW]",
+        "value": "USNNW"
+    },
+    {
+        "name": "Noblesville, IN, United States [USNVB]",
+        "value": "USNVB"
+    },
+    {
+        "name": "New York, United States [USNYC]",
+        "value": "USNYC"
+    },
+    {
+        "name": "Oakland, United States [USOAK]",
+        "value": "USOAK"
+    },
+    {
+        "name": "Kahului, United States [USOGG]",
+        "value": "USOGG"
+    },
+    {
+        "name": "Olathe, United States [USOLB]",
+        "value": "USOLB"
+    },
+    {
+        "name": "Omaha, United States [USOMA]",
+        "value": "USOMA"
+    },
+    {
+        "name": "Ontario, United States [USONT]",
+        "value": "USONT"
+    },
+    {
+        "name": "Orrville, OH, United States [USORR]",
+        "value": "USORR"
+    },
+    {
+        "name": "Ottawa, IL, United States [USOTW]",
+        "value": "USOTW"
+    },
+    {
+        "name": "Oxnardca, United States [USOXN]",
+        "value": "USOXN"
+    },
+    {
+        "name": "Plainfield, United States [USPAF]",
+        "value": "USPAF"
+    },
+    {
+        "name": "Portlandoregon, United States [USPDX]",
+        "value": "USPDX"
+    },
+    {
+        "name": "Phoenix, United States [USPHX]",
+        "value": "USPHX"
+    },
+    {
+        "name": "Pigeon, United States [USPIG]",
+        "value": "USPIG"
+    },
+    {
+        "name": "Ponca City, United States [USPNC]",
+        "value": "USPNC"
+    },
+    {
+        "name": "Parsippany, NJ, United States [USPPY]",
+        "value": "USPPY"
+    },
+    {
+        "name": "Pico Rivera, CA, United States [USPQU]",
+        "value": "USPQU"
+    },
+    {
+        "name": "Prescott, AR, United States [USPRC]",
+        "value": "USPRC"
+    },
+    {
+        "name": "Paris, United States [USPRP]",
+        "value": "USPRP"
+    },
+    {
+        "name": "Hanover, IL, United States [USQHV]",
+        "value": "USQHV"
+    },
+    {
+        "name": "Riverside, CA, United States [USRAL]",
+        "value": "USRAL"
+    },
+    {
+        "name": "Rancho Belago,CA, United States [USRBQ]",
+        "value": "USRBQ"
+    },
+    {
+        "name": "Rancho Cucamonga, United States [USRCU]",
+        "value": "USRCU"
+    },
+    {
+        "name": "Richmond In, United States [USRID]",
+        "value": "USRID"
+    },
+    {
+        "name": "Roselle Il, United States [USRLL]",
+        "value": "USRLL"
+    },
+    {
+        "name": "Redlands, CA, United States [USRLS]",
+        "value": "USRLS"
+    },
+    {
+        "name": ", United States [USRNO]",
+        "value": "USRNO"
+    },
+    {
+        "name": "Ripon, United States [USRPN]",
+        "value": "USRPN"
+    },
+    {
+        "name": "San Diego, United States [USSAN]",
+        "value": "USSAN"
+    },
+    {
+        "name": "South Bend In, United States [USSBN]",
+        "value": "USSBN"
+    },
+    {
+        "name": "San Bernardino, United States [USSBT]",
+        "value": "USSBT"
+    },
+    {
+        "name": "Stockton, United States [USSCK]",
+        "value": "USSCK"
+    },
+    {
+        "name": "Sidney, Ohio, United States [USSDN]",
+        "value": "USSDN"
+    },
+    {
+        "name": "Seattle, United States [USSEA]",
+        "value": "USSEA"
+    },
+    {
+        "name": "Sterling, United States [USSGI]",
+        "value": "USSGI"
+    },
+    {
+        "name": "Sugar Land, United States [USSGR]",
+        "value": "USSGR"
+    },
+    {
+        "name": "Shreveport, United States [USSHV]",
+        "value": "USSHV"
+    },
+    {
+        "name": "Schiller Park, United States [USSID]",
+        "value": "USSID"
+    },
+    {
+        "name": "Signal Hill, United States [USSII]",
+        "value": "USSII"
+    },
+    {
+        "name": "Salt Lake City, United States [USSLC]",
+        "value": "USSLC"
+    },
+    {
+        "name": "Santa Ana, CA, United States [USSNA]",
+        "value": "USSNA"
+    },
+    {
+        "name": "San Leandro , CA, United States [USSNH]",
+        "value": "USSNH"
+    },
+    {
+        "name": "Solon, OH, United States [USSOO]",
+        "value": "USSOO"
+    },
+    {
+        "name": "Strongsville, United States [USSSV]",
+        "value": "USSSV"
+    },
+    {
+        "name": "Saint Joseph, United States [USSTJ]",
+        "value": "USSTJ"
+    },
+    {
+        "name": "Saint Louis, United States [USSTL]",
+        "value": "USSTL"
+    },
+    {
+        "name": "Tulare, United States [USTLR]",
+        "value": "USTLR"
+    },
+    {
+        "name": "Tonganoxie, United States [USTN3]",
+        "value": "USTN3"
+    },
+    {
+        "name": "Constantine, United States [USTNJ]",
+        "value": "USTNJ"
+    },
+    {
+        "name": "Toledo, OH, United States [USTOL]",
+        "value": "USTOL"
+    },
+    {
+        "name": "Lost Hills, CA, United States [USTSO]",
+        "value": "USTSO"
+    },
+    {
+        "name": "Tukwila, WA, United States [USTUK]",
+        "value": "USTUK"
+    },
+    {
+        "name": "Two Rivers, United States [USTWR]",
+        "value": "USTWR"
+    },
+    {
+        "name": "Troy, United States [USTYH]",
+        "value": "USTYH"
+    },
+    {
+        "name": ", United States [USUJO]",
+        "value": "USUJO"
+    },
+    {
+        "name": "Muskego, WI, United States [USUSG]",
+        "value": "USUSG"
+    },
+    {
+        "name": "Neenah, WI, United States [USUXK]",
+        "value": "USUXK"
+    },
+    {
+        "name": "Vernon Ca, United States [USVCA]",
+        "value": "USVCA"
+    },
+    {
+        "name": ", United States [USVCX]",
+        "value": "USVCX"
+    },
+    {
+        "name": "Vandalia, OH, United States [USVDH]",
+        "value": "USVDH"
+    },
+    {
+        "name": ", United States [USVLL]",
+        "value": "USVLL"
+    },
+    {
+        "name": "Peru, Illinois, United States [USVYS]",
+        "value": "USVYS"
+    },
+    {
+        "name": ", United States [USWBG]",
+        "value": "USWBG"
+    },
+    {
+        "name": ", United States [USWDQ]",
+        "value": "USWDQ"
+    },
+    {
+        "name": "West Fargo, ND, United States [USWFG]",
+        "value": "USWFG"
+    },
+    {
+        "name": "Winn, United States [USWQM]",
+        "value": "USWQM"
+    },
+    {
+        "name": "West Valley City, United States [USWVC]",
+        "value": "USWVC"
+    },
+    {
+        "name": ", United States [USWVI]",
+        "value": "USWVI"
+    },
+    {
+        "name": "Wyoming - MI, United States [USWYM]",
+        "value": "USWYM"
+    },
+    {
+        "name": "Bardstown, KY, United States [USXCV]",
+        "value": "USXCV"
+    },
+    {
+        "name": "Fremont Oh, United States [USXFK]",
+        "value": "USXFK"
+    },
+    {
+        "name": "Fontana Ca, United States [USXFR]",
+        "value": "USXFR"
+    },
+    {
+        "name": "CRYSTAL, MN, United States [USYSA]",
+        "value": "USYSA"
+    },
+    {
+        "name": "Montevideo, Uruguay [UYMVD]",
+        "value": "UYMVD"
+    },
+    {
+        "name": "Kingstown, Saint Vincent and the Grenadines [VCKTN]",
+        "value": "VCKTN"
+    },
+    {
+        "name": "Binh Duong, Vietnam [VNBDU]",
+        "value": "VNBDU"
+    },
+    {
+        "name": "Ho Chi Minh Cat Lai, Vietnam [VNCLI]",
+        "value": "VNCLI"
+    },
+    {
+        "name": "Da Nang, Vietnam [VNDAD]",
+        "value": "VNDAD"
+    },
+    {
+        "name": "Dong Nai Port, Vietnam [VNDNA]",
+        "value": "VNDNA"
+    },
+    {
+        "name": "Haiphong, Vietnam [VNHPH]",
+        "value": "VNHPH"
+    },
+    {
+        "name": "Ho Chi Minh (SP- ITC), Vietnam [VNITC]",
+        "value": "VNITC"
+    },
+    {
+        "name": "ICD Transimex THU DUC, Vietnam [VNITX]",
+        "value": "VNITX"
+    },
+    {
+        "name": ", Vietnam [VNLMP]",
+        "value": "VNLMP"
+    },
+    {
+        "name": "ICD Phuoc Long, Vietnam [VNPHG]",
+        "value": "VNPHG"
+    },
+    {
+        "name": "ICD Phuc Long, Vietnam [VNPLG]",
+        "value": "VNPLG"
+    },
+    {
+        "name": "Ho Chi Minh Tan Cang, Vietnam [VNSGN]",
+        "value": "VNSGN"
+    },
+    {
+        "name": "Icd Sotrans, Vietnam [VNSTR]",
+        "value": "VNSTR"
+    },
+    {
+        "name": "Icd Tanamexco, Vietnam [VNTAM]",
+        "value": "VNTAM"
+    },
+    {
+        "name": "Qui Nhon, Vietnam [VNUIH]",
+        "value": "VNUIH"
+    },
+    {
+        "name": "Ho Chi Minh VICT, Vietnam [VNVIC]",
+        "value": "VNVIC"
+    },
+    {
+        "name": "Vung Tau, Vietnam [VNVUT]",
+        "value": "VNVUT"
+    },
+    {
+        "name": "Santo, Vanuatu [VUSAN]",
+        "value": "VUSAN"
+    },
+    {
+        "name": "Port Vila, Vanuatu [VUVLI]",
+        "value": "VUVLI"
+    },
+    {
+        "name": "Futuna Island, Wallis and Futuna [WFFUT]",
+        "value": "WFFUT"
+    },
+    {
+        "name": "Wallis, Wallis and Futuna [WFWLS]",
+        "value": "WFWLS"
+    },
+    {
+        "name": "Apia, Samoa [WSAPW]",
+        "value": "WSAPW"
+    },
+    {
+        "name": "Aden, Yemen [YEADE]",
+        "value": "YEADE"
+    },
+    {
+        "name": "Hodeidah, Yemen [YEHOD]",
+        "value": "YEHOD"
+    },
+    {
+        "name": "Sanaa, Yemen [YESAH]",
+        "value": "YESAH"
+    },
+    {
+        "name": "Cape Town, South Africa [ZACPT]",
+        "value": "ZACPT"
+    },
+    {
+        "name": "Durban, South Africa [ZADUR]",
+        "value": "ZADUR"
+    },
+    {
+        "name": "Johannesburg, South Africa [ZAJNB]",
+        "value": "ZAJNB"
+    },
+    {
+        "name": "Port Elizabeth, South Africa [ZAPLZ]",
+        "value": "ZAPLZ"
+    },
+    {
+        "name": "Pretoria, South Africa [ZAPRY]",
+        "value": "ZAPRY"
+    },
+    {
+        "name": "Richards Bay, South Africa [ZARCB]",
+        "value": "ZARCB"
+    },
+    {
+        "name": "Coega, South Africa [ZAZBA]",
+        "value": "ZAZBA"
+    },
+    {
+        "name": "Chingola, Zambia [ZMCGJ]",
+        "value": "ZMCGJ"
+    },
+    {
+        "name": "Choma, Zambia [ZMCHO]",
+        "value": "ZMCHO"
+    },
+    {
+        "name": "Chipata, Zambia [ZMCIP]",
+        "value": "ZMCIP"
+    },
+    {
+        "name": ", Zambia [ZMKAM]",
+        "value": "ZMKAM"
+    },
+    {
+        "name": "Katete, Zambia [ZMKAT]",
+        "value": "ZMKAT"
+    },
+    {
+        "name": "Kitwe, Zambia [ZMKIW]",
+        "value": "ZMKIW"
+    },
+    {
+        "name": "Lusaka, Zambia [ZMLUN]",
+        "value": "ZMLUN"
+    },
+    {
+        "name": "Livingstone, Zambia [ZMLVI]",
+        "value": "ZMLVI"
+    },
+    {
+        "name": "Ndola, Zambia [ZMNLA]",
+        "value": "ZMNLA"
+    },
+    {
+        "name": "Kabwe, Zambia [ZMQKE]",
+        "value": "ZMQKE"
+    },
+    {
+        "name": "Solwezi, Zambia [ZMSLI]",
+        "value": "ZMSLI"
+    },
+    {
+        "name": "Banket, Zimbabwe [ZWBKT]",
+        "value": "ZWBKT"
+    },
+    {
+        "name": "Bulawayo, Zimbabwe [ZWBUQ]",
+        "value": "ZWBUQ"
+    },
+    {
+        "name": "Chipinge, Zimbabwe [ZWCHJ]",
+        "value": "ZWCHJ"
+    },
+    {
+        "name": "Gweru, Zimbabwe [ZWGWE]",
+        "value": "ZWGWE"
+    },
+    {
+        "name": "Harare, Zimbabwe [ZWHRE]",
+        "value": "ZWHRE"
+    },
+    {
+        "name": "Kadoma, Zimbabwe [ZWKDM]",
+        "value": "ZWKDM"
+    },
+    {
+        "name": "Kwekwe, Zimbabwe [ZWKWE]",
+        "value": "ZWKWE"
+    },
+    {
+        "name": ", Zimbabwe [ZWMVZ]",
+        "value": "ZWMVZ"
+    },
+    {
+        "name": "Mutare, Zimbabwe [ZWUTA]",
+        "value": "ZWUTA"
+    },
+    {
+        "name": ", Zimbabwe [ZWWKI]",
+        "value": "ZWWKI"
+    },
+    {
+        "name": ", Zimbabwe [ZWZ45]",
+        "value": "ZWZ45"
+    }
+]

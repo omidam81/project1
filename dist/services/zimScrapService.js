@@ -28,15 +28,18 @@ class zimScrapService {
         else {
             scheduleString = scheduleTime;
         }
-        if (globalSheduleList_1.GlobalSchedule.maerskSchedule) {
-            globalSheduleList_1.GlobalSchedule.maerskSchedule.cancel();
+        if (globalSheduleList_1.GlobalSchedule.zimSchedule) {
+            globalSheduleList_1.GlobalSchedule.zimSchedule.cancel();
         }
-        globalSheduleList_1.GlobalSchedule.maerskSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+        globalSheduleList_1.GlobalSchedule.zimSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(5);
+            if (!siteSetting[0]['DisableEnable']) {
+                return;
+            }
             console.log(scheduleTime);
             console.log('service zim call');
             //get all points
             //init scrap proccess
-            let siteSetting = yield this.scrap.loadSetting(2);
             let timeLength = siteSetting[0]['LenghtScrap'];
             let endTime = Math.floor(timeLength / 7);
             if (endTime === 0)
@@ -86,7 +89,10 @@ class zimScrapService {
                         if (toCode === 'noCode' || fromCode === 'noCode') {
                             continue;
                         }
-                        yield this.sendData(fromCode, toCode, endTime, id, ptp);
+                        const pageNum = yield this.findPageNumber(fromCode, toCode, endTime);
+                        for (let p = 0; p < pageNum; p++) {
+                            yield this.sendData(fromCode, toCode, endTime, id, ptp, p + 1);
+                        }
                     }
                     portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                     if (!portToPortList[0]) {
@@ -97,10 +103,10 @@ class zimScrapService {
             console.log('finish');
         }));
     }
-    sendData(from, to, NOW, id, portsDetail) {
+    sendData(from, to, NOW, id, portsDetail, page) {
         return new Promise((resolve, reject) => {
             let u = porttoporturl +
-                `?portcode=${from}&portdestinationcode=${to}fromdate=today&weeksahead=${NOW}&direction=True`;
+                `?portcode=${from}&portdestinationcode=${to}&fromdate=today&weeksahead=${NOW}&direction=True&page=${page}`;
             request(u, (err, res, body) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
                     utilService_1.default.writeLog(err);
@@ -109,80 +115,99 @@ class zimScrapService {
                 else {
                     try {
                         if (res.statusCode === 200) {
-                            let roueTemp = new scrapModel_1.Route();
-                            const tempTable = node_html_parser_1.parse(body);
-                            //get Arrival (eta)
-                            let ArrivalRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Arrival') !== -1);
-                            let ArrivalDates = ArrivalRow[ArrivalRow.length - 1].querySelectorAll('strong');
-                            let arrival = ArrivalDates[0].innerHTML;
-                            //get Departure (etd)
-                            let DepartureRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Departure') !== -1);
-                            let DepartureDates = DepartureRow[DepartureRow.length - 1].querySelectorAll('strong');
-                            let Departure = DepartureDates[0].innerHTML;
-                            //service , vessel and Voyage
-                            let vesselRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Vessel') !== -1);
-                            let vesselData = vesselRow[0].querySelectorAll('td')[0];
-                            //get vessel 
-                            let vesselHtml = vesselData.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                            let vesel = vesselHtml.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '');
-                            //get Voyage
-                            let voyage = vesselData.querySelectorAll('a').slice(-1).pop().text;
-                            //get service 
-                            let service = vesselData.childNodes.filter(x => x.text !== "\n")[0].text;
-                            //port cutoff and vga cutoff
-                            let portCutOff = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Port Cutoff') !== -1);
-                            let cutOffData = portCutOff[0].querySelectorAll('td')[0].innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                            //get Port Cutoff (from_sch_cy)
-                            let cutOff = cutOffData.split('<br />')[2];
-                            //get vgm cutoff (from_sch_vgm)
-                            let vgmCutoff = cutOffData.split('<br />')[1];
-                            //get to/from (ts_port_name) 
-                            let toFrom = null;
-                            let toFromRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('To / From') !== -1);
-                            if (toFromRow > 0) {
-                                let toFrom = toFromRow[0].querySelectorAll('td')[0].querySelectorAll('a')[0].text;
+                            const bodyHtml = node_html_parser_1.parse(body);
+                            let valid = bodyHtml.innerHTML.indexOf('The information you requested is currently unavailable') === -1;
+                            if (valid) {
+                                let tempTable = bodyHtml.querySelector('#table-grid-mvc');
+                                let rows = tempTable.querySelector('tbody').querySelectorAll('tr');
+                                let currentClass = 'start';
+                                let groupNumber = -1;
+                                let finalGroup = [];
+                                for (let row of rows) {
+                                    if (row.classNames[0] !== currentClass) {
+                                        groupNumber++;
+                                        currentClass = row.classNames[0];
+                                        finalGroup.push({
+                                            g: []
+                                        });
+                                    }
+                                    finalGroup[groupNumber]['g'].push(row);
+                                }
+                                for (let group of finalGroup) {
+                                    try {
+                                        let roueTemp = new scrapModel_1.Route();
+                                        //get Arrival (eta)
+                                        let ArrivalRow = group.g[group.g.length - 1];
+                                        let ArrivalDates = ArrivalRow.querySelectorAll('td')[2].querySelector('p').text.replace(',', '');
+                                        let arrival = new Date(ArrivalDates);
+                                        //get Departure (etd)
+                                        let DepartureRow = group.g[0];
+                                        let DepartureDates = DepartureRow.querySelectorAll('td')[1].querySelector('p').text.replace(',', '');
+                                        let Departure = new Date(DepartureDates);
+                                        //service , vessel 
+                                        let vesselRow = group.g[0];
+                                        let vesselData = vesselRow.querySelectorAll('td')[0].querySelector('a').text;
+                                        //get vessel 
+                                        let vesel = vesselData.split('(')[0].trim();
+                                        //get Voyage
+                                        let voyage = vesselData.split('/')[1];
+                                        //get service 
+                                        let serviceRow = group.g[0];
+                                        let serviceData = serviceRow.querySelectorAll('td')[3].querySelector('a');
+                                        let service = null;
+                                        if (serviceData) {
+                                            service = serviceData.text.match(/\((.*)\)/).pop();
+                                        }
+                                        //get to/from (ts_port_name) 
+                                        let toFrom = null;
+                                        let vessel_2 = null;
+                                        let voyage_2 = null;
+                                        if (group.g.length > 1) {
+                                            let toFromRow = group.g[1];
+                                            toFrom = toFromRow.querySelectorAll('td')[1].querySelectorAll('p')[1].text;
+                                            //service , vessel 
+                                            let vesselRow2 = group.g[1];
+                                            let vesselData2 = vesselRow2.querySelectorAll('td')[0].querySelector('a').text;
+                                            //get vessel 
+                                            vessel_2 = vesselData2.split('(')[0].trim();
+                                            //get Voyage
+                                            voyage_2 = vesselData2.split('/')[1];
+                                        }
+                                        //fill data
+                                        roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
+                                        roueTemp.from_port_name = portsDetail['fromPortname'].trim();
+                                        roueTemp.to_port_id = portsDetail['toPortcode'].trim();
+                                        roueTemp.to_port_name = portsDetail['toPortname'].trim();
+                                        roueTemp.etd = Departure;
+                                        roueTemp.eta = arrival;
+                                        roueTemp.vessel = vesel;
+                                        roueTemp.voyage = voyage;
+                                        roueTemp.modify_date = new Date();
+                                        roueTemp.imp_exp = 'E';
+                                        roueTemp.service = service;
+                                        roueTemp.from_sch_cy = null;
+                                        roueTemp.from_sch_cfs = null;
+                                        roueTemp.from_sch_rece = null;
+                                        roueTemp.from_sch_si = null;
+                                        roueTemp.from_sch_vgm = null;
+                                        roueTemp.vessel_2 = vessel_2;
+                                        roueTemp.voyage_2 = voyage_2;
+                                        roueTemp.ts_port_name = toFrom;
+                                        roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
+                                        roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
+                                        roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
+                                        roueTemp.masterSetting = id;
+                                        roueTemp.siteId = 5;
+                                        //!!!!
+                                        yield this.scrap.saveRoute(roueTemp);
+                                        // //dispose variables
+                                        roueTemp = null;
+                                    }
+                                    catch (e) {
+                                        continue;
+                                    }
+                                }
                             }
-                            //vessel and Voyage 2
-                            let vessel_2 = null;
-                            let voyage_2 = null;
-                            let vessel2Row = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Local Voyage Ref') !== -1);
-                            if (vessel2Row.length > 1) {
-                                let vessel2Data = vessel2Row[1].querySelectorAll('td')[0];
-                                //get vessel2
-                                let vessel2Html = vessel2Data.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                                vessel_2 = vessel2Html.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '');
-                                //get Voyage2
-                                voyage_2 = vessel2Data.querySelectorAll('a').slice(-1).pop().text;
-                            }
-                            //fill data
-                            roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
-                            roueTemp.from_port_name = portsDetail['fromPortname'].trim();
-                            roueTemp.to_port_id = portsDetail['toPortcode'].trim();
-                            roueTemp.to_port_name = portsDetail['toPortname'].trim();
-                            roueTemp.etd = Departure;
-                            roueTemp.eta = arrival;
-                            roueTemp.vessel = vesel;
-                            roueTemp.voyage = voyage;
-                            roueTemp.modify_date = new Date();
-                            roueTemp.imp_exp = 'E';
-                            roueTemp.service = service;
-                            roueTemp.from_sch_cy = cutOff;
-                            roueTemp.from_sch_cfs = null;
-                            roueTemp.from_sch_rece = null;
-                            roueTemp.from_sch_si = null;
-                            roueTemp.from_sch_vgm = vgmCutoff;
-                            roueTemp.vessel_2 = vessel_2;
-                            roueTemp.voyage_2 = voyage_2;
-                            roueTemp.ts_port_name = toFrom;
-                            roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
-                            roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
-                            roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
-                            roueTemp.masterSetting = id;
-                            roueTemp.siteId = 3;
-                            //!!!!
-                            yield this.scrap.saveRoute(roueTemp);
-                            // //dispose variables
-                            roueTemp = null;
                         }
                         resolve('ok');
                     }
@@ -229,6 +254,43 @@ class zimScrapService {
     sleep() {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000);
+        });
+    }
+    findPageNumber(from, to, NOW) {
+        return new Promise((resolve, reject) => {
+            let u = porttoporturl +
+                `?portcode=${from}&portdestinationcode=${to}&fromdate=today&weeksahead=${NOW}&direction=True&page=${1}`;
+            request(u, (err, res, body) => __awaiter(this, void 0, void 0, function* () {
+                if (err) {
+                    utilService_1.default.writeLog(err);
+                    resolve(0);
+                }
+                else {
+                    try {
+                        if (res.statusCode === 200) {
+                            const bodyHtml = node_html_parser_1.parse(body);
+                            let valid = bodyHtml.innerHTML.indexOf('The information you requested is currently unavailable') === -1;
+                            if (valid) {
+                                let next = bodyHtml.querySelector('.PagedList-skipToNext');
+                                if (!next) {
+                                    resolve(1);
+                                }
+                                else {
+                                    let pages = bodyHtml.querySelector('.paging-list').querySelectorAll('li');
+                                    resolve(pages.length - 1);
+                                }
+                            }
+                            else {
+                                resolve(0);
+                            }
+                        }
+                    }
+                    catch (e) {
+                        utilService_1.default.writeLog(e.message);
+                        resolve(0);
+                    }
+                }
+            }));
         });
     }
 }

@@ -6,4 +6,5 @@ export class GlobalSchedule {
     public static yangMingSchedule;
     public static shipmentLinkSchedule;
     public static pilSchedule;
+    public static zimSchedule;
 }
