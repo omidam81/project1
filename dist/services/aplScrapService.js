@@ -143,7 +143,14 @@ class aplScrapService {
                             voyage = vesselData.querySelectorAll('a').slice(-1).pop().text;
                         }
                         //get service 
-                        let service = vesselData.childNodes.filter(x => x.text !== "\n")[0].text;
+                        let service = null;
+                        let serviceData = vesselData.childNodes.filter(x => x.text.indexOf('\n') === -1)[0].text;
+                        if (serviceData.indexOf('(') !== -1) {
+                            service = serviceData.match(/\((.*?)\)/g).pop().replace(/(\(|\))/g, '');
+                        }
+                        else {
+                            service = serviceData.trim();
+                        }
                         //port cutoff and vga cutoff
                         let portCutOff = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Port Cutoff') !== -1);
                         let cutOffData = portCutOff[0].querySelectorAll('td')[p].innerHTML.replace(/\n/g, '').replace(/\t/g, '');
