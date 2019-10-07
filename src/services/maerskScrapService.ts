@@ -166,9 +166,9 @@ export default class maeskScrapService {
                                             let sc = null;
                                             const vC = schedule['vessel']['code'];
                                             const vN = schedule['scheduleDetails'][0]['transport']['voyageNumber'] || schedule['scheduleDetails'][1]['transport']['voyageNumber'];
-                                            if(schedule['scheduleDetails'][0]['transport']['voyageNumber']){
+                                            if (schedule['scheduleDetails'][0]['transport']['voyageNumber']) {
                                                 sc = schedule['scheduleDetails'][0]['fromLocation']['siteGeoId'];
-                                            }else{
+                                            } else {
                                                 sc = schedule['scheduleDetails'][0]['toLocation']['siteGeoId'];
                                             }
                                             let params = [];
@@ -184,15 +184,15 @@ export default class maeskScrapService {
                                             if (deadLines) {
                                                 const SINONAMS = deadLines[0].filter(x => x.deadlineKey === 'SINONAMS');
                                                 if (SINONAMS.length > 0) {
-                                                    roueTemp.from_sch_si = new Date(SINONAMS[0]['deadline']);
+                                                    roueTemp.from_sch_si = this.changeDate(new Date(SINONAMS[0]['deadline']));
                                                 }
                                                 const cvr = deadLines[0].filter(x => x.deadlineKey === 'CY');
                                                 if (cvr.length > 0 && schedule['scheduleDetails'][0]['transport']['voyageNumber'] !== null) {
-                                                    roueTemp.from_sch_cy = new Date(cvr[0]['deadline']);
+                                                    roueTemp.from_sch_cy = this.changeDate(new Date(cvr[0]['deadline']));
                                                 }
                                                 const vgmr = deadLines[0].filter(x => x.deadlineKey === 'VGM');
                                                 if (vgmr.length > 0) {
-                                                    roueTemp.from_sch_vgm = new Date(vgmr[0]['deadline']);
+                                                    roueTemp.from_sch_vgm = this.changeDate(new Date(vgmr[0]['deadline']));
                                                 }
                                             }
                                         }
@@ -323,5 +323,19 @@ export default class maeskScrapService {
             });
         })
 
+    }
+    public changeDate(date: Date) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getUTCDate();
+        let h: any = date.getHours();
+        let m: any = date.getMinutes();
+        if (h < 10) {
+            h = "0" + h.toString();
+        }
+        if (m < 10) {
+            m = "0" + m.toString();
+        }
+        return `${year}/${month}/${day} ${h}:${m}`
     }
 }

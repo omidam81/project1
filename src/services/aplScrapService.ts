@@ -38,7 +38,7 @@ export default class aplScrapService {
                 console.log('service apl call');
                 //get all points
                 //init scrap proccess
-                
+
                 let timeLength = siteSetting[0]['LenghtScrap'];
                 let tempDate = new Date();
                 let endTime = this.IsoTime(
@@ -126,7 +126,7 @@ export default class aplScrapService {
                     return Tables;
                 });
                 for (let table of tables) {
-                   
+
                     const tempTable: any = parse(table);
                     //find schedule part
                     let part = tempTable.querySelectorAll('th').filter(x => x.innerHTML.indexOf('Schedule') !== -1);
@@ -135,11 +135,11 @@ export default class aplScrapService {
                         //get Arrival (eta)
                         let ArrivalRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Arrival') !== -1);
                         let ArrivalDates = ArrivalRow[ArrivalRow.length - 1].querySelectorAll('strong')
-                        let arrival = new Date(ArrivalDates[p].innerHTML);
+                        let arrival = this.changeDate(new Date(ArrivalDates[p].innerHTML));
                         //get Departure (etd)
                         let DepartureRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Departure') !== -1);
                         let DepartureDates = DepartureRow[1].querySelectorAll('strong')
-                        let Departure = new Date(DepartureDates[p].innerHTML);
+                        let Departure = this.changeDate(new Date(DepartureDates[p].innerHTML));
                         //service , vessel and Voyage
                         let vesselRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Vessel') !== -1);
                         let vesselData = vesselRow[0].querySelectorAll('td')[p];
@@ -155,9 +155,9 @@ export default class aplScrapService {
                         //get service 
                         let service = null;
                         let serviceData = vesselData.childNodes.filter(x => x.text.indexOf('\n') === -1)[0].text;
-                        if(serviceData.indexOf('(') !== -1){
-                            service = serviceData.match(/\((.*?)\)/g).pop().replace(/(\(|\))/g,'');
-                        }else{
+                        if (serviceData.indexOf('(') !== -1) {
+                            service = serviceData.match(/\((.*?)\)/g).pop().replace(/(\(|\))/g, '');
+                        } else {
                             service = serviceData.trim();
                         }
                         //port cutoff and vga cutoff
@@ -165,16 +165,16 @@ export default class aplScrapService {
                         let cutOffData = portCutOff[0].querySelectorAll('td')[p].innerHTML.replace(/\n/g, '').replace(/\t/g, '');
                         //get Port Cutoff (from_sch_cy)
                         let cutOff = cutOffData.split('<br />')[2];
-                        if(new Date(cutOff).toString() !== "Invalid Date"){
-                            cutOff = new Date(cutOff);
-                        }else{
+                        if (new Date(cutOff).toString() !== "Invalid Date") {
+                            cutOff = this.changeDate(new Date(cutOff));
+                        } else {
                             cutOff = null;
                         }
                         //get vgm cutoff (from_sch_vgm)
                         let vgmCutoff = cutOffData.split('<br />')[1];
-                        if(new Date(vgmCutoff).toString() !== "Invalid Date"){
-                            vgmCutoff = new Date(vgmCutoff);
-                        }else{
+                        if (new Date(vgmCutoff).toString() !== "Invalid Date") {
+                            vgmCutoff = this.changeDate(new Date(vgmCutoff));
+                        } else {
                             vgmCutoff = null;
                         }
                         //get to/from (ts_port_name) 
@@ -193,7 +193,7 @@ export default class aplScrapService {
                             //get vessel2
                             let vessel2Html = vessel2Data.innerHTML.replace(/\n/g, '').replace(/\t/g, '')
                             vessel_2 = vessel2Html.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '').split('<i')[0];
-                            if(vessel_2.indexOf('<i') !== -1){
+                            if (vessel_2.indexOf('<i') !== -1) {
                                 vessel_2 = vessel_2.split('<i')[0];
                             }
                             //get Voyage2
@@ -295,5 +295,19 @@ export default class aplScrapService {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000)
         })
+    }
+    public changeDate(date: Date) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getUTCDate();
+        let h: any = date.getHours();
+        let m: any = date.getMinutes();
+        if (h < 10) {
+            h = "0" + h.toString();
+        }
+        if (m < 10) {
+            m = "0" + m.toString();
+        }
+        return `${year}/${month}/${day} ${h}:${m}`
     }
 }

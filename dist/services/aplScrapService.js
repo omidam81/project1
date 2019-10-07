@@ -126,11 +126,11 @@ class aplScrapService {
                         //get Arrival (eta)
                         let ArrivalRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Arrival') !== -1);
                         let ArrivalDates = ArrivalRow[ArrivalRow.length - 1].querySelectorAll('strong');
-                        let arrival = new Date(ArrivalDates[p].innerHTML);
+                        let arrival = this.changeDate(new Date(ArrivalDates[p].innerHTML));
                         //get Departure (etd)
                         let DepartureRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Departure') !== -1);
                         let DepartureDates = DepartureRow[1].querySelectorAll('strong');
-                        let Departure = new Date(DepartureDates[p].innerHTML);
+                        let Departure = this.changeDate(new Date(DepartureDates[p].innerHTML));
                         //service , vessel and Voyage
                         let vesselRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Vessel') !== -1);
                         let vesselData = vesselRow[0].querySelectorAll('td')[p];
@@ -157,7 +157,7 @@ class aplScrapService {
                         //get Port Cutoff (from_sch_cy)
                         let cutOff = cutOffData.split('<br />')[2];
                         if (new Date(cutOff).toString() !== "Invalid Date") {
-                            cutOff = new Date(cutOff);
+                            cutOff = this.changeDate(new Date(cutOff));
                         }
                         else {
                             cutOff = null;
@@ -165,7 +165,7 @@ class aplScrapService {
                         //get vgm cutoff (from_sch_vgm)
                         let vgmCutoff = cutOffData.split('<br />')[1];
                         if (new Date(vgmCutoff).toString() !== "Invalid Date") {
-                            vgmCutoff = new Date(vgmCutoff);
+                            vgmCutoff = this.changeDate(new Date(vgmCutoff));
                         }
                         else {
                             vgmCutoff = null;
@@ -271,6 +271,20 @@ class aplScrapService {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000);
         });
+    }
+    changeDate(date) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getUTCDate();
+        let h = date.getHours();
+        let m = date.getMinutes();
+        if (h < 10) {
+            h = "0" + h.toString();
+        }
+        if (m < 10) {
+            m = "0" + m.toString();
+        }
+        return `${year}/${month}/${day} ${h}:${m}`;
     }
 }
 exports.default = aplScrapService;
