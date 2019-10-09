@@ -325,17 +325,22 @@ export default class maeskScrapService {
 
     }
     public changeDate(date: Date) {
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getUTCDate();
-        let h: any = date.getHours();
-        let m: any = date.getMinutes();
-        if (h < 10) {
-            h = "0" + h.toString();
+        try{
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let h: any = date.getHours();
+            let m: any = date.getMinutes();
+            if (h < 10) {
+                h = "0" + h.toString();
+            }
+            if (m < 10) {
+                m = "0" + m.toString();
+            }
+            return `${year}/${month}/${day} ${h}:${m}`
+        }catch{
+            return null;
         }
-        if (m < 10) {
-            m = "0" + m.toString();
-        }
-        return `${year}/${month}/${day} ${h}:${m}`
+        
     }
 }
