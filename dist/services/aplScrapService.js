@@ -273,18 +273,23 @@ class aplScrapService {
         });
     }
     changeDate(date) {
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getUTCDate();
-        let h = date.getHours();
-        let m = date.getMinutes();
-        if (h < 10) {
-            h = "0" + h.toString();
+        try {
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let h = date.getHours();
+            let m = date.getMinutes();
+            if (h < 10) {
+                h = "0" + h.toString();
+            }
+            if (m < 10) {
+                m = "0" + m.toString();
+            }
+            return `${year}/${month}/${day} ${h}:${m}`;
         }
-        if (m < 10) {
-            m = "0" + m.toString();
+        catch (_a) {
+            return null;
         }
-        return `${year}/${month}/${day} ${h}:${m}`;
     }
 }
 exports.default = aplScrapService;

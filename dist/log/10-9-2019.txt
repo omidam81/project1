@@ -1,0 +1,33 @@
+
+3:58:09 PM:Error: getaddrinfo EAI_FAIL api.maersk.com api.maersk.com:443
+5:21:41 PM:Error: connect ETIMEDOUT 23.214.7.178:443
+5:31:50 PM:Cannot read property 'filter' of null
+5:32:51 PM:Cannot read property 'filter' of null
+5:33:46 PM:Cannot read property 'filter' of null
+5:36:19 PM:Cannot read property 'filter' of null
+5:36:41 PM:Cannot read property 'filter' of null
+5:37:03 PM:Cannot read property 'filter' of null
+5:39:40 PM:Cannot read property 'filter' of null
+5:39:42 PM:Cannot read property 'filter' of null
+5:40:03 PM:Cannot read property 'filter' of null
+5:40:25 PM:Cannot read property 'filter' of null
+5:41:50 PM:Cannot read property 'filter' of null
+5:43:31 PM:Cannot read property 'filter' of null
+5:43:37 PM:Cannot read property 'filter' of null
+5:43:43 PM:Cannot read property 'filter' of null
+5:44:03 PM:Cannot read property 'filter' of null
+5:44:35 PM:Cannot read property 'filter' of null
+5:44:51 PM:Cannot read property 'filter' of null
+5:45:35 PM:Cannot read property 'filter' of null
+5:46:28 PM:Cannot read property 'filter' of null
+5:47:03 PM:Cannot read property 'filter' of null
+5:47:19 PM:Cannot read property 'filter' of null
+5:50:58 PM:Cannot read property 'filter' of null
+5:52:29 PM:Cannot read property 'name' of null
+5:52:38 PM:Cannot read property 'filter' of null
+5:53:02 PM:Cannot read property 'filter' of null
+5:53:24 PM:Cannot read property 'filter' of null
+5:54:53 PM:Cannot read property 'filter' of null
+5:55:02 PM:Cannot read property 'filter' of null
+5:57:40 PM:Cannot read property 'name' of null
+6:01:12 PM:Cannot read property 'filter' of null

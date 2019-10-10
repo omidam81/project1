@@ -180,8 +180,8 @@ export default class maeskScrapService {
                                                 "serviceMode": "DRY"
                                             })
                                             let finalP = { params: params };
-                                            const deadLines = await this.findDeadLine(JSON.stringify(finalP));
-                                            if (deadLines) {
+                                            const deadLines: any = await this.findDeadLine(JSON.stringify(finalP));
+                                            if (deadLines.length > 0) {
                                                 const SINONAMS = deadLines[0].filter(x => x.deadlineKey === 'SINONAMS');
                                                 if (SINONAMS.length > 0) {
                                                     roueTemp.from_sch_si = this.changeDate(new Date(SINONAMS[0]['deadline']));
@@ -225,16 +225,13 @@ export default class maeskScrapService {
                                 body = null;
                                 res = null;
                             }
-                            resolve('ok');
+
                         }
                     } catch (e) {
-                        if (e.message.indexOf("sleep system") !== -1) {
-                            console.log('one-line is updating ,waiting ...');
-                            await this.sleep();
-                            console.log('start again!');
-                        } else {
-                            util.writeLog(e.message);
-                        }
+                        util.writeLog(e.message);
+
+                    }
+                    finally {
                         resolve('ko');
                     }
                 }
@@ -325,7 +322,7 @@ export default class maeskScrapService {
 
     }
     public changeDate(date: Date) {
-        try{
+        try {
             let year = date.getFullYear();
             let month = date.getMonth() + 1;
             let day = date.getDate();
@@ -338,9 +335,9 @@ export default class maeskScrapService {
                 m = "0" + m.toString();
             }
             return `${year}/${month}/${day} ${h}:${m}`
-        }catch{
+        } catch{
             return null;
         }
-        
+
     }
 }

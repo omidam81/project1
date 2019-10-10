@@ -169,7 +169,7 @@ class maeskScrapService {
                                             });
                                             let finalP = { params: params };
                                             const deadLines = yield this.findDeadLine(JSON.stringify(finalP));
-                                            if (deadLines) {
+                                            if (deadLines.length > 0) {
                                                 const SINONAMS = deadLines[0].filter(x => x.deadlineKey === 'SINONAMS');
                                                 if (SINONAMS.length > 0) {
                                                     roueTemp.from_sch_si = this.changeDate(new Date(SINONAMS[0]['deadline']));
@@ -206,18 +206,12 @@ class maeskScrapService {
                                 body = null;
                                 res = null;
                             }
-                            resolve('ok');
                         }
                     }
                     catch (e) {
-                        if (e.message.indexOf("sleep system") !== -1) {
-                            console.log('one-line is updating ,waiting ...');
-                            yield this.sleep();
-                            console.log('start again!');
-                        }
-                        else {
-                            utilService_1.default.writeLog(e.message);
-                        }
+                        utilService_1.default.writeLog(e.message);
+                    }
+                    finally {
                         resolve('ko');
                     }
                 }
@@ -307,18 +301,23 @@ class maeskScrapService {
         });
     }
     changeDate(date) {
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getUTCDate();
-        let h = date.getHours();
-        let m = date.getMinutes();
-        if (h < 10) {
-            h = "0" + h.toString();
+        try {
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let h = date.getHours();
+            let m = date.getMinutes();
+            if (h < 10) {
+                h = "0" + h.toString();
+            }
+            if (m < 10) {
+                m = "0" + m.toString();
+            }
+            return `${year}/${month}/${day} ${h}:${m}`;
         }
-        if (m < 10) {
-            m = "0" + m.toString();
+        catch (_a) {
+            return null;
         }
-        return `${year}/${month}/${day} ${h}:${m}`;
     }
 }
 exports.default = maeskScrapService;
