@@ -6,6 +6,7 @@ import Jwt from '../autorize';
 import oneLineService from '../services/onelineScrapService';
 import aplScrapService from '../services/aplScrapService';
 import maerskScrapService from '../services/maerskScrapService';
+import pilScrapService from '../services/pilScrapService';
 import * as ScrapModel from './scrapModel';
 class scrapControler {
     public router: express.router;
@@ -13,12 +14,14 @@ class scrapControler {
     public oneLine: oneLineService;
     public apl: aplScrapService;
     public maersk: maerskScrapService;
+    public pil: pilScrapService;
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
         this.oneLine = new oneLineService();
         this.apl = new aplScrapService();
         this.maersk = new maerskScrapService();
+        this.pil = new pilScrapService();
         this.config();
         this.call();
     }
@@ -149,6 +152,9 @@ class scrapControler {
                         break;
                     case 3:
                         this.maersk.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 4:
+                        this.pil.loadPortToPortSchedule(siteSetting.String);
                         break;
                 }
                 this.scrap

@@ -15,6 +15,7 @@ const autorize_1 = require("../autorize");
 const onelineScrapService_1 = require("../services/onelineScrapService");
 const aplScrapService_1 = require("../services/aplScrapService");
 const maerskScrapService_1 = require("../services/maerskScrapService");
+const pilScrapService_1 = require("../services/pilScrapService");
 const ScrapModel = require("./scrapModel");
 class scrapControler {
     constructor() {
@@ -23,6 +24,7 @@ class scrapControler {
         this.oneLine = new onelineScrapService_1.default();
         this.apl = new aplScrapService_1.default();
         this.maersk = new maerskScrapService_1.default();
+        this.pil = new pilScrapService_1.default();
         this.config();
         this.call();
     }
@@ -152,6 +154,9 @@ class scrapControler {
                         break;
                     case 3:
                         this.maersk.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 4:
+                        this.pil.loadPortToPortSchedule(siteSetting.String);
                         break;
                 }
                 this.scrap
@@ -449,6 +454,9 @@ class scrapControler {
                     msg: 'fail'
                 });
             }
+        });
+        this.router.get('/api/scrap/test', (req, res) => {
+            this.pil.sendData('CNAQG', 'BRIOA', '2019-10-10', 1, 308, null);
         });
     }
 }
