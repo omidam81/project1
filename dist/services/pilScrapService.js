@@ -115,6 +115,16 @@ class pilScrapService {
                         let vesel = ul.querySelector('.vessel').text;
                         //get Voyage
                         let voyage = ul.querySelector('.voyage').querySelector('span').text;
+                        let tsPortName = null;
+                        let vessel_2 = null;
+                        let voyage_2 = null;
+                        //check second voyage 
+                        if (ul.querySelectorAll('.arrival').length > 1) {
+                            //get port of lane (ts port name)
+                            tsPortName = ul.querySelectorAll('.port-of-load')[1].text;
+                            vessel_2 = ul.querySelectorAll('.vessel')[1].text;
+                            voyage_2 = ul.querySelectorAll('.voyage')[1].querySelector('span').text;
+                        }
                         //get service 
                         const voyageCode = ul.querySelectorAll('.voyage-code')[1].querySelector('a');
                         let veselcodeText = voyageCode['attributes']['name'];
@@ -142,9 +152,9 @@ class pilScrapService {
                         roueTemp.from_sch_rece = null;
                         roueTemp.from_sch_si = null;
                         roueTemp.from_sch_vgm = null;
-                        roueTemp.vessel_2 = null;
-                        roueTemp.voyage_2 = null;
-                        roueTemp.ts_port_name = null;
+                        roueTemp.vessel_2 = vessel_2;
+                        roueTemp.voyage_2 = voyage_2;
+                        roueTemp.ts_port_name = tsPortName;
                         roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
                         roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
                         roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();

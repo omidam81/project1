@@ -455,9 +455,6 @@ class scrapControler {
                 });
             }
         });
-        this.router.get('/api/scrap/test', (req, res) => {
-            this.pil.sendData('CNAQG', 'BRIOA', '2019-10-10', 1, 308, null);
-        });
     }
 }
 exports.default = new scrapControler().router;
