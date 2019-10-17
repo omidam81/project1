@@ -139,18 +139,18 @@ class zimScrapService {
                                         //get Arrival (eta)
                                         let ArrivalRow = group.g[group.g.length - 1];
                                         let ArrivalDates = ArrivalRow.querySelectorAll('td')[2].querySelector('p').text.replace(',', '');
-                                        let arrival = new Date(ArrivalDates);
+                                        let arrival = this.changeDate(new Date(ArrivalDates));
                                         //get Departure (etd)
                                         let DepartureRow = group.g[0];
                                         let DepartureDates = DepartureRow.querySelectorAll('td')[1].querySelector('p').text.replace(',', '');
-                                        let Departure = new Date(DepartureDates);
+                                        let Departure = this.changeDate(new Date(DepartureDates));
                                         //service , vessel 
                                         let vesselRow = group.g[0];
                                         let vesselData = vesselRow.querySelectorAll('td')[0].querySelector('a').text;
                                         //get vessel 
                                         let vesel = vesselData.split('(')[0].trim();
                                         //get Voyage
-                                        let voyage = vesselData.split('/')[1];
+                                        let voyage = vesselData.split('/')[1].trim();
                                         //get service 
                                         let serviceRow = group.g[0];
                                         let serviceData = serviceRow.querySelectorAll('td')[3].querySelector('a');
@@ -171,7 +171,7 @@ class zimScrapService {
                                             //get vessel 
                                             vessel_2 = vesselData2.split('(')[0].trim();
                                             //get Voyage
-                                            voyage_2 = vesselData2.split('/')[1];
+                                            voyage_2 = vesselData2.split('/')[1].trim();
                                         }
                                         //fill data
                                         roueTemp.from_port_id = portsDetail['fromPortcode'].trim();

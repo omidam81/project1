@@ -10,6 +10,13 @@ class UtilService {
             }
         });
     }
+    static writeTime(Message) {
+        fs.appendFile(path.resolve(__dirname, `../log/APLTime${(new Date()).toLocaleDateString().replace(/\//g, '-')}.txt`), '\n' + (new Date()).toLocaleTimeString() + ':' + Message, (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
 }
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

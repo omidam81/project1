@@ -17,6 +17,7 @@ const globalSheduleList_1 = require("./globalSheduleList");
 const utilService_1 = require("./utilService");
 const puppeteer = require("puppeteer");
 const node_html_parser_1 = require("node-html-parser");
+const utilService_2 = require("./utilService");
 const porttoporturl = 'http://www.apl.com/ebusiness/schedules/routing-finder';
 class aplScrapService {
     constructor() {
@@ -92,6 +93,7 @@ class aplScrapService {
                         }
                         yield this.sendData(fromCode, toCode, startTime, endTime, id, ptp);
                     }
+                    utilService_2.default.writeTime(`0:${new Date()}`);
                     portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                     if (!portToPortList[0]) {
                         break;
@@ -103,13 +105,16 @@ class aplScrapService {
     }
     sendData(from, to, startDate, range, id, portsDetail) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            utilService_2.default.writeTime(`1:${new Date()}`);
             const browser = yield puppeteer.launch({});
             const page = yield browser.newPage();
+            utilService_2.default.writeTime(`2:${new Date()}`);
             try {
                 let fromDetails = from.split(';');
                 let toDetails = to.split(';');
                 let url = porttoporturl + `?DeparturePlaceCode=${fromDetails[2].trim()}&ArrivalPlaceCode=${toDetails[2].trim()}&DeparturePlaceName=${fromDetails[0].trim()}&ArrivalPlaceName=${toDetails[0].trim()}&DepartureCountryCode=${fromDetails[1].trim()}&ArrivalCountryCode=${toDetails[1].trim()}&CultureId=1033&POLDescription=${from}&POLCountryCode=&POLCountryCode=&PODDescription=${to}&PODCountryCode=&PODPlaceCode=&IsDeparture=True&SearchDate=${startDate}&DateRange=2`;
                 yield page.goto(url);
+                utilService_2.default.writeTime(`3:${new Date()}`);
                 const tables = yield page.evaluate(() => {
                     let Tables = [];
                     for (let i = 0; i < document.getElementsByClassName('solutions-table').length; i++) {
@@ -220,8 +225,11 @@ class aplScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 2;
                         //!!!!
+                        utilService_2.default.writeTime(`4:${new Date()}`);
                         yield this.scrap.saveRoute(roueTemp);
                         // //dispose variables
+                        utilService_2.default.writeTime(`5:${new Date()}`);
+                        utilService_2.default.writeTime(`2:${new Date()}`);
                         roueTemp = null;
                     }
                 }

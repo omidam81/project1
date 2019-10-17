@@ -9,6 +9,7 @@ import * as puppeteer from 'puppeteer';
 import { parse } from 'node-html-parser';
 import { resolve } from 'path';
 import { write } from 'fs';
+import UtilService from './utilService';
 const porttoporturl = 'http://www.apl.com/ebusiness/schedules/routing-finder';
 
 
@@ -97,6 +98,7 @@ export default class aplScrapService {
                                 ptp
                             );
                         }
+                        UtilService.writeTime(`0`)
                         portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                         if (!portToPortList[0]) {
                             break;
@@ -111,13 +113,16 @@ export default class aplScrapService {
     }
     public sendData(from, to, startDate, range, id, portsDetail) {
         return new Promise(async (resolve, reject) => {
+            UtilService.writeTime(`1`)
             const browser = await puppeteer.launch({});
             const page = await browser.newPage();
+            UtilService.writeTime(`2`)
             try {
                 let fromDetails = from.split(';');
                 let toDetails = to.split(';');
                 let url = porttoporturl + `?DeparturePlaceCode=${fromDetails[2].trim()}&ArrivalPlaceCode=${toDetails[2].trim()}&DeparturePlaceName=${fromDetails[0].trim()}&ArrivalPlaceName=${toDetails[0].trim()}&DepartureCountryCode=${fromDetails[1].trim()}&ArrivalCountryCode=${toDetails[1].trim()}&CultureId=1033&POLDescription=${from}&POLCountryCode=&POLCountryCode=&PODDescription=${to}&PODCountryCode=&PODPlaceCode=&IsDeparture=True&SearchDate=${startDate}&DateRange=2`;
                 await page.goto(url);
+                UtilService.writeTime(`3`)
                 const tables = await page.evaluate(() => {
                     let Tables = [];
                     for (let i = 0; i < document.getElementsByClassName('solutions-table').length; i++) {
@@ -242,8 +247,10 @@ export default class aplScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 2;
                         //!!!!
+                        UtilService.writeTime(`4`)
                         await this.scrap.saveRoute(roueTemp);
                         // //dispose variables
+                        UtilService.writeTime(`5`)
                         roueTemp = null;
                     }
 
