@@ -8,6 +8,7 @@ import aplScrapService from '../services/aplScrapService';
 import maerskScrapService from '../services/maerskScrapService';
 import pilScrapService from '../services/pilScrapService';
 import * as ScrapModel from './scrapModel';
+import zimScrapService from '../services/zimScrapService';
 class scrapControler {
     public router: express.router;
     public scrap: Scrap;
@@ -15,6 +16,7 @@ class scrapControler {
     public apl: aplScrapService;
     public maersk: maerskScrapService;
     public pil: pilScrapService;
+    public zim: zimScrapService;
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
@@ -22,6 +24,7 @@ class scrapControler {
         this.apl = new aplScrapService();
         this.maersk = new maerskScrapService();
         this.pil = new pilScrapService();
+        this.zim = new zimScrapService();
         this.config();
         this.call();
     }
@@ -155,6 +158,9 @@ class scrapControler {
                         break;
                     case 4:
                         this.pil.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 5:
+                        this.zim.loadPortToPortSchedule(siteSetting.String);
                         break;
                 }
                 this.scrap
