@@ -17,9 +17,8 @@ const globalSheduleList_1 = require("./globalSheduleList");
 const utilService_1 = require("./utilService");
 const puppeteer = require("puppeteer");
 const node_html_parser_1 = require("node-html-parser");
-const utilService_2 = require("./utilService");
-const porttoporturl = 'http://www.apl.com/ebusiness/schedules/routing-finder';
-class aplScrapService {
+const porttoporturl = 'https://www.shipmentlink.com/tvs2/jsp/TVS2_InteractiveSchedule.jsp?';
+class shipmentLinkService {
     constructor() {
         this.scrap = new scrap_1.default();
     }
@@ -30,11 +29,11 @@ class aplScrapService {
         else {
             scheduleString = scheduleTime;
         }
-        if (globalSheduleList_1.GlobalSchedule.aplSchedule) {
-            globalSheduleList_1.GlobalSchedule.aplSchedule.cancel();
+        if (globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule) {
+            globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule.cancel();
         }
-        globalSheduleList_1.GlobalSchedule.aplSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
-            let siteSetting = yield this.scrap.loadSetting(2);
+        globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(6);
             if (!siteSetting[0]['DisableEnable']) {
                 return;
             }
@@ -44,7 +43,9 @@ class aplScrapService {
             //init scrap proccess
             let timeLength = siteSetting[0]['LenghtScrap'];
             let tempDate = new Date();
-            let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));
+            let range = Math.floor(timeLength / 7);
+            if (range === 0)
+                range = 1;
             let startTime = this.IsoTime(new Date());
             let iso = new Date().toISOString().split('T')[0];
             let obj = yield this.scrap.insertMasterRoute(iso, 1);
@@ -91,9 +92,8 @@ class aplScrapService {
                         if (toCode === 'noCode' || fromCode === 'noCode') {
                             continue;
                         }
-                        yield this.sendData(fromCode, toCode, startTime, endTime, id, ptp);
+                        yield this.sendData(fromCode, toCode, startTime, range, id, ptp);
                     }
-                    utilService_2.default.writeTime(`0`);
                     portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                     if (!portToPortList[0]) {
                         break;
@@ -105,97 +105,91 @@ class aplScrapService {
     }
     sendData(from, to, startDate, range, id, portsDetail) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            const browser = yield puppeteer.launch({});
+            const browser = yield puppeteer.launch();
             const page = yield browser.newPage();
             try {
-                let fromDetails = from.split(';');
-                let toDetails = to.split(';');
-                let url = porttoporturl + `?DeparturePlaceCode=${fromDetails[2].trim()}&ArrivalPlaceCode=${toDetails[2].trim()}&DeparturePlaceName=${fromDetails[0].trim()}&ArrivalPlaceName=${toDetails[0].trim()}&DepartureCountryCode=${fromDetails[1].trim()}&ArrivalCountryCode=${toDetails[1].trim()}&CultureId=1033&POLDescription=${from}&POLCountryCode=&POLCountryCode=&PODDescription=${to}&PODCountryCode=&PODPlaceCode=&IsDeparture=True&SearchDate=${startDate}&DateRange=2`;
-                yield page.goto(url);
-                const tables = yield page.evaluate(() => {
-                    let Tables = [];
-                    for (let i = 0; i < document.getElementsByClassName('solutions-table').length; i++) {
-                        Tables.push(document.getElementsByClassName('solutions-table')[i].innerHTML);
-                    }
-                    return Tables;
+                page.on('dialog', (dialog) => __awaiter(this, void 0, void 0, function* () {
+                    yield dialog.dismiss();
+                }));
+                yield page.goto(porttoporturl);
+                yield page.evaluate(element => {
+                    let dom = document.querySelector('#captcha_input');
+                    dom.parentNode.removeChild(dom);
                 });
-                for (let table of tables) {
-                    const tempTable = node_html_parser_1.parse(table);
-                    //find schedule part
-                    let part = tempTable.querySelectorAll('th').filter(x => x.innerHTML.indexOf('Schedule') !== -1);
-                    for (let p = 0; p < part.length; p++) {
+                //oriCountry
+                //fill from inputs
+                const fromInput = yield page.$('#tvs2OriAC_hideValue');
+                yield page.evaluate((fromInput, from) => fromInput.value = from.code, fromInput, from);
+                const fromInputName = yield page.$('#tvs2OriAC');
+                yield page.evaluate((fromInputName, from) => fromInputName.value = from.url, fromInputName, from);
+                //fill to location inputs
+                const toInput = yield page.$("#tvs2DesAC_hideValue");
+                yield page.evaluate((toInput, to) => toInput.value = to.code, toInput, to);
+                const toInputName = yield page.$("#tvs2DesAC");
+                yield page.evaluate((toInputName, to) => toInputName.value = to.url, toInputName, to);
+                //set duration week
+                const timeOption = yield page.$("#durationWeek");
+                yield page.evaluate((timeOption, range) => {
+                    switch (range) {
+                        case 1:
+                            timeOption.value = 7;
+                            break;
+                        case 2:
+                            timeOption.value = 14;
+                            break;
+                        case 3:
+                            timeOption.value = 21;
+                            break;
+                        default:
+                            timeOption.value = 28;
+                            break;
+                    }
+                }, timeOption, range);
+                const button = yield page.$("input[value='Submit']");
+                yield page.evaluate(button => button.click(), button);
+                yield page.waitForNavigation();
+                yield page.evaluate(element => {
+                    let dom = document.querySelector('#captcha_input');
+                    dom.parentNode.removeChild(dom);
+                });
+                const button2 = yield page.$("input[value='Submit']");
+                yield page.evaluate(button => button.click(), button2);
+                yield page.waitForNavigation();
+                let bodyHTML = yield page.evaluate(() => document.body.innerHTML);
+                if (bodyHTML.indexOf('Data not found') === -1) {
+                    const body = node_html_parser_1.parse(bodyHTML);
+                    let results = body.querySelectorAll('thead').filter(x => x.innerHTML.indexOf('Details') !== -1);
+                    for (let i = 1; i < results.length; i++) {
                         let roueTemp = new scrapModel_1.Route();
                         //get Arrival (eta)
-                        let ArrivalRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Arrival') !== -1);
-                        let ArrivalDates = ArrivalRow[ArrivalRow.length - 1].querySelectorAll('strong');
-                        let arrival = this.changeDate(new Date(ArrivalDates[p].innerHTML));
+                        let arrival = this.changeDate(results[i].querySelectorAll('tr')[1].querySelectorAll('td')[4].text.trim());
                         //get Departure (etd)
-                        let DepartureRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Departure') !== -1);
-                        let DepartureDates = DepartureRow[1].querySelectorAll('strong');
-                        let Departure = this.changeDate(new Date(DepartureDates[p].innerHTML));
-                        //service , vessel and Voyage
-                        let vesselRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Vessel') !== -1);
-                        let vesselData = vesselRow[0].querySelectorAll('td')[p];
+                        let Departure = this.changeDate(results[i].querySelectorAll('tr')[1].querySelectorAll('td')[1].text.trim());
+                        //Voyage and service
+                        let row = results[i].querySelectorAll('tr')[1].querySelectorAll('td')[3].text.trim();
                         //get vessel 
-                        let vesselHtml = vesselData.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                        let vesel = vesselHtml.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '');
+                        let vesel = row.split('\n')[0].trim();
                         //get Voyage
-                        let voyage = null;
-                        if (vesselData.querySelectorAll('a').length > 0) {
-                            voyage = vesselData.querySelectorAll('a').slice(-1).pop().text;
-                        }
+                        let voyage = row.split('\n')[1].trim();
                         //get service 
-                        let service = null;
-                        let serviceData = vesselData.childNodes.filter(x => x.text.indexOf('\n') === -1)[0].text;
-                        if (serviceData.indexOf('(') !== -1) {
-                            service = serviceData.match(/\((.*?)\)/g).pop().replace(/(\(|\))/g, '');
-                        }
-                        else {
-                            service = serviceData.trim();
-                        }
-                        //port cutoff and vga cutoff
-                        let portCutOff = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Port Cutoff') !== -1);
-                        let cutOffData = portCutOff[0].querySelectorAll('td')[p].innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                        //get Port Cutoff (from_sch_cy)
-                        let cutOff = cutOffData.split('<br />')[2];
-                        if (new Date(cutOff).toString() !== "Invalid Date") {
-                            cutOff = this.changeDate(new Date(cutOff));
-                        }
-                        else {
-                            cutOff = null;
-                        }
-                        //get vgm cutoff (from_sch_vgm)
-                        let vgmCutoff = cutOffData.split('<br />')[1];
-                        if (new Date(vgmCutoff).toString() !== "Invalid Date") {
-                            vgmCutoff = this.changeDate(new Date(vgmCutoff));
-                        }
-                        else {
-                            vgmCutoff = null;
-                        }
-                        //get to/from (ts_port_name) 
-                        let toFrom = null;
-                        let toFromRow = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('To / From') !== -1);
-                        if (toFromRow.length > 0) {
-                            toFrom = toFromRow[0].querySelectorAll('td')[p].querySelectorAll('a')[0].text;
-                        }
-                        //vessel and Voyage 2
+                        let service = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[4].text.trim();
+                        //go to Details
+                        //find Details Table
+                        let DetailBtn = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[8].querySelectorAll('span');
+                        let param = DetailBtn[0].attributes['params'];
+                        let code = param.split('=')[1];
+                        const detailsTable = body.querySelectorAll(`#detailSeq` + code)[0].querySelector('.Design1');
+                        const detailsRow = detailsTable.querySelectorAll(`tr`).filter(x => x.text.indexOf('----') === -1);
                         let vessel_2 = null;
                         let voyage_2 = null;
-                        let vessel2Row = tempTable.querySelectorAll('tr').filter(x => x.innerHTML.indexOf('Local Voyage Ref') !== -1);
-                        if (vessel2Row.length > 1) {
-                            let vessel2Data = vessel2Row[1].querySelectorAll('td')[p];
-                            //get vessel2
-                            let vessel2Html = vessel2Data.innerHTML.replace(/\n/g, '').replace(/\t/g, '');
-                            vessel_2 = vessel2Html.match(/<br \/>(.*?)<br \/>/gm)[0].replace(/<br \/>/g, '').split('<i')[0];
-                            if (vessel_2.indexOf('<i') !== -1) {
-                                vessel_2 = vessel_2.split('<i')[0];
-                            }
-                            //get Voyage2
-                            voyage_2 = null;
-                            if (vessel2Data.querySelectorAll('a').length > 0) {
-                                voyage_2 = vessel2Data.querySelectorAll('a').slice(-1).pop().text;
-                            }
+                        let ts_port_name = null;
+                        if (detailsRow.length > 3) {
+                            ts_port_name = detailsRow[3].querySelectorAll('td')[1].text.split(',')[0].trim();
+                            let v2 = detailsRow[3].querySelectorAll('td')[6].text.trim();
+                            vessel_2 = v2.match(/(.*?) /g).join(' ').trim();
+                            voyage_2 = v2.split(' ')[v2.split(' ').length - 1];
                         }
+                        //get 
                         //fill data
                         roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
                         roueTemp.from_port_name = portsDetail['fromPortname'].trim();
@@ -207,20 +201,20 @@ class aplScrapService {
                         roueTemp.voyage = voyage;
                         roueTemp.modify_date = new Date();
                         roueTemp.imp_exp = 'E';
-                        roueTemp.service = service.trim();
-                        roueTemp.from_sch_cy = cutOff;
+                        roueTemp.service = service;
+                        roueTemp.from_sch_cy = null;
                         roueTemp.from_sch_cfs = null;
                         roueTemp.from_sch_rece = null;
                         roueTemp.from_sch_si = null;
-                        roueTemp.from_sch_vgm = vgmCutoff;
+                        roueTemp.from_sch_vgm = null;
                         roueTemp.vessel_2 = vessel_2;
                         roueTemp.voyage_2 = voyage_2;
-                        roueTemp.ts_port_name = toFrom;
+                        roueTemp.ts_port_name = ts_port_name;
                         roueTemp.com_code = this.siteSettingGlobal['com_code'].trim();
                         roueTemp.DisableEnable = this.siteSettingGlobal['DisableEnable'];
                         roueTemp.subsidiary_id = this.siteSettingGlobal['Subsidiary_id'].trim();
                         roueTemp.masterSetting = id;
-                        roueTemp.siteId = 2;
+                        roueTemp.siteId = 3;
                         //!!!!
                         yield this.scrap.saveRoute(roueTemp);
                         // //dispose variables
@@ -229,9 +223,10 @@ class aplScrapService {
                 }
             }
             catch (e) {
-                utilService_1.default.writeLog(e);
+                utilService_1.default.writeLog(e.message);
             }
             finally {
+                yield page.close();
                 yield browser.close();
                 resolve('ok');
             }
@@ -243,36 +238,61 @@ class aplScrapService {
             month = '0' + month;
         if (day.length < 2)
             day = '0' + day;
-        return [month, day, year].join('/');
+        return [year, month, day].join('-');
     }
     findCode(code) {
         return new Promise((resolve, reject) => {
-            let url = `http://www.apl.com/api/PortsWithInlands/GetAll?id=${code.trim().toLowerCase()}`;
-            request(url, (err, res, body) => {
-                try {
-                    if (err) {
+            try {
+                let url = `https://www.shipmentlink.com/servlet/TUF1_AutoCompleteServlet`;
+                var options = {
+                    method: 'POST',
+                    url: url,
+                    headers: {
+                        'cache-control': 'no-cache',
+                        'Content-Length': '89',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Cache-Control': 'no-cache',
+                        Accept: '*/*'
+                    },
+                    form: {
+                        scope: 'context',
+                        search: code,
+                        action: 'preLoad',
+                        switchSql: '',
+                        datasource: 'bkLocations',
+                        fromFirst: 'true'
+                    }
+                };
+                request(options, (error, response, body) => {
+                    if (error)
+                        resolve('');
+                    try {
+                        let res = {};
+                        res['url'] = decodeURIComponent(eval(body)[0][0]);
+                        res['code'] = decodeURIComponent(eval(body)[0][1]);
+                        resolve(res);
+                    }
+                    catch (_a) {
                         resolve('');
                     }
-                    else {
-                        let obj = JSON.parse(body);
-                        if (obj.length !== 0) {
-                            resolve(obj[0]['Name']);
-                        }
-                        else {
-                            resolve('');
-                        }
-                    }
-                }
-                catch (e) {
-                    resolve('');
-                }
-            });
+                });
+            }
+            catch (e) {
+                resolve('');
+            }
         });
     }
     sleep() {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000);
         });
+    }
+    decodeHex(h) {
+        var s = '';
+        for (var i = 0; i < h.length; i += 2) {
+            s += String.fromCharCode(parseInt(h.substr(i, 2), 16));
+        }
+        return decodeURIComponent(escape(s));
     }
     changeDate(date) {
         try {
@@ -294,5 +314,5 @@ class aplScrapService {
         }
     }
 }
-exports.default = aplScrapService;
-//# sourceMappingURL=aplScrapService.js.map
+exports.default = shipmentLinkService;
+//# sourceMappingURL=shipmentlinkScrapService.js.map

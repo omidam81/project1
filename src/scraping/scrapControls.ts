@@ -9,6 +9,7 @@ import maerskScrapService from '../services/maerskScrapService';
 import pilScrapService from '../services/pilScrapService';
 import * as ScrapModel from './scrapModel';
 import zimScrapService from '../services/zimScrapService';
+import shipmentLinkService from '../services/shipmentlinkScrapService';
 class scrapControler {
     public router: express.router;
     public scrap: Scrap;
@@ -17,6 +18,7 @@ class scrapControler {
     public maersk: maerskScrapService;
     public pil: pilScrapService;
     public zim: zimScrapService;
+    public shipment:shipmentLinkService;
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
@@ -25,6 +27,7 @@ class scrapControler {
         this.maersk = new maerskScrapService();
         this.pil = new pilScrapService();
         this.zim = new zimScrapService();
+        this.shipment = new shipmentLinkService();
         this.config();
         this.call();
     }
@@ -161,6 +164,9 @@ class scrapControler {
                         break;
                     case 5:
                         this.zim.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 6:
+                        this.shipment.loadPortToPortSchedule(siteSetting.String);
                         break;
                 }
                 this.scrap
@@ -454,6 +460,10 @@ class scrapControler {
                     msg: 'fail'
                 });
             }
+        })
+
+        this.router.get('/api/test/',(req,res)=>{
+            this.apl.sendData("BANGKOK ; TH ; THBKK","QINZHOU ; CN ; CNQZH","10/17/2019",3,null,null)
         })
     }
 }

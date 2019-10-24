@@ -18,6 +18,7 @@ const maerskScrapService_1 = require("../services/maerskScrapService");
 const pilScrapService_1 = require("../services/pilScrapService");
 const ScrapModel = require("./scrapModel");
 const zimScrapService_1 = require("../services/zimScrapService");
+const shipmentlinkScrapService_1 = require("../services/shipmentlinkScrapService");
 class scrapControler {
     constructor() {
         this.router = express.Router();
@@ -27,6 +28,7 @@ class scrapControler {
         this.maersk = new maerskScrapService_1.default();
         this.pil = new pilScrapService_1.default();
         this.zim = new zimScrapService_1.default();
+        this.shipment = new shipmentlinkScrapService_1.default();
         this.config();
         this.call();
     }
@@ -162,6 +164,9 @@ class scrapControler {
                         break;
                     case 5:
                         this.zim.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 6:
+                        this.shipment.loadPortToPortSchedule(siteSetting.String);
                         break;
                 }
                 this.scrap
@@ -459,6 +464,9 @@ class scrapControler {
                     msg: 'fail'
                 });
             }
+        });
+        this.router.get('/api/test/', (req, res) => {
+            this.apl.sendData("BANGKOK ; TH ; THBKK", "QINZHOU ; CN ; CNQZH", "10/17/2019", 3, null, null);
         });
     }
 }

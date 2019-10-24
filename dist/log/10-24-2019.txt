@@ -1,0 +1,8 @@
+
+11:09:00 AM:Evaluation failed: TypeError: Cannot read property 'parentNode' of null
+    at __puppeteer_evaluation_script__:3:25
+11:12:34 AM:Evaluation failed: TypeError: Cannot read property 'parentNode' of null
+    at __puppeteer_evaluation_script__:3:25
+12:05:47 PM:Evaluation failed: TypeError: Cannot read property 'parentNode' of null
+    at __puppeteer_evaluation_script__:3:25
+2:42:44 PM:Navigation Timeout Exceeded: 30000ms exceeded
