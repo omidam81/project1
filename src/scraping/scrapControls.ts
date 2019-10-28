@@ -10,6 +10,7 @@ import pilScrapService from '../services/pilScrapService';
 import * as ScrapModel from './scrapModel';
 import zimScrapService from '../services/zimScrapService';
 import shipmentLinkService from '../services/shipmentlinkScrapService';
+import { GlobalSchedule } from '../services/globalSheduleList';
 class scrapControler {
     public router: express.router;
     public scrap: Scrap;
@@ -18,7 +19,7 @@ class scrapControler {
     public maersk: maerskScrapService;
     public pil: pilScrapService;
     public zim: zimScrapService;
-    public shipment:shipmentLinkService;
+    public shipment: shipmentLinkService;
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
@@ -462,8 +463,44 @@ class scrapControler {
             }
         })
 
-        this.router.get('/api/test/',(req,res)=>{
-            this.apl.sendData("BANGKOK ; TH ; THBKK","QINZHOU ; CN ; CNQZH","10/17/2019",3,null,null)
+        this.router.get('/api/test/', (req, res) => {
+            this.apl.sendData("BANGKOK ; TH ; THBKK", "QINZHOU ; CN ; CNQZH", "10/17/2019", 3, null, null)
+        })
+        this.router.get('/api/checkServices', (req, res) => {
+            let result = [];
+            result.push({
+                name:'Zim',
+                service: GlobalSchedule.zimScheduleService,
+                count: GlobalSchedule.zimScheduleCount
+            });
+            result.push({
+                name:'apl',
+                service: GlobalSchedule.aplScheduleService,
+                count: GlobalSchedule.aplScheduleCount
+            });
+            result.push({
+                name:'maersk',
+                service: GlobalSchedule.maerskScheduleService,
+                count: GlobalSchedule.maerskScheduleCount
+            });
+            result.push({
+                name:'oneLine',
+                service: GlobalSchedule.oneLineScheduleService,
+                count: GlobalSchedule.oneLineScheduleCount
+            });
+            result.push({
+                name:'pil',
+                service: GlobalSchedule.pilScheduleService,
+                count: GlobalSchedule.pilScheduleCount
+            });
+            result.push({
+                name:'shipmentLink',
+                service: GlobalSchedule.shipmentLinkScheduleService,
+                count: GlobalSchedule.shipmentLinkScheduleCount
+            });
+            res.status(200).send({
+                result
+            })
         })
     }
 }

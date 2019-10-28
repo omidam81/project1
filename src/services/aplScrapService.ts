@@ -31,83 +31,94 @@ export default class aplScrapService {
         GlobalSchedule.aplSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
-                let siteSetting = await this.scrap.loadSetting(2);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
-                console.log(scheduleTime);
-                console.log('service apl call');
-                //get all points
-                //init scrap proccess
+                try {
+                    let siteSetting = await this.scrap.loadSetting(2);
+                    if (!siteSetting[0]['DisableEnable']) {
+                        return;
+                    }
+                    console.log(scheduleTime);
+                    console.log('service apl call');
+                    GlobalSchedule.aplScheduleService = true;
+                    GlobalSchedule.aplScheduleCount = 0;
+                    //get all points
+                    //init scrap proccess
 
-                let timeLength = siteSetting[0]['LenghtScrap'];
-                let tempDate = new Date();
-                let endTime = this.IsoTime(
-                    tempDate.setDate(tempDate.getDate() + timeLength)
-                );
-                let startTime = this.IsoTime(new Date());
-                let iso = new Date().toISOString().split('T')[0];
-                let obj = await this.scrap.insertMasterRoute(iso, 1);
-                let id = obj[0]['PkMasterRoute'];
-                console.log(new Date());
-                this.siteSettingGlobal = siteSetting[0];
-                let cath = [];
-                //load  first 1000 ptp
-                let portToPortList = await this.scrap.loadDetailSetting(1, 0);
-                if (portToPortList[0]) {
-                    while (true) {
-                        for (let ptp of portToPortList) {
-                            let from = cath.find(x => x.name === ptp['fromPortname']);
-                            let to = cath.find(x => x.name === ptp['toPortname']);
-                            let fromCode;
-                            let toCode;
-                            //check if this port not in my cache call api and get code 
-                            if (!from) {
-                                fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
-                                cath.push({
-                                    name: ptp['fromPortname'],
-                                    code: fromCode
-                                })
-                            } else {
-                                if (from['code'] === 'noCode') {
-                                    continue;
+                    let timeLength = siteSetting[0]['LenghtScrap'];
+                    let tempDate = new Date();
+                    let endTime = this.IsoTime(
+                        tempDate.setDate(tempDate.getDate() + timeLength)
+                    );
+                    let startTime = this.IsoTime(new Date());
+                    let iso = new Date().toISOString().split('T')[0];
+                    let obj = await this.scrap.insertMasterRoute(iso, 1);
+                    let id = obj[0]['PkMasterRoute'];
+                    console.log(new Date());
+                    this.siteSettingGlobal = siteSetting[0];
+                    let cath = [];
+                    //load  first 1000 ptp
+                    let portToPortList = await this.scrap.loadDetailSetting(1, 0);
+                    if (portToPortList[0]) {
+                        while (true) {
+                            for (let ptp of portToPortList) {
+                                let from = cath.find(x => x.name === ptp['fromPortname']);
+                                let to = cath.find(x => x.name === ptp['toPortname']);
+                                let fromCode;
+                                let toCode;
+                                //check if this port not in my cache call api and get code 
+                                if (!from) {
+                                    fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
+                                    cath.push({
+                                        name: ptp['fromPortname'],
+                                        code: fromCode
+                                    })
+                                } else {
+                                    if (from['code'] === 'noCode') {
+                                        continue;
+                                    }
+                                    fromCode = from['code'];
                                 }
-                                fromCode = from['code'];
-                            }
-                            if (!to) {
-                                toCode = await this.findCode(ptp['toPortname']) || 'noCode'
-                                cath.push({
-                                    name: ptp['toPortname'],
-                                    code: toCode
-                                })
-                            } else {
-                                if (to['code'] === 'noCode') {
-                                    continue;
+                                if (!to) {
+                                    toCode = await this.findCode(ptp['toPortname']) || 'noCode'
+                                    cath.push({
+                                        name: ptp['toPortname'],
+                                        code: toCode
+                                    })
+                                } else {
+                                    if (to['code'] === 'noCode') {
+                                        continue;
+                                    }
+                                    toCode = to['code'];
                                 }
-                                toCode = to['code'];
+                                if (toCode === 'noCode' || fromCode === 'noCode') {
+                                    continue
+                                }
+                                await this.sendData(
+                                    fromCode,
+                                    toCode,
+                                    startTime,
+                                    endTime,
+                                    id,
+                                    ptp
+                                );
                             }
-                            if (toCode === 'noCode' || fromCode === 'noCode') {
-                                continue
+                            UtilService.writeTime(`0`)
+                            portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                            if (!portToPortList[0]) {
+                                break;
                             }
-                            await this.sendData(
-                                fromCode,
-                                toCode,
-                                startTime,
-                                endTime,
-                                id,
-                                ptp
-                            );
                         }
-                        UtilService.writeTime(`0`)
-                        portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
-                        if (!portToPortList[0]) {
-                            break;
-                        }
+
                     }
 
-                }
 
-                console.log('finish');
+                } catch(e){
+                    console.log('apl scrap problem!!! please check your log file');
+                    util.writeLog(e);
+                }
+                finally {
+                    GlobalSchedule.aplScheduleService = false;
+                    console.log('finish');
+                }
             }
         );
     }
@@ -245,6 +256,7 @@ export default class aplScrapService {
                         roueTemp.siteId = 2;
                         //!!!!
                         await this.scrap.saveRoute(roueTemp);
+                        GlobalSchedule.aplScheduleCount++;
                         // //dispose variables
                         roueTemp = null;
                     }
@@ -299,7 +311,7 @@ export default class aplScrapService {
         })
     }
     public changeDate(date: Date) {
-        try{
+        try {
             let year = date.getFullYear();
             let month = date.getMonth() + 1;
             let day = date.getDate();
@@ -312,7 +324,7 @@ export default class aplScrapService {
                 m = "0" + m.toString();
             }
             return `${year}/${month}/${day} ${h}:${m}`
-        }catch{
+        } catch{
             return null;
         }
     }

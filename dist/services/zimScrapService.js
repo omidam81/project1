@@ -32,75 +32,86 @@ class zimScrapService {
             globalSheduleList_1.GlobalSchedule.zimSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.zimSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
-            let siteSetting = yield this.scrap.loadSetting(5);
-            if (!siteSetting[0]['DisableEnable']) {
-                return;
-            }
-            console.log(scheduleTime);
-            console.log('service zim call');
-            //get all points
-            //init scrap proccess
-            let timeLength = siteSetting[0]['LenghtScrap'];
-            let endTime = Math.floor(timeLength / 7);
-            if (endTime === 0)
-                endTime = endTime + 1;
-            let iso = new Date().toISOString().split('T')[0];
-            let obj = yield this.scrap.insertMasterRoute(iso, 1);
-            let id = obj[0]['PkMasterRoute'];
-            console.log(new Date());
-            this.siteSettingGlobal = siteSetting[0];
-            let cath = [];
-            //load  first 1000 ptp
-            let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
-            if (portToPortList[0]) {
-                while (true) {
-                    for (let ptp of portToPortList) {
-                        let from = cath.find(x => x.name === ptp['fromPortname']);
-                        let to = cath.find(x => x.name === ptp['toPortname']);
-                        let fromCode;
-                        let toCode;
-                        //check if this port not in my cache call api and get code 
-                        if (!from) {
-                            fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
-                            cath.push({
-                                name: ptp['fromPortname'],
-                                code: fromCode
-                            });
-                        }
-                        else {
-                            if (from['code'] === 'noCode') {
+            try {
+                let siteSetting = yield this.scrap.loadSetting(5);
+                if (!siteSetting[0]['DisableEnable']) {
+                    return;
+                }
+                console.log(scheduleTime);
+                console.log('service zim call');
+                globalSheduleList_1.GlobalSchedule.zimScheduleService = true;
+                globalSheduleList_1.GlobalSchedule.zimScheduleCount = 0;
+                //get all points
+                //init scrap proccess
+                let timeLength = siteSetting[0]['LenghtScrap'];
+                let endTime = Math.floor(timeLength / 7);
+                if (endTime === 0)
+                    endTime = endTime + 1;
+                let iso = new Date().toISOString().split('T')[0];
+                let obj = yield this.scrap.insertMasterRoute(iso, 1);
+                let id = obj[0]['PkMasterRoute'];
+                console.log(new Date());
+                this.siteSettingGlobal = siteSetting[0];
+                let cath = [];
+                //load  first 1000 ptp
+                let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
+                if (portToPortList[0]) {
+                    while (true) {
+                        for (let ptp of portToPortList) {
+                            let from = cath.find(x => x.name === ptp['fromPortname']);
+                            let to = cath.find(x => x.name === ptp['toPortname']);
+                            let fromCode;
+                            let toCode;
+                            //check if this port not in my cache call api and get code 
+                            if (!from) {
+                                fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
+                                cath.push({
+                                    name: ptp['fromPortname'],
+                                    code: fromCode
+                                });
+                            }
+                            else {
+                                if (from['code'] === 'noCode') {
+                                    continue;
+                                }
+                                fromCode = from['code'];
+                            }
+                            if (!to) {
+                                toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
+                                cath.push({
+                                    name: ptp['toPortname'],
+                                    code: toCode
+                                });
+                            }
+                            else {
+                                if (to['code'] === 'noCode') {
+                                    continue;
+                                }
+                                toCode = to['code'];
+                            }
+                            if (toCode === 'noCode' || fromCode === 'noCode') {
                                 continue;
                             }
-                            fromCode = from['code'];
-                        }
-                        if (!to) {
-                            toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
-                            cath.push({
-                                name: ptp['toPortname'],
-                                code: toCode
-                            });
-                        }
-                        else {
-                            if (to['code'] === 'noCode') {
-                                continue;
+                            const pageNum = yield this.findPageNumber(fromCode, toCode, endTime);
+                            for (let p = 0; p < pageNum; p++) {
+                                yield this.sendData(fromCode, toCode, endTime, id, ptp, p + 1);
                             }
-                            toCode = to['code'];
                         }
-                        if (toCode === 'noCode' || fromCode === 'noCode') {
-                            continue;
+                        portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                        if (!portToPortList[0]) {
+                            break;
                         }
-                        const pageNum = yield this.findPageNumber(fromCode, toCode, endTime);
-                        for (let p = 0; p < pageNum; p++) {
-                            yield this.sendData(fromCode, toCode, endTime, id, ptp, p + 1);
-                        }
-                    }
-                    portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
-                    if (!portToPortList[0]) {
-                        break;
                     }
                 }
             }
-            console.log('finish');
+            catch (e) {
+                console.log('zim scrap problem!!! please check your log file');
+                utilService_1.default.writeLog("zim:" + e);
+            }
+            finally {
+                console.log('finish');
+                globalSheduleList_1.GlobalSchedule.zimScheduleService = false;
+            }
         }));
     }
     sendData(from, to, NOW, id, portsDetail, page) {
@@ -201,6 +212,7 @@ class zimScrapService {
                                         //!!!!
                                         yield this.scrap.saveRoute(roueTemp);
                                         // //dispose variables
+                                        globalSheduleList_1.GlobalSchedule.zimScheduleCount++;
                                         roueTemp = null;
                                     }
                                     catch (e) {

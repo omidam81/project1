@@ -33,74 +33,85 @@ class shipmentLinkService {
             globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
-            let siteSetting = yield this.scrap.loadSetting(6);
-            if (!siteSetting[0]['DisableEnable']) {
-                return;
-            }
-            console.log(scheduleTime);
-            console.log('service apl call');
-            //get all points
-            //init scrap proccess
-            let timeLength = siteSetting[0]['LenghtScrap'];
-            let tempDate = new Date();
-            let range = Math.floor(timeLength / 7);
-            if (range === 0)
-                range = 1;
-            let startTime = this.IsoTime(new Date());
-            let iso = new Date().toISOString().split('T')[0];
-            let obj = yield this.scrap.insertMasterRoute(iso, 1);
-            let id = obj[0]['PkMasterRoute'];
-            console.log(new Date());
-            this.siteSettingGlobal = siteSetting[0];
-            let cath = [];
-            //load  first 1000 ptp
-            let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
-            if (portToPortList[0]) {
-                while (true) {
-                    for (let ptp of portToPortList) {
-                        let from = cath.find(x => x.name === ptp['fromPortname']);
-                        let to = cath.find(x => x.name === ptp['toPortname']);
-                        let fromCode;
-                        let toCode;
-                        //check if this port not in my cache call api and get code 
-                        if (!from) {
-                            fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
-                            cath.push({
-                                name: ptp['fromPortname'],
-                                code: fromCode
-                            });
-                        }
-                        else {
-                            if (from['code'] === 'noCode') {
+            try {
+                let siteSetting = yield this.scrap.loadSetting(6);
+                if (!siteSetting[0]['DisableEnable']) {
+                    return;
+                }
+                console.log(scheduleTime);
+                console.log('service shipment call');
+                globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService = true;
+                globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleCount = 0;
+                //get all points
+                //init scrap proccess
+                let timeLength = siteSetting[0]['LenghtScrap'];
+                let tempDate = new Date();
+                let range = Math.floor(timeLength / 7);
+                if (range === 0)
+                    range = 1;
+                let startTime = this.IsoTime(new Date());
+                let iso = new Date().toISOString().split('T')[0];
+                let obj = yield this.scrap.insertMasterRoute(iso, 1);
+                let id = obj[0]['PkMasterRoute'];
+                console.log(new Date());
+                this.siteSettingGlobal = siteSetting[0];
+                let cath = [];
+                //load  first 1000 ptp
+                let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
+                if (portToPortList[0]) {
+                    while (true) {
+                        for (let ptp of portToPortList) {
+                            let from = cath.find(x => x.name === ptp['fromPortname']);
+                            let to = cath.find(x => x.name === ptp['toPortname']);
+                            let fromCode;
+                            let toCode;
+                            //check if this port not in my cache call api and get code 
+                            if (!from) {
+                                fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
+                                cath.push({
+                                    name: ptp['fromPortname'],
+                                    code: fromCode
+                                });
+                            }
+                            else {
+                                if (from['code'] === 'noCode') {
+                                    continue;
+                                }
+                                fromCode = from['code'];
+                            }
+                            if (!to) {
+                                toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
+                                cath.push({
+                                    name: ptp['toPortname'],
+                                    code: toCode
+                                });
+                            }
+                            else {
+                                if (to['code'] === 'noCode') {
+                                    continue;
+                                }
+                                toCode = to['code'];
+                            }
+                            if (toCode === 'noCode' || fromCode === 'noCode') {
                                 continue;
                             }
-                            fromCode = from['code'];
+                            yield this.sendData(fromCode, toCode, startTime, range, id, ptp);
                         }
-                        if (!to) {
-                            toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
-                            cath.push({
-                                name: ptp['toPortname'],
-                                code: toCode
-                            });
+                        portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                        if (!portToPortList[0]) {
+                            break;
                         }
-                        else {
-                            if (to['code'] === 'noCode') {
-                                continue;
-                            }
-                            toCode = to['code'];
-                        }
-                        if (toCode === 'noCode' || fromCode === 'noCode') {
-                            continue;
-                        }
-                        yield this.sendData(fromCode, toCode, startTime, range, id, ptp);
-                    }
-                    portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
-                    if (!portToPortList[0]) {
-                        break;
                     }
                 }
             }
-            console.log('finish');
+            catch (e) {
+                console.log('shipmentLink scrap problem!!! please check your log file');
+                utilService_1.default.writeLog("shipmentLink:" + e);
+            }
+            finally {
+                console.log('finish');
+                globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService = false;
+            }
         }));
     }
     sendData(from, to, startDate, range, id, portsDetail) {
@@ -217,6 +228,7 @@ class shipmentLinkService {
                         roueTemp.siteId = 3;
                         //!!!!
                         yield this.scrap.saveRoute(roueTemp);
+                        globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleCount++;
                         // //dispose variables
                         roueTemp = null;
                     }

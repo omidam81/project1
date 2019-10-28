@@ -27,82 +27,94 @@ export default class zimScrapService {
         GlobalSchedule.zimSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
-                let siteSetting = await this.scrap.loadSetting(5);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
-                console.log(scheduleTime);
-                console.log('service zim call');
-                //get all points
-                //init scrap proccess
-                let timeLength = siteSetting[0]['LenghtScrap'];
-                let endTime = Math.floor(timeLength / 7);
-                if (endTime === 0)
-                    endTime = endTime + 1;
-                let iso = new Date().toISOString().split('T')[0];
-                let obj = await this.scrap.insertMasterRoute(iso, 1);
-                let id = obj[0]['PkMasterRoute'];
-                console.log(new Date());
-                this.siteSettingGlobal = siteSetting[0];
-                let cath = [];
-                //load  first 1000 ptp
-                let portToPortList = await this.scrap.loadDetailSetting(1, 0);
-                if (portToPortList[0]) {
-                    while (true) {
-                        for (let ptp of portToPortList) {
-                            let from = cath.find(x => x.name === ptp['fromPortname']);
-                            let to = cath.find(x => x.name === ptp['toPortname']);
-                            let fromCode;
-                            let toCode;
-                            //check if this port not in my cache call api and get code 
-                            if (!from) {
-                                fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
-                                cath.push({
-                                    name: ptp['fromPortname'],
-                                    code: fromCode
-                                })
-                            } else {
-                                if (from['code'] === 'noCode') {
-                                    continue;
-                                }
-                                fromCode = from['code'];
-                            }
-                            if (!to) {
-                                toCode = await this.findCode(ptp['toPortname']) || 'noCode'
-                                cath.push({
-                                    name: ptp['toPortname'],
-                                    code: toCode
-                                })
-                            } else {
-                                if (to['code'] === 'noCode') {
-                                    continue;
-                                }
-                                toCode = to['code'];
-                            }
-                            if (toCode === 'noCode' || fromCode === 'noCode') {
-                                continue
-                            }
-                            const pageNum: any = await this.findPageNumber(fromCode, toCode, endTime);
-                            for (let p = 0; p < pageNum; p++) {
-                                await this.sendData(
-                                    fromCode,
-                                    toCode,
-                                    endTime,
-                                    id,
-                                    ptp,
-                                    p + 1
-                                );
-                            }
-                        }
-                        portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
-                        if (!portToPortList[0]) {
-                            break;
-                        }
+                try{
+                    let siteSetting = await this.scrap.loadSetting(5);
+                    if (!siteSetting[0]['DisableEnable']) {
+                        return;
                     }
-
+                    console.log(scheduleTime);
+                    console.log('service zim call');
+                    GlobalSchedule.zimScheduleService = true;
+                    GlobalSchedule.zimScheduleCount = 0;
+                    //get all points
+                    //init scrap proccess
+                    let timeLength = siteSetting[0]['LenghtScrap'];
+                    let endTime = Math.floor(timeLength / 7);
+                    if (endTime === 0)
+                        endTime = endTime + 1;
+                    let iso = new Date().toISOString().split('T')[0];
+                    let obj = await this.scrap.insertMasterRoute(iso, 1);
+                    let id = obj[0]['PkMasterRoute'];
+                    console.log(new Date());
+                    this.siteSettingGlobal = siteSetting[0];
+                    let cath = [];
+                    //load  first 1000 ptp
+                    let portToPortList = await this.scrap.loadDetailSetting(1, 0);
+                    if (portToPortList[0]) {
+                        while (true) {
+                            for (let ptp of portToPortList) {
+                                let from = cath.find(x => x.name === ptp['fromPortname']);
+                                let to = cath.find(x => x.name === ptp['toPortname']);
+                                let fromCode;
+                                let toCode;
+                                //check if this port not in my cache call api and get code 
+                                if (!from) {
+                                    fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
+                                    cath.push({
+                                        name: ptp['fromPortname'],
+                                        code: fromCode
+                                    })
+                                } else {
+                                    if (from['code'] === 'noCode') {
+                                        continue;
+                                    }
+                                    fromCode = from['code'];
+                                }
+                                if (!to) {
+                                    toCode = await this.findCode(ptp['toPortname']) || 'noCode'
+                                    cath.push({
+                                        name: ptp['toPortname'],
+                                        code: toCode
+                                    })
+                                } else {
+                                    if (to['code'] === 'noCode') {
+                                        continue;
+                                    }
+                                    toCode = to['code'];
+                                }
+                                if (toCode === 'noCode' || fromCode === 'noCode') {
+                                    continue
+                                }
+                                const pageNum: any = await this.findPageNumber(fromCode, toCode, endTime);
+                                for (let p = 0; p < pageNum; p++) {
+                                    await this.sendData(
+                                        fromCode,
+                                        toCode,
+                                        endTime,
+                                        id,
+                                        ptp,
+                                        p + 1
+                                    );
+                                }
+                            }
+                            portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                            if (!portToPortList[0]) {
+                                break;
+                            }
+                        }
+    
+                    }
+    
+                   
+                }catch(e){
+                    console.log('zim scrap problem!!! please check your log file');
+                    util.writeLog("zim:" + e);
                 }
-
-                console.log('finish');
+                finally{
+                    console.log('finish');
+                    GlobalSchedule.zimScheduleService = false;
+                }
+               
             }
         );
     }
@@ -221,6 +233,7 @@ export default class zimScrapService {
                                     //!!!!
                                     await this.scrap.saveRoute(roueTemp);
                                     // //dispose variables
+                                    GlobalSchedule.zimScheduleCount++;
                                     roueTemp = null;
                                   }catch(e){
                                       continue;

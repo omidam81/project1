@@ -33,44 +33,55 @@ class pilScrapService {
             globalSheduleList_1.GlobalSchedule.pilSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.pilSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
-            let siteSetting = yield this.scrap.loadSetting(4);
-            if (!siteSetting[0]['DisableEnable']) {
-                return;
-            }
-            console.log(scheduleTime);
-            console.log('service pil call');
-            //get all points
-            //init scrap proccess
-            let timeLength = siteSetting[0]['LenghtScrap'];
-            let endTime = Math.floor(timeLength / 7);
-            if (endTime === 0)
-                endTime++;
-            let startTime = this.IsoTime(new Date());
-            let iso = new Date().toISOString().split('T')[0];
-            let obj = yield this.scrap.insertMasterRoute(iso, 1);
-            let id = obj[0]['PkMasterRoute'];
-            console.log(new Date());
-            this.siteSettingGlobal = siteSetting[0];
-            let cath = [];
-            //load  first 1000 ptp
-            let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
-            if (portToPortList[0]) {
-                while (true) {
-                    for (let ptp of portToPortList) {
-                        let from = this.findCode(ptp['fromPortname']);
-                        let to = this.findCode(ptp['toPortname']);
-                        if (!from || !to) {
-                            continue;
+            try {
+                let siteSetting = yield this.scrap.loadSetting(4);
+                if (!siteSetting[0]['DisableEnable']) {
+                    return;
+                }
+                console.log(scheduleTime);
+                console.log('service pil call');
+                globalSheduleList_1.GlobalSchedule.pilScheduleService = true;
+                globalSheduleList_1.GlobalSchedule.pilScheduleCount = 0;
+                //get all points
+                //init scrap proccess
+                let timeLength = siteSetting[0]['LenghtScrap'];
+                let endTime = Math.floor(timeLength / 7);
+                if (endTime === 0)
+                    endTime++;
+                let startTime = this.IsoTime(new Date());
+                let iso = new Date().toISOString().split('T')[0];
+                let obj = yield this.scrap.insertMasterRoute(iso, 1);
+                let id = obj[0]['PkMasterRoute'];
+                console.log(new Date());
+                this.siteSettingGlobal = siteSetting[0];
+                let cath = [];
+                //load  first 1000 ptp
+                let portToPortList = yield this.scrap.loadDetailSetting(1, 0);
+                if (portToPortList[0]) {
+                    while (true) {
+                        for (let ptp of portToPortList) {
+                            let from = this.findCode(ptp['fromPortname']);
+                            let to = this.findCode(ptp['toPortname']);
+                            if (!from || !to) {
+                                continue;
+                            }
+                            yield this.sendData(from, to, startTime, endTime, id, ptp);
                         }
-                        yield this.sendData(from, to, startTime, endTime, id, ptp);
-                    }
-                    portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
-                    if (!portToPortList[0]) {
-                        break;
+                        portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
+                        if (!portToPortList[0]) {
+                            break;
+                        }
                     }
                 }
             }
-            console.log('finish');
+            catch (e) {
+                console.log('pil scrap problem!!! please check your log file');
+                utilService_1.default.writeLog("pil:" + e);
+            }
+            finally {
+                console.log('finish');
+                globalSheduleList_1.GlobalSchedule.pilScheduleService = false;
+            }
         }));
     }
     sendData(from, to, startDate, range, id, portsDetail) {
@@ -162,6 +173,7 @@ class pilScrapService {
                         roueTemp.siteId = 4;
                         //!!!!
                         yield this.scrap.saveRoute(roueTemp);
+                        globalSheduleList_1.GlobalSchedule.pilScheduleCount++;
                         // //dispose variables
                         roueTemp = null;
                     }

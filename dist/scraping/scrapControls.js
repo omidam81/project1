@@ -19,6 +19,7 @@ const pilScrapService_1 = require("../services/pilScrapService");
 const ScrapModel = require("./scrapModel");
 const zimScrapService_1 = require("../services/zimScrapService");
 const shipmentlinkScrapService_1 = require("../services/shipmentlinkScrapService");
+const globalSheduleList_1 = require("../services/globalSheduleList");
 class scrapControler {
     constructor() {
         this.router = express.Router();
@@ -467,6 +468,42 @@ class scrapControler {
         });
         this.router.get('/api/test/', (req, res) => {
             this.apl.sendData("BANGKOK ; TH ; THBKK", "QINZHOU ; CN ; CNQZH", "10/17/2019", 3, null, null);
+        });
+        this.router.get('/api/checkServices', (req, res) => {
+            let result = [];
+            result.push({
+                name: 'Zim',
+                service: globalSheduleList_1.GlobalSchedule.zimScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.zimScheduleCount
+            });
+            result.push({
+                name: 'apl',
+                service: globalSheduleList_1.GlobalSchedule.aplScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.aplScheduleCount
+            });
+            result.push({
+                name: 'maersk',
+                service: globalSheduleList_1.GlobalSchedule.maerskScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.maerskScheduleCount
+            });
+            result.push({
+                name: 'oneLine',
+                service: globalSheduleList_1.GlobalSchedule.oneLineScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.oneLineScheduleCount
+            });
+            result.push({
+                name: 'pil',
+                service: globalSheduleList_1.GlobalSchedule.pilScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.pilScheduleCount
+            });
+            result.push({
+                name: 'shipmentLink',
+                service: globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleCount
+            });
+            res.status(200).send({
+                result
+            });
         });
     }
 }
