@@ -124,8 +124,10 @@ class shipmentLinkService {
                 }));
                 yield page.goto(porttoporturl);
                 yield page.evaluate(element => {
-                    let dom = document.querySelector('#captcha_input');
-                    dom.parentNode.removeChild(dom);
+                    document.getElementById('captcha_input').remove();
+                    if (document.getElementById('captcha_input')) {
+                        document.getElementById('captcha_input').remove();
+                    }
                 });
                 //oriCountry
                 //fill from inputs
@@ -160,8 +162,10 @@ class shipmentLinkService {
                 yield page.evaluate(button => button.click(), button);
                 yield page.waitForNavigation();
                 yield page.evaluate(element => {
-                    let dom = document.querySelector('#captcha_input');
-                    dom.parentNode.removeChild(dom);
+                    document.getElementById('captcha_input').remove();
+                    if (document.getElementById('captcha_input')) {
+                        document.getElementById('captcha_input').remove();
+                    }
                 });
                 const button2 = yield page.$("input[value='Submit']");
                 yield page.evaluate(button => button.click(), button2);
@@ -173,9 +177,9 @@ class shipmentLinkService {
                     for (let i = 1; i < results.length; i++) {
                         let roueTemp = new scrapModel_1.Route();
                         //get Arrival (eta)
-                        let arrival = this.changeDate(results[i].querySelectorAll('tr')[1].querySelectorAll('td')[4].text.trim());
+                        let arrival = this.changeDate(new Date(results[i].querySelectorAll('tr')[1].querySelectorAll('td')[4].text.trim()));
                         //get Departure (etd)
-                        let Departure = this.changeDate(results[i].querySelectorAll('tr')[1].querySelectorAll('td')[1].text.trim());
+                        let Departure = this.changeDate(new Date(results[i].querySelectorAll('tr')[1].querySelectorAll('td')[1].text.trim()));
                         //Voyage and service
                         let row = results[i].querySelectorAll('tr')[1].querySelectorAll('td')[3].text.trim();
                         //get vessel 
@@ -184,6 +188,14 @@ class shipmentLinkService {
                         let voyage = row.split('\n')[1].trim();
                         //get service 
                         let service = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[4].text.trim();
+                        //get from_sch_cy
+                        var from_sch_cy = this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
+                        //get from_sch_vgm
+                        var from_sch_vgmRows = results[i].querySelectorAll('tr').filter(x => x.text.indexOf('----') === -1);
+                        var from_sch_vgm = null;
+                        if (from_sch_vgmRows.length > 1) {
+                            from_sch_vgm = this.changeDate(new Date(from_sch_vgmRows[1].querySelector('font').text.trim()));
+                        }
                         //go to Details
                         //find Details Table
                         let DetailBtn = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[8].querySelectorAll('span');
@@ -213,11 +225,11 @@ class shipmentLinkService {
                         roueTemp.modify_date = new Date();
                         roueTemp.imp_exp = 'E';
                         roueTemp.service = service;
-                        roueTemp.from_sch_cy = null;
+                        roueTemp.from_sch_cy = from_sch_cy;
                         roueTemp.from_sch_cfs = null;
                         roueTemp.from_sch_rece = null;
                         roueTemp.from_sch_si = null;
-                        roueTemp.from_sch_vgm = null;
+                        roueTemp.from_sch_vgm = from_sch_vgm;
                         roueTemp.vessel_2 = vessel_2;
                         roueTemp.voyage_2 = voyage_2;
                         roueTemp.ts_port_name = ts_port_name;

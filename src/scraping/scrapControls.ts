@@ -10,6 +10,8 @@ import pilScrapService from '../services/pilScrapService';
 import * as ScrapModel from './scrapModel';
 import zimScrapService from '../services/zimScrapService';
 import shipmentLinkService from '../services/shipmentlinkScrapService';
+import hapagScrapService from '../services/hapagScrapService';
+import yangMingScrapService from '../services/yangmingScrapService';
 import { GlobalSchedule } from '../services/globalSheduleList';
 class scrapControler {
     public router: express.router;
@@ -20,6 +22,8 @@ class scrapControler {
     public pil: pilScrapService;
     public zim: zimScrapService;
     public shipment: shipmentLinkService;
+    public hapag: hapagScrapService;
+    public yang: yangMingScrapService;
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
@@ -29,6 +33,8 @@ class scrapControler {
         this.pil = new pilScrapService();
         this.zim = new zimScrapService();
         this.shipment = new shipmentLinkService();
+        this.hapag = new hapagScrapService();
+        this.yang = new yangMingScrapService();
         this.config();
         this.call();
     }
@@ -169,6 +175,11 @@ class scrapControler {
                     case 6:
                         this.shipment.loadPortToPortSchedule(siteSetting.String);
                         break;
+                    case 7:
+                        this.hapag.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 8:
+                        this.yang.loadPortToPortSchedule(siteSetting.String);
                 }
                 this.scrap
                     .saveSettingForSite(siteSetting)
@@ -469,34 +480,44 @@ class scrapControler {
         this.router.get('/api/checkServices', (req, res) => {
             let result = [];
             result.push({
-                name:'Zim',
+                name: 'Zim',
                 service: GlobalSchedule.zimScheduleService,
                 count: GlobalSchedule.zimScheduleCount
             });
             result.push({
-                name:'apl',
+                name: 'apl',
                 service: GlobalSchedule.aplScheduleService,
                 count: GlobalSchedule.aplScheduleCount
             });
             result.push({
-                name:'maersk',
+                name: 'maersk',
                 service: GlobalSchedule.maerskScheduleService,
                 count: GlobalSchedule.maerskScheduleCount
             });
             result.push({
-                name:'oneLine',
+                name: 'oneLine',
                 service: GlobalSchedule.oneLineScheduleService,
                 count: GlobalSchedule.oneLineScheduleCount
             });
             result.push({
-                name:'pil',
+                name: 'pil',
                 service: GlobalSchedule.pilScheduleService,
                 count: GlobalSchedule.pilScheduleCount
             });
             result.push({
-                name:'shipmentLink',
+                name: 'shipmentLink',
                 service: GlobalSchedule.shipmentLinkScheduleService,
                 count: GlobalSchedule.shipmentLinkScheduleCount
+            });
+            result.push({
+                name: 'yangming',
+                service: GlobalSchedule.yangMingScheduleService,
+                count: GlobalSchedule.yangMingScheduleCount
+            });
+            result.push({
+                name: 'hapag-lloyd',
+                service: GlobalSchedule.hapagScheduleService,
+                count: GlobalSchedule.hapagScheduleCount
             });
             res.status(200).send({
                 result

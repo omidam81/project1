@@ -19,6 +19,8 @@ const pilScrapService_1 = require("../services/pilScrapService");
 const ScrapModel = require("./scrapModel");
 const zimScrapService_1 = require("../services/zimScrapService");
 const shipmentlinkScrapService_1 = require("../services/shipmentlinkScrapService");
+const hapagScrapService_1 = require("../services/hapagScrapService");
+const yangmingScrapService_1 = require("../services/yangmingScrapService");
 const globalSheduleList_1 = require("../services/globalSheduleList");
 class scrapControler {
     constructor() {
@@ -30,6 +32,8 @@ class scrapControler {
         this.pil = new pilScrapService_1.default();
         this.zim = new zimScrapService_1.default();
         this.shipment = new shipmentlinkScrapService_1.default();
+        this.hapag = new hapagScrapService_1.default();
+        this.yang = new yangmingScrapService_1.default();
         this.config();
         this.call();
     }
@@ -169,6 +173,11 @@ class scrapControler {
                     case 6:
                         this.shipment.loadPortToPortSchedule(siteSetting.String);
                         break;
+                    case 7:
+                        this.hapag.loadPortToPortSchedule(siteSetting.String);
+                        break;
+                    case 8:
+                        this.yang.loadPortToPortSchedule(siteSetting.String);
                 }
                 this.scrap
                     .saveSettingForSite(siteSetting)
@@ -500,6 +509,11 @@ class scrapControler {
                 name: 'shipmentLink',
                 service: globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService,
                 count: globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleCount
+            });
+            result.push({
+                name: 'yangming',
+                service: globalSheduleList_1.GlobalSchedule.yangMingScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.yangMingScheduleCount
             });
             res.status(200).send({
                 result
