@@ -186,7 +186,6 @@ class oneLineService {
                                 body = null;
                                 res = null;
                             }
-                            resolve('ok');
                         }
                     }
                     catch (e) {
@@ -198,7 +197,12 @@ class oneLineService {
                         else {
                             utilService_1.default.writeLog(e.message);
                         }
-                        resolve('ko');
+                    }
+                    finally {
+                        if (+this.siteSettingGlobal['FldbreakTime']) {
+                            yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                        }
+                        resolve('ok');
                     }
                 }
             }));
@@ -239,6 +243,11 @@ class oneLineService {
     sleep() {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000);
+        });
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
         });
     }
 }

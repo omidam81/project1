@@ -192,6 +192,9 @@ class pilScrapService {
             finally {
                 yield page.close();
                 yield browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
         }));
@@ -251,6 +254,11 @@ class pilScrapService {
         catch (_a) {
             return null;
         }
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        });
     }
 }
 exports.default = pilScrapService;

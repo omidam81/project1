@@ -245,6 +245,9 @@ class aplScrapService {
             }
             finally {
                 yield browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
         }));
@@ -304,6 +307,11 @@ class aplScrapService {
         catch (_a) {
             return null;
         }
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        });
     }
 }
 exports.default = aplScrapService;

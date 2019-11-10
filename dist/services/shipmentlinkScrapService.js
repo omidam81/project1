@@ -189,7 +189,8 @@ class shipmentLinkService {
                         //get service 
                         let service = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[4].text.trim();
                         //get from_sch_cy
-                        var from_sch_cy = this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
+                        let schTemp = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim();
+                        var from_sch_cy = schTemp.indexOf('----') !== -1 ? '' : this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
                         //get from_sch_vgm
                         var from_sch_vgmRows = results[i].querySelectorAll('tr').filter(x => x.text.indexOf('----') === -1);
                         var from_sch_vgm = null;
@@ -252,6 +253,9 @@ class shipmentLinkService {
             finally {
                 yield page.close();
                 yield browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
         }));
@@ -336,6 +340,11 @@ class shipmentLinkService {
         catch (_a) {
             return null;
         }
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        });
     }
 }
 exports.default = shipmentLinkService;

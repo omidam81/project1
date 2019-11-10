@@ -206,7 +206,7 @@ export default class oneLineService {
                                 body = null;
                                 res = null;
                             }
-                            resolve('ok');
+
                         }
                     } catch (e) {
                         if (e.message.indexOf("sleep system") !== -1) {
@@ -217,7 +217,13 @@ export default class oneLineService {
                             util.writeLog(e.message);
                         }
 
-                        resolve('ko');
+
+                    }
+                    finally {
+                        if (+this.siteSettingGlobal['FldbreakTime']) {
+                            await this.break(+this.siteSettingGlobal['FldbreakTime']);
+                        }
+                        resolve('ok');
                     }
                 }
 
@@ -261,6 +267,11 @@ export default class oneLineService {
     public sleep() {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000)
+        })
+    }
+    public break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
         })
     }
 }

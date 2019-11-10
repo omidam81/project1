@@ -224,6 +224,9 @@ class maeskScrapService {
                         utilService_1.default.writeLog(e.message);
                     }
                     finally {
+                        if (+this.siteSettingGlobal['FldbreakTime']) {
+                            yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                        }
                         resolve('ko');
                     }
                 }
@@ -330,6 +333,11 @@ class maeskScrapService {
         catch (_a) {
             return null;
         }
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        });
     }
 }
 exports.default = maeskScrapService;

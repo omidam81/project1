@@ -115,6 +115,7 @@ class Scrap {
                     .input('DisableEnable', siteSettingOData.DisableEnable)
                     .input('Subsidiary_id', siteSettingOData.SubsidiaryId)
                     .input('com_code', siteSettingOData.ComCode)
+                    .input('breakTime', siteSettingOData.breakTime)
                     .execute(qry);
             })
                 .then(result => {

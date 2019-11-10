@@ -154,6 +154,7 @@ class scrapControler {
                 siteSetting.ComCode = req.body.ComCode;
                 siteSetting.SubsidiaryId = req.body.SubsidiaryId;
                 siteSetting.DisableEnable = req.body.DisableEnable;
+                siteSetting.breakTime = req.body.breakTime;
                 switch (siteSetting.SiteId) {
                     case 1:
                         this.oneLine.loadPortToPortSchedule(siteSetting.String);
@@ -514,6 +515,11 @@ class scrapControler {
                 name: 'yangming',
                 service: globalSheduleList_1.GlobalSchedule.yangMingScheduleService,
                 count: globalSheduleList_1.GlobalSchedule.yangMingScheduleCount
+            });
+            result.push({
+                name: 'hapag-lloyd',
+                service: globalSheduleList_1.GlobalSchedule.hapagScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.hapagScheduleCount
             });
             res.status(200).send({
                 result

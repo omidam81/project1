@@ -59,8 +59,6 @@ class hapagScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
-                            ptp['fromPortname'] = 'Beijing';
-                            ptp['toPortname'] = 'Abu Dhabi';
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
@@ -116,9 +114,7 @@ class hapagScrapService {
     }
     sendData(from, to, startDate, range, id, portsDetail) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            const browser = yield puppeteer.launch({
-                headless: false
-            });
+            const browser = yield puppeteer.launch();
             const page = yield browser.newPage();
             try {
                 yield page.setRequestInterception(true);
@@ -172,13 +168,19 @@ class hapagScrapService {
                         //service , vessel and Voyage
                         let serviceCell = row.querySelectorAll('td')[vesselIndex].querySelector('span').innerHTML;
                         let service = null;
-                        if (serviceCell.split('<br />')[1].split('/').length > 2) {
-                            service = serviceCell.split('<br />')[1].split('/')[2];
+                        let sRow = serviceCell.split('<br />')[0];
+                        if (sRow.split('/').length > 2) {
+                            if (sRow.indexOf('<a') !== -1) {
+                                service = sRow.match(/\>(.*?)\</g)[0].replace(/\<|\>/g, '');
+                            }
+                            else {
+                                service = sRow.split('/')[2].trim();
+                            }
                         }
                         //get vessel
-                        let vesel = serviceCell.split('<br />')[0].split('/')[0];
+                        let vesel = serviceCell.split('<br />')[0].split('/')[0].trim();
                         //get Voyage
-                        let voyage = serviceCell.split('<br />')[0].split('/')[1];
+                        let voyage = serviceCell.split('<br />')[0].split('/')[1].trim();
                         // ts_port_name
                         //select current row 
                         yield page.evaluate((rowNumber) => {
@@ -293,7 +295,6 @@ class hapagScrapService {
                         //back to previes page
                         yield page.goBack();
                         yield page.goBack();
-                        yield page.waitForNavigation();
                     }
                 }
             }
@@ -302,6 +303,9 @@ class hapagScrapService {
             }
             finally {
                 yield browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
         }));
@@ -341,6 +345,11 @@ class hapagScrapService {
     sleep() {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000);
+        });
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
         });
     }
 }

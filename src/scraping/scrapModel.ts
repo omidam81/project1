@@ -23,6 +23,7 @@ export class siteSetting {
     DisableEnable;
     SubsidiaryId;
     ComCode;
+    breakTime;
 }
 export class Route {
     from;

@@ -1,0 +1,15 @@
+
+1:48:00 PM:TypeError: Cannot read property 'querySelector' of null
+1:53:42 PM:TypeError: Cannot read property 'querySelector' of null
+1:54:18 PM:TypeError: Cannot read property 'querySelector' of null
+1:54:56 PM:TypeError: Cannot read property 'querySelector' of null
+1:55:32 PM:TypeError: Cannot read property 'querySelector' of null
+1:56:34 PM:TypeError: Cannot read property 'querySelector' of null
+1:57:14 PM:TypeError: Cannot read property 'querySelector' of null
+1:57:50 PM:TypeError: Cannot read property 'querySelector' of null
+3:50:01 PM:TypeError: Cannot read property 'querySelector' of null
+4:26:01 PM:TypeError: Cannot read property 'querySelectorAll' of null
+4:58:01 PM:TypeError: Cannot read property 'querySelector' of null
+4:58:53 PM:TypeError: Cannot read property 'querySelectorAll' of null
+4:59:30 PM:TypeError: Cannot read property 'querySelectorAll' of null
+5:00:09 PM:TypeError: Cannot read property 'querySelectorAll' of null

@@ -111,7 +111,7 @@ export default class aplScrapService {
                     }
 
 
-                } catch(e){
+                } catch (e) {
                     console.log('apl scrap problem!!! please check your log file');
                     util.writeLog(e);
                 }
@@ -267,6 +267,9 @@ export default class aplScrapService {
                 util.writeLog(e)
             } finally {
                 await browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    await this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
         })
@@ -327,5 +330,10 @@ export default class aplScrapService {
         } catch{
             return null;
         }
+    }
+    public break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        })
     }
 }

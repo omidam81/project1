@@ -243,10 +243,15 @@ export default class zimScrapService {
                             }
 
                         }
-                        resolve('ok');
+                       
                     } catch (e) {
                         util.writeLog(e.message);
-                        resolve('ko');
+                    }
+                    finally{
+                        if(+this.siteSettingGlobal['FldbreakTime']){
+                            await this.break(+this.siteSettingGlobal['FldbreakTime']);
+                        }
+                        resolve('ok');
                     }
                 }
             });
@@ -345,5 +350,10 @@ export default class zimScrapService {
             return null;
         }
 
+    }
+    public break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        })
     }
 }

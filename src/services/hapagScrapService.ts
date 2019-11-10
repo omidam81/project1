@@ -178,13 +178,18 @@ export default class hapagScrapService {
                         //service , vessel and Voyage
                         let serviceCell = row.querySelectorAll('td')[vesselIndex].querySelector('span').innerHTML;
                         let service = null;
-                        if (serviceCell.split('<br />')[1].split('/').length > 2) {
-                            service = serviceCell.split('<br />')[1].split('/')[2];
+                        let sRow = serviceCell.split('<br />')[0];
+                        if (sRow.split('/').length > 2) {
+                            if (sRow.indexOf('<a') !== -1) {
+                                service = sRow.match(/\>(.*?)\</g)[0].replace(/\<|\>/g,'');
+                            } else {
+                                service = sRow.split('/')[2].trim();
+                            }
                         }
                         //get vessel
-                        let vesel = serviceCell.split('<br />')[0].split('/')[0];
+                        let vesel = serviceCell.split('<br />')[0].split('/')[0].trim();
                         //get Voyage
-                        let voyage = serviceCell.split('<br />')[0].split('/')[1];
+                        let voyage = serviceCell.split('<br />')[0].split('/')[1].trim();
                         // ts_port_name
                         //select current row 
 
@@ -325,6 +330,9 @@ export default class hapagScrapService {
                 util.writeLog(e.message)
             } finally {
                 await browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    await this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
 
@@ -367,6 +375,11 @@ export default class hapagScrapService {
     public sleep() {
         return new Promise((resolve) => {
             setTimeout(resolve, 900000)
+        })
+    }
+    public break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
         })
     }
 }

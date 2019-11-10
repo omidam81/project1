@@ -244,6 +244,9 @@ export default class maeskScrapService {
 
                     }
                     finally {
+                        if (+this.siteSettingGlobal['FldbreakTime']) {
+                            await this.break(+this.siteSettingGlobal['FldbreakTime']);
+                        }
                         resolve('ko');
                     }
                 }
@@ -351,5 +354,10 @@ export default class maeskScrapService {
             return null;
         }
 
+    }
+    public break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        })
     }
 }

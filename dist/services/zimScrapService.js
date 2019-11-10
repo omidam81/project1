@@ -221,11 +221,15 @@ class zimScrapService {
                                 }
                             }
                         }
-                        resolve('ok');
                     }
                     catch (e) {
                         utilService_1.default.writeLog(e.message);
-                        resolve('ko');
+                    }
+                    finally {
+                        if (+this.siteSettingGlobal['FldbreakTime']) {
+                            yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                        }
+                        resolve('ok');
                     }
                 }
             }));
@@ -323,6 +327,11 @@ class zimScrapService {
         catch (_a) {
             return null;
         }
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        });
     }
 }
 exports.default = zimScrapService;

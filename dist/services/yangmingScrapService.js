@@ -45,6 +45,9 @@ class yangMingScrapService {
                 //init scrap proccess
                 let timeLength = siteSetting[0]['LenghtScrap'];
                 let tempDate = new Date();
+                if (timeLength >= 60) {
+                    timeLength = 59;
+                }
                 let endTime = this.IsoTime(tempDate.setDate(tempDate.getDate() + timeLength));
                 let startTime = this.IsoTime(new Date());
                 let iso = new Date().toISOString().split('T')[0];
@@ -58,6 +61,8 @@ class yangMingScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            ptp['fromPortname'] = 'Hong Kong';
+                            ptp['toPortname'] = 'Abu Dhabi';
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
@@ -111,9 +116,11 @@ class yangMingScrapService {
             }
         }));
     }
-    sendData(from, to, startDate, range, id, portsDetail) {
+    sendData(from, to, startDate, endDate, id, portsDetail) {
         return __awaiter(this, void 0, void 0, function* () {
-            const browser = yield puppeteer.launch();
+            const browser = yield puppeteer.launch({
+                headless: false
+            });
             const page = yield browser.newPage();
             try {
                 yield page.goto('https://o-www.yangming.com/e-service/schedule/PointToPoint.aspx');
@@ -128,65 +135,43 @@ class yangMingScrapService {
                 yield toInputHide.evaluate((fromInput, to) => fromInput.value = to['LOC_CD'], to);
                 const toInput = yield page.$("#ContentPlaceHolder1_hidTo_txt");
                 yield toInput.evaluate((toInput, from) => toInput.value = from['LOC_NAME'], from);
+                const endDateInput = yield page.$('#ContentPlaceHolder1_date_End');
+                yield endDateInput.evaluate((input, date) => input.value = date, endDate);
                 const button = yield page.$('#ContentPlaceHolder1_btnSearch0');
                 yield button.evaluate(button => button.click());
                 yield page.waitForNavigation();
+                yield this.break(10000);
                 let bodyHTML = yield page.evaluate(() => document.body.innerHTML);
                 if (bodyHTML.indexOf('Sorry, no data could be found. For more information') === -1) {
                     const body = node_html_parser_1.parse(bodyHTML);
-                    let ResTable = body.querySelector('#ContentPlaceHolder1_gvRouting').querySelector('tbody').querySelectorAll('tr');
-                    for (let i = 0; i < ResTable.length; i++) {
+                    let ResTable = body.querySelector('#divCargoDateSchedule').querySelector('tbody').querySelectorAll('tr');
+                    for (let i = 0; i < ResTable.length; i += 2) {
                         let roueTemp = new scrapModel_1.Route();
                         //get Arrival (eta)
-                        let arrival = ResTable[i].querySelectorAll('td')[3].text;
+                        let arrival = ResTable[i].querySelectorAll('td')[9].text;
                         //get Departure (etd)
-                        let Departure = ResTable[i].querySelectorAll('td')[1].text;
+                        let Departure = ResTable[i].querySelectorAll('td')[3].text;
                         //Voyage and service
-                        let row = ResTable[i].querySelectorAll('td')[6].text;
+                        let row = ResTable[i].querySelectorAll('td')[5].text;
                         let arr = row.split('-');
                         //get vessel 
                         let vesel = arr[0].trim();
                         //get Voyage
-                        let voyage = arr.length > 1 ? arr[1] : '';
+                        let voyage = arr.length > 1 ? arr[1].trim() : '';
                         //get service 
                         let service = ResTable[i].querySelectorAll('td')[4].text;
                         //get deatils
-                        yield page.evaluate(index => {
-                            document.getElementById('ContentPlaceHolder1_gvRouting_LinkBtnDetails_' + index).click();
-                        }, i);
-                        yield page.waitForNavigation();
-                        let detailHTML = yield page.evaluate(() => document.body.innerHTML);
-                        const details = node_html_parser_1.parse(detailHTML);
-                        let detailTable = details.querySelector('#gvRouting').querySelector('tbody');
-                        let hasDetails = detailTable.querySelectorAll('div').filter(x => x.text.indexOf('VESSEL') !== -1).length > 1;
+                        let detailTable = body.querySelector('#Schedule_Tr_sub_' + ((i / 2) + 1)).querySelector('tbody');
                         var ts_port_name = null;
                         var vessel_2 = null;
                         var voyage_2 = null;
-                        if (hasDetails) {
-                            //find index of details
-                            let ModelCol = detailTable.querySelectorAll('td')[7];
-                            let first = false;
-                            let currentIndex = -1;
-                            let ModelDiv = ModelCol.querySelectorAll('div');
-                            for (let j = 0; j < ModelDiv.length; j++) {
-                                if (ModelDiv[j].text.indexOf('VESSEL') !== -1) {
-                                    if (first) {
-                                        currentIndex = j;
-                                        break;
-                                    }
-                                    else {
-                                        first = true;
-                                    }
-                                }
-                            }
-                            if (currentIndex !== -1) {
-                                let ts_port_nameDiv = detailTable.querySelectorAll('td')[1].querySelectorAll('div')[currentIndex];
-                                ts_port_name = ts_port_nameDiv.querySelector('div').text;
-                                let vessel_2Div = detailTable.querySelectorAll('td')[4].querySelectorAll('div')[currentIndex];
-                                let d = vessel_2Div.text.split('-');
-                                vessel_2 = d[0].trim();
-                                voyage_2 = d.length > 1 ? d[1].trim() : '-';
-                            }
+                        //find index of details
+                        let VeselMode = detailTable.querySelectorAll('tr').filter(x => x.text.indexOf('VESSEL') !== -1);
+                        if (VeselMode.length > 1) {
+                            ts_port_name = VeselMode[1].querySelectorAll('td')[1].text;
+                            let d = VeselMode[1].querySelectorAll('td')[4].text.split('-');
+                            vessel_2 = d[0].trim();
+                            voyage_2 = d.length > 1 ? d[1].trim() : '-';
                         }
                         //fill data
                         roueTemp.from_port_id = portsDetail['fromPortcode'].trim();
@@ -218,7 +203,6 @@ class yangMingScrapService {
                         globalSheduleList_1.GlobalSchedule.yangMingScheduleCount++;
                         // //dispose variables
                         roueTemp = null;
-                        yield page.goBack();
                         // await page.waitForNavigation();
                     }
                 }
@@ -228,6 +212,9 @@ class yangMingScrapService {
             }
             finally {
                 yield browser.close();
+                if (+this.siteSettingGlobal['FldbreakTime']) {
+                    yield this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
             }
         });
     }
@@ -237,7 +224,7 @@ class yangMingScrapService {
             month = '0' + month;
         if (day.length < 2)
             day = '0' + day;
-        return [year, month, day].join('-');
+        return [year, month, day].join('/');
     }
     findCode(code) {
         return new Promise((resolve, reject) => {
@@ -263,9 +250,14 @@ class yangMingScrapService {
             });
         });
     }
-    sleep() {
+    sleep(sec) {
         return new Promise((resolve) => {
-            setTimeout(resolve, 900000);
+            setTimeout(resolve, sec * 1000);
+        });
+    }
+    break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
         });
     }
 }

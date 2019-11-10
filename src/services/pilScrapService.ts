@@ -211,6 +211,9 @@ export default class pilScrapService {
             } finally {
                 await page.close();
                 await browser.close();
+                if(+this.siteSettingGlobal['FldbreakTime']){
+                    await this.break(+this.siteSettingGlobal['FldbreakTime']);
+                }
                 resolve('ok');
             }
         })
@@ -273,5 +276,10 @@ export default class pilScrapService {
             return null;
         }
 
+    }
+    public break(time) {
+        return new Promise(resolve => {
+            setTimeout(resolve, time);
+        })
     }
 }

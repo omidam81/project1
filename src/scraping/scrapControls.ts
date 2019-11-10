@@ -156,6 +156,7 @@ class scrapControler {
                 siteSetting.ComCode = req.body.ComCode;
                 siteSetting.SubsidiaryId = req.body.SubsidiaryId;
                 siteSetting.DisableEnable = req.body.DisableEnable;
+                siteSetting.breakTime = req.body.breakTime;
                 switch (siteSetting.SiteId) {
                     case 1:
                         this.oneLine.loadPortToPortSchedule(siteSetting.String);
