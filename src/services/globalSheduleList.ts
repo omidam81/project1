@@ -8,6 +8,7 @@ export class GlobalSchedule {
     public static pilSchedule;
     public static zimSchedule;
     public static hapagSchedule;
+    public static ooclSchedule;
     public static oneLineScheduleService = false;
     public static sendEmailService = false;
     public static maerskScheduleService = false;
@@ -17,6 +18,7 @@ export class GlobalSchedule {
     public static pilScheduleService = false;
     public static zimScheduleService = false;
     public static hapagScheduleService = false;
+    public static ooclScheduleService = false;
     public static oneLineScheduleCount = 0;
     public static sendEmailCount = 0;
     public static maerskScheduleCount = 0;
@@ -26,4 +28,5 @@ export class GlobalSchedule {
     public static pilScheduleCount = 0;
     public static zimScheduleCount = 0;
     public static hapagScheduleCount = 0;
+    public static ooclScheduleCount = 0;
 }

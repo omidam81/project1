@@ -21,6 +21,7 @@ const zimScrapService_1 = require("../services/zimScrapService");
 const shipmentlinkScrapService_1 = require("../services/shipmentlinkScrapService");
 const hapagScrapService_1 = require("../services/hapagScrapService");
 const yangmingScrapService_1 = require("../services/yangmingScrapService");
+const ooclScrapService_1 = require("../services/ooclScrapService");
 const globalSheduleList_1 = require("../services/globalSheduleList");
 class scrapControler {
     constructor() {
@@ -34,6 +35,7 @@ class scrapControler {
         this.shipment = new shipmentlinkScrapService_1.default();
         this.hapag = new hapagScrapService_1.default();
         this.yang = new yangmingScrapService_1.default();
+        this.oocl = new ooclScrapService_1.default();
         this.config();
         this.call();
     }
@@ -179,6 +181,8 @@ class scrapControler {
                         break;
                     case 8:
                         this.yang.loadPortToPortSchedule(siteSetting.String);
+                    case 9:
+                        this.oocl.loadPortToPortSchedule(siteSetting.String);
                 }
                 this.scrap
                     .saveSettingForSite(siteSetting)
@@ -476,9 +480,15 @@ class scrapControler {
                 });
             }
         });
-        this.router.get('/api/test/', (req, res) => {
-            this.apl.sendData("BANGKOK ; TH ; THBKK", "QINZHOU ; CN ; CNQZH", "10/17/2019", 3, null, null);
-        });
+        this.router.get('/api/test/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let from = yield this.oocl.findCode('hong kong');
+            let to = yield this.oocl.findCode('Hamburg');
+            let d = yield this.oocl.sendData(from, to, "2019-11-28", 1, {}, 8);
+            res.status(200).send({
+                msg: 'success',
+                data: d
+            });
+        }));
         this.router.get('/api/checkServices', (req, res) => {
             let result = [];
             result.push({
@@ -520,6 +530,11 @@ class scrapControler {
                 name: 'hapag-lloyd',
                 service: globalSheduleList_1.GlobalSchedule.hapagScheduleService,
                 count: globalSheduleList_1.GlobalSchedule.hapagScheduleCount
+            });
+            result.push({
+                name: 'oocl',
+                service: globalSheduleList_1.GlobalSchedule.ooclScheduleService,
+                count: globalSheduleList_1.GlobalSchedule.ooclScheduleCount,
             });
             res.status(200).send({
                 result

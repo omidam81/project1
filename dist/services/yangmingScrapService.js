@@ -61,8 +61,6 @@ class yangMingScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
-                            ptp['fromPortname'] = 'Hong Kong';
-                            ptp['toPortname'] = 'Abu Dhabi';
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;

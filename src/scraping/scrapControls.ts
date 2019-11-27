@@ -12,6 +12,7 @@ import zimScrapService from '../services/zimScrapService';
 import shipmentLinkService from '../services/shipmentlinkScrapService';
 import hapagScrapService from '../services/hapagScrapService';
 import yangMingScrapService from '../services/yangmingScrapService';
+import OoclScrapService from '../services/ooclScrapService';
 import { GlobalSchedule } from '../services/globalSheduleList';
 class scrapControler {
     public router: express.router;
@@ -24,6 +25,7 @@ class scrapControler {
     public shipment: shipmentLinkService;
     public hapag: hapagScrapService;
     public yang: yangMingScrapService;
+    public oocl: OoclScrapService;
     constructor() {
         this.router = express.Router();
         this.scrap = new Scrap();
@@ -35,6 +37,7 @@ class scrapControler {
         this.shipment = new shipmentLinkService();
         this.hapag = new hapagScrapService();
         this.yang = new yangMingScrapService();
+        this.oocl = new OoclScrapService();
         this.config();
         this.call();
     }
@@ -181,6 +184,8 @@ class scrapControler {
                         break;
                     case 8:
                         this.yang.loadPortToPortSchedule(siteSetting.String);
+                    case 9:
+                        this.oocl.loadPortToPortSchedule(siteSetting.String);
                 }
                 this.scrap
                     .saveSettingForSite(siteSetting)
@@ -475,8 +480,15 @@ class scrapControler {
             }
         })
 
-        this.router.get('/api/test/', (req, res) => {
-            this.apl.sendData("BANGKOK ; TH ; THBKK", "QINZHOU ; CN ; CNQZH", "10/17/2019", 3, null, null)
+        this.router.get('/api/test/', async (req, res) => {
+            let from = await this.oocl.findCode('hong kong');
+            let to = await this.oocl.findCode('Hamburg');
+            let d: any = await this.oocl.sendData(from, to, "2019-11-28", 1, {}, 8);
+
+            res.status(200).send({
+                msg: 'success',
+                data: d
+            })
         })
         this.router.get('/api/checkServices', (req, res) => {
             let result = [];
@@ -520,6 +532,11 @@ class scrapControler {
                 service: GlobalSchedule.hapagScheduleService,
                 count: GlobalSchedule.hapagScheduleCount
             });
+            result.push({
+                name: 'oocl',
+                service: GlobalSchedule.ooclScheduleService,
+                count: GlobalSchedule.ooclScheduleCount,
+            })
             res.status(200).send({
                 result
             })
