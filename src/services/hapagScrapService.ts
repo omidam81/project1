@@ -28,11 +28,12 @@ export default class hapagScrapService {
         GlobalSchedule.hapagSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(7);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.hapagScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(7);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('service hapag-lloyd call');
                     GlobalSchedule.hapagScheduleService = true;
@@ -108,7 +109,7 @@ export default class hapagScrapService {
                     console.log('hapag-lloyd scrap problem!!! please check your log file');
                     util.writeLog("hapag-lloyd:" + e);
                 } finally {
-                    console.log('finish');
+                    console.log('hapag: finish');
                     GlobalSchedule.hapagScheduleService = false;
                 }
 
@@ -181,7 +182,7 @@ export default class hapagScrapService {
                         let sRow = serviceCell.split('<br />')[0];
                         if (sRow.split('/').length > 2) {
                             if (sRow.indexOf('<a') !== -1) {
-                                service = sRow.match(/\>(.*?)\</g)[0].replace(/\<|\>/g,'');
+                                service = sRow.match(/\>(.*?)\</g)[0].replace(/\<|\>/g, '');
                             } else {
                                 service = sRow.split('/')[2].trim();
                             }

@@ -32,11 +32,11 @@ class zimScrapService {
             globalSheduleList_1.GlobalSchedule.zimSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.zimSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(5);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.zimScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(5);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service zim call');
                 globalSheduleList_1.GlobalSchedule.zimScheduleService = true;

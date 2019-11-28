@@ -33,11 +33,11 @@ class hapagScrapService {
             globalSheduleList_1.GlobalSchedule.hapagSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.hapagSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(7);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.hapagScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(7);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service hapag-lloyd call');
                 globalSheduleList_1.GlobalSchedule.hapagScheduleService = true;

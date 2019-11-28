@@ -31,11 +31,12 @@ export default class aplScrapService {
         GlobalSchedule.aplSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(2);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.aplScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(2);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('service apl call');
                     GlobalSchedule.aplScheduleService = true;
@@ -117,7 +118,7 @@ export default class aplScrapService {
                 }
                 finally {
                     GlobalSchedule.aplScheduleService = false;
-                    console.log('finish');
+                    console.log('apl:finish');
                 }
             }
         );

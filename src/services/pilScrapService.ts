@@ -28,11 +28,12 @@ export default class pilScrapService {
         GlobalSchedule.pilSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(4);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.pilScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(4);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('service pil call');
                     GlobalSchedule.pilScheduleService = true;
@@ -84,7 +85,7 @@ export default class pilScrapService {
                     util.writeLog("pil:" + e);
                 }
                 finally {
-                    console.log('finish');
+                    console.log('pil: finish');
                     GlobalSchedule.pilScheduleService = false;
                 }
 
@@ -204,7 +205,7 @@ export default class pilScrapService {
                 if (e.message.indexOf("sleep system") !== -1) {
                     console.log('Pil rejected request ,waiting ...');
                     await this.sleep();
-                    console.log('start again!');
+                    console.log('pil: start again!');
                 } else {
                     util.writeLog(e.message);
                 }

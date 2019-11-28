@@ -27,18 +27,19 @@ export default class maeskScrapService {
         GlobalSchedule.maerskSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
-                try{
-                    let siteSetting = await this.scrap.loadSetting(3);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+                let siteSetting = await this.scrap.loadSetting(3);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.maerskScheduleService) {
+                    return;
+                }
+                try {
+
                     console.log(scheduleTime);
                     console.log('service maersk call');
                     GlobalSchedule.maerskScheduleService = true;
                     GlobalSchedule.maerskScheduleCount = 0;
                     //get all points
                     //init scrap proccess
-    
+
                     let timeLength = siteSetting[0]['LenghtScrap'];
                     let tempDate = new Date();
                     let endTime = Math.floor(timeLength / 7);
@@ -102,18 +103,18 @@ export default class maeskScrapService {
                                 break;
                             }
                         }
-    
+
                     }
                 }
-                catch(e){
+                catch (e) {
                     console.log('maersk scrap problem!!! please check your log file');
-                    util.writeLog("maersk:"+e);
+                    util.writeLog("maersk:" + e);
                 }
-                finally{
-                    console.log('finish');
+                finally {
+                    console.log('maersk: finish');
                     GlobalSchedule.maerskScheduleService = false;
                 }
-               
+
             }
         );
     }

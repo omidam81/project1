@@ -24,11 +24,12 @@ export default class oneLineService {
         GlobalSchedule.oneLineSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(1);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.oneLineScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(1);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('service one-line call');
                     GlobalSchedule.oneLineScheduleService = true;
@@ -106,7 +107,7 @@ export default class oneLineService {
                     console.log('oneline scrap problem!!! please check your log file');
                     util.writeLog("oneline:" + e);
                 } finally {
-                    console.log('finish');
+                    console.log('oneline: finish');
                     GlobalSchedule.oneLineScheduleService = false;
                 }
 
@@ -212,7 +213,7 @@ export default class oneLineService {
                         if (e.message.indexOf("sleep system") !== -1) {
                             console.log('one-line is updating ,waiting ...');
                             await this.sleep();
-                            console.log('start again!');
+                            console.log('oneLine : start again!');
                         } else {
                             util.writeLog(e.message);
                         }

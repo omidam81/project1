@@ -31,11 +31,11 @@ class OoclScrapService {
             globalSheduleList_1.GlobalSchedule.ooclSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.ooclSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(9);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.ooclScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(9);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service oocl call');
                 globalSheduleList_1.GlobalSchedule.ooclScheduleService = true;

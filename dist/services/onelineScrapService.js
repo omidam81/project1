@@ -30,11 +30,11 @@ class oneLineService {
             globalSheduleList_1.GlobalSchedule.oneLineSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.oneLineSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(1);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.oneLineScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(1);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service one-line call');
                 globalSheduleList_1.GlobalSchedule.oneLineScheduleService = true;
@@ -192,7 +192,7 @@ class oneLineService {
                         if (e.message.indexOf("sleep system") !== -1) {
                             console.log('one-line is updating ,waiting ...');
                             yield this.sleep();
-                            console.log('start again!');
+                            console.log('oneLine : start again!');
                         }
                         else {
                             utilService_1.default.writeLog(e.message);

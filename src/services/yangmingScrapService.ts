@@ -24,14 +24,15 @@ export default class yangMingScrapService {
         if (GlobalSchedule.yangMingSchedule) {
             GlobalSchedule.yangMingSchedule.cancel();
         }
-        GlobalSchedule.aplSchedule = schedule.scheduleJob(
+        GlobalSchedule.yangMingSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(8);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.yangMingScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(8);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('yangming service call');
                     GlobalSchedule.yangMingScheduleService = true;
@@ -112,7 +113,7 @@ export default class yangMingScrapService {
                     console.log('yang ming scrap problem!!! please check your log file');
                     util.writeLog("yang ming:" + e);
                 } finally {
-                    console.log('finish');
+                    console.log('yangming: finish');
                     GlobalSchedule.yangMingScheduleService = false;
                 }
 

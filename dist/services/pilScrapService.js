@@ -33,11 +33,11 @@ class pilScrapService {
             globalSheduleList_1.GlobalSchedule.pilSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.pilSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(4);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.pilScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(4);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service pil call');
                 globalSheduleList_1.GlobalSchedule.pilScheduleService = true;
@@ -183,7 +183,7 @@ class pilScrapService {
                 if (e.message.indexOf("sleep system") !== -1) {
                     console.log('Pil rejected request ,waiting ...');
                     yield this.sleep();
-                    console.log('start again!');
+                    console.log('pil: start again!');
                 }
                 else {
                     utilService_1.default.writeLog(e.message);

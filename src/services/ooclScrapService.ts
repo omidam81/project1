@@ -27,11 +27,12 @@ export default class OoclScrapService {
         GlobalSchedule.ooclSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(9);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.ooclScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(9);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('service oocl call');
                     GlobalSchedule.ooclScheduleService = true;
@@ -110,7 +111,7 @@ export default class OoclScrapService {
                     util.writeLog("zim:" + e);
                 }
                 finally {
-                    console.log('finish');
+                    console.log('oocl: finish');
                     GlobalSchedule.ooclScheduleService = false;
                 }
 

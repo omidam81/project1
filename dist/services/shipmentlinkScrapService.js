@@ -33,11 +33,11 @@ class shipmentLinkService {
             globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.shipmentLinkSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(6);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(6);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service shipment call');
                 globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService = true;

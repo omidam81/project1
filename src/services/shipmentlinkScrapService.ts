@@ -28,11 +28,12 @@ export default class shipmentLinkService {
         GlobalSchedule.shipmentLinkSchedule = schedule.scheduleJob(
             scheduleTime,
             async () => {
+                let siteSetting = await this.scrap.loadSetting(6);
+                if (!siteSetting[0]['DisableEnable'] || GlobalSchedule.shipmentLinkScheduleService) {
+                    return;
+                }
                 try {
-                    let siteSetting = await this.scrap.loadSetting(6);
-                    if (!siteSetting[0]['DisableEnable']) {
-                        return;
-                    }
+
                     console.log(scheduleTime);
                     console.log('service shipment call');
                     GlobalSchedule.shipmentLinkScheduleService = true;
@@ -110,7 +111,7 @@ export default class shipmentLinkService {
                     console.log('shipmentLink scrap problem!!! please check your log file');
                     util.writeLog("shipmentLink:" + e);
                 } finally {
-                    console.log('finish');
+                    console.log('shipmentLink: finish');
                     GlobalSchedule.shipmentLinkScheduleService = false;
                 }
 
@@ -199,7 +200,7 @@ export default class shipmentLinkService {
                         //get from_sch_cy
                         let schTemp = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim();
 
-                        var from_sch_cy = schTemp.indexOf('----') !== -1 ? '' :this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
+                        var from_sch_cy = schTemp.indexOf('----') !== -1 ? '' : this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
                         //get from_sch_vgm
                         var from_sch_vgmRows = results[i].querySelectorAll('tr').filter(x => x.text.indexOf('----') === -1);
                         var from_sch_vgm = null;
@@ -276,7 +277,7 @@ export default class shipmentLinkService {
             finally {
                 await page.close();
                 await browser.close();
-                if(+this.siteSettingGlobal['FldbreakTime']){
+                if (+this.siteSettingGlobal['FldbreakTime']) {
                     await this.break(+this.siteSettingGlobal['FldbreakTime']);
                 }
                 resolve('ok');

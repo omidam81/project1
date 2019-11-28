@@ -32,11 +32,11 @@ class yangMingScrapService {
             globalSheduleList_1.GlobalSchedule.yangMingSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.aplSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(8);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.yangMingScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(8);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('yangming service call');
                 globalSheduleList_1.GlobalSchedule.yangMingScheduleService = true;

@@ -32,11 +32,11 @@ class maeskScrapService {
             globalSheduleList_1.GlobalSchedule.maerskSchedule.cancel();
         }
         globalSheduleList_1.GlobalSchedule.maerskSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+            let siteSetting = yield this.scrap.loadSetting(3);
+            if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.maerskScheduleService) {
+                return;
+            }
             try {
-                let siteSetting = yield this.scrap.loadSetting(3);
-                if (!siteSetting[0]['DisableEnable']) {
-                    return;
-                }
                 console.log(scheduleTime);
                 console.log('service maersk call');
                 globalSheduleList_1.GlobalSchedule.maerskScheduleService = true;
