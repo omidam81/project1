@@ -106,7 +106,7 @@ class OoclScrapService {
                 utilService_1.default.writeLog("zim:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('oocl: finish');
                 globalSheduleList_1.GlobalSchedule.ooclScheduleService = false;
             }
         }));

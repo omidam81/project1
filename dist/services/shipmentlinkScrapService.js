@@ -109,7 +109,7 @@ class shipmentLinkService {
                 utilService_1.default.writeLog("shipmentLink:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('shipmentLink: finish');
                 globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleService = false;
             }
         }));
@@ -190,7 +190,7 @@ class shipmentLinkService {
                         let service = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[4].text.trim();
                         //get from_sch_cy
                         let schTemp = results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim();
-                        var from_sch_cy = schTemp.indexOf('----') !== -1 ? '' : this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
+                        var from_sch_cy = schTemp.indexOf('----') !== -1 ? null : this.changeDate(new Date(results[i].querySelectorAll('tr')[0].querySelectorAll('td')[3].querySelector('div').text.trim()));
                         //get from_sch_vgm
                         var from_sch_vgmRows = results[i].querySelectorAll('tr').filter(x => x.text.indexOf('----') === -1);
                         var from_sch_vgm = null;
@@ -210,7 +210,7 @@ class shipmentLinkService {
                         if (detailsRow.length > 3) {
                             ts_port_name = detailsRow[3].querySelectorAll('td')[1].text.split(',')[0].trim();
                             let v2 = detailsRow[3].querySelectorAll('td')[6].text.trim();
-                            vessel_2 = v2.match(/(.*?) /g).join(' ').trim();
+                            vessel_2 = v2.match(/(.*?) /g).join(' ').trim().replace('  ', ' ');
                             voyage_2 = v2.split(' ')[v2.split(' ').length - 1];
                         }
                         //get 
@@ -324,6 +324,9 @@ class shipmentLinkService {
     }
     changeDate(date) {
         try {
+            if (date.getFullYear().toString() === "Nan") {
+                return null;
+            }
             let year = date.getFullYear();
             let month = date.getMonth() + 1;
             let day = date.getDate();

@@ -109,7 +109,7 @@ class zimScrapService {
                 utilService_1.default.writeLog("zim:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('zim: finish');
                 globalSheduleList_1.GlobalSchedule.zimScheduleService = false;
             }
         }));

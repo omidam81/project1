@@ -31,7 +31,7 @@ class yangMingScrapService {
         if (globalSheduleList_1.GlobalSchedule.yangMingSchedule) {
             globalSheduleList_1.GlobalSchedule.yangMingSchedule.cancel();
         }
-        globalSheduleList_1.GlobalSchedule.aplSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
+        globalSheduleList_1.GlobalSchedule.yangMingSchedule = schedule.scheduleJob(scheduleTime, () => __awaiter(this, void 0, void 0, function* () {
             let siteSetting = yield this.scrap.loadSetting(8);
             if (!siteSetting[0]['DisableEnable'] || globalSheduleList_1.GlobalSchedule.yangMingScheduleService) {
                 return;
@@ -109,7 +109,7 @@ class yangMingScrapService {
                 utilService_1.default.writeLog("yang ming:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('yangming: finish');
                 globalSheduleList_1.GlobalSchedule.yangMingScheduleService = false;
             }
         }));

@@ -79,7 +79,7 @@ class pilScrapService {
                 utilService_1.default.writeLog("pil:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('pil: finish');
                 globalSheduleList_1.GlobalSchedule.pilScheduleService = false;
             }
         }));

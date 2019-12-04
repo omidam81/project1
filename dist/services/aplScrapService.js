@@ -110,7 +110,7 @@ class aplScrapService {
             }
             finally {
                 globalSheduleList_1.GlobalSchedule.aplScheduleService = false;
-                console.log('finish');
+                console.log('apl:finish');
             }
         }));
     }

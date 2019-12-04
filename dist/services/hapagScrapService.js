@@ -107,7 +107,7 @@ class hapagScrapService {
                 utilService_1.default.writeLog("hapag-lloyd:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('hapag: finish');
                 globalSheduleList_1.GlobalSchedule.hapagScheduleService = false;
             }
         }));

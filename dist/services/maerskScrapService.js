@@ -108,7 +108,7 @@ class maeskScrapService {
                 utilService_1.default.writeLog("maersk:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('maersk: finish');
                 globalSheduleList_1.GlobalSchedule.maerskScheduleService = false;
             }
         }));

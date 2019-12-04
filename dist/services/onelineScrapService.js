@@ -104,7 +104,7 @@ class oneLineService {
                 utilService_1.default.writeLog("oneline:" + e);
             }
             finally {
-                console.log('finish');
+                console.log('oneline: finish');
                 globalSheduleList_1.GlobalSchedule.oneLineScheduleService = false;
             }
         }));
