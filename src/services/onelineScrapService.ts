@@ -53,13 +53,26 @@ export default class oneLineService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.oneLinestopFlag) {
+                                    console.log('User stop oneLine Service');
+                                    await this.PauseService();
+                                    console.log('User start oneLine Service agian');
+                                }
                                 let from = cath.find(x => x.name === ptp['fromPortname']);
                                 let to = cath.find(x => x.name === ptp['toPortname']);
                                 let fromCode;
                                 let toCode;
                                 //check if this port not in my cache call api and get code 
                                 if (!from) {
-                                    fromCode = await this.findOneLineCode(ptp['fromPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findOneLineCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.oneLineshowLog) {
+                                            console.log('\x1b[31m', 'oneline:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.oneLineerr++;
+                                    }
+                                    fromCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['fromPortname'],
                                         code: fromCode
@@ -71,7 +84,15 @@ export default class oneLineService {
                                     fromCode = from['code'];
                                 }
                                 if (!to) {
-                                    toCode = await this.findOneLineCode(ptp['toPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findOneLineCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.oneLineshowLog) {
+                                            console.log('\x1b[31m', 'oneline:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.oneLineerr++;
+                                    }
+                                    toCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['toPortname'],
                                         code: toCode
@@ -85,14 +106,20 @@ export default class oneLineService {
                                 if (toCode === 'noCode' || fromCode === 'noCode') {
                                     continue
                                 }
-                                await this.sendData(
+                                let temp = await Promise.race([this.sendData(
                                     fromCode,
                                     toCode,
                                     startTime,
                                     endTime,
                                     id,
                                     ptp
-                                );
+                                ), this.setTimeOut(120)]);
+                                if (temp == "i") {
+                                    if (GlobalSchedule.oneLineshowLog) {
+                                        console.log('\x1b[31m', 'oneline:find Scrap Data', 'fail');
+                                    }
+                                    GlobalSchedule.oneLineerr++;
+                                }
                             }
                             portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                             if (!portToPortList[0]) {
@@ -194,8 +221,17 @@ export default class oneLineService {
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
                                     //!!!!
-                                    await this.scrap.saveRoute(roueTemp);
-                                    GlobalSchedule.oneLineScheduleCount++;
+                                    try {
+                                        await this.scrap.saveRoute(roueTemp);
+                                        if (GlobalSchedule.oneLineshowLog) {
+                                            console.log('oneline:Save in db');
+                                        }
+                                        GlobalSchedule.oneLineScheduleCount++;
+                                    } catch (e) {
+                                        util.writeLog('DataBase error:' + e.message);
+                                        console.log('DataBase error:', e.message);
+                                    }
+
                                     // //dispose variables
                                     roueTemp = null;
                                     tempVessel = null;
@@ -244,6 +280,9 @@ export default class oneLineService {
     }
     public findOneLineCode(code) {
         return new Promise((resolve, reject) => {
+            if (GlobalSchedule.oneLineshowLog) {
+                console.log('oneline:find code', 'start');
+            }
             let url = `http://ecomm.one-line.com/ecom/CUP_HOM_3000GS.do?f_cmd=123&loc_nm=${code.trim().toLowerCase()}&oriLocNm=${code.trim().toLowerCase()}`;
             request(url, (err, res, body) => {
                 try {
@@ -274,5 +313,21 @@ export default class oneLineService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.oneLinestopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }

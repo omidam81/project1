@@ -58,13 +58,26 @@ class OoclScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            if (globalSheduleList_1.GlobalSchedule.ooclstopFlag) {
+                                console.log('User oocl maersk Service');
+                                yield this.PauseService();
+                                console.log('User oocl maersk Service agian');
+                            }
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
                             let toCode;
                             //check if this port not in my cache call api and get code 
                             if (!from) {
-                                fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.ooclshowLog) {
+                                        console.log('\x1b[31m', 'oocl:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.ooclerr++;
+                                }
+                                fromCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['fromPortname'],
                                     code: fromCode
@@ -77,7 +90,15 @@ class OoclScrapService {
                                 fromCode = from['code'];
                             }
                             if (!to) {
-                                toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.ooclshowLog) {
+                                        console.log('\x1b[31m', 'oocl:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.ooclerr++;
+                                }
+                                toCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['toPortname'],
                                     code: toCode
@@ -92,7 +113,13 @@ class OoclScrapService {
                             if (toCode === 'noCode' || fromCode === 'noCode') {
                                 continue;
                             }
-                            yield this.sendData(fromCode, toCode, startTime, id, ptp, endTime);
+                            let temp = yield Promise.race([this.sendData(fromCode, toCode, startTime, id, ptp, endTime), this.setTimeOut(120)]);
+                            if (temp == "i") {
+                                if (globalSheduleList_1.GlobalSchedule.ooclshowLog) {
+                                    console.log('\x1b[31m', 'oocl:scrap data', 'fail');
+                                }
+                                globalSheduleList_1.GlobalSchedule.ooclerr++;
+                            }
                         }
                         portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                         if (!portToPortList[0]) {
@@ -219,9 +246,18 @@ class OoclScrapService {
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 5;
                                     //!!!!
-                                    yield this.scrap.saveRoute(roueTemp);
+                                    try {
+                                        yield this.scrap.saveRoute(roueTemp);
+                                        if (globalSheduleList_1.GlobalSchedule.ooclshowLog) {
+                                            console.log('oocl:Save in db');
+                                        }
+                                        globalSheduleList_1.GlobalSchedule.ooclScheduleCount++;
+                                    }
+                                    catch (e) {
+                                        utilService_1.default.writeLog('DataBase error:' + e.message);
+                                        console.log('DataBase error:', e.message);
+                                    }
                                     // //dispose variables
-                                    globalSheduleList_1.GlobalSchedule.ooclScheduleCount++;
                                     roueTemp = null;
                                 }
                                 catch (e) {
@@ -253,6 +289,9 @@ class OoclScrapService {
     }
     findCode(code) {
         return new Promise((resolve, reject) => {
+            if (globalSheduleList_1.GlobalSchedule.ooclshowLog) {
+                console.log('oocl:find code', 'start');
+            }
             try {
                 var options = {
                     method: 'GET',
@@ -320,6 +359,21 @@ class OoclScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         });
+    }
+    setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        });
+    }
+    PauseService() {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            while (globalSheduleList_1.GlobalSchedule.ooclstopFlag) {
+                yield this.setTimeOut(1);
+            }
+            resolve('');
+        }));
     }
 }
 exports.default = OoclScrapService;

@@ -32,8 +32,7 @@ export default class zimScrapService {
                     return;
                 }
                 try {
-
-                    console.log(scheduleTime);
+                    GlobalSchedule.zimstopFlag = false;
                     console.log('service zim call');
                     GlobalSchedule.zimScheduleService = true;
                     GlobalSchedule.zimScheduleCount = 0;
@@ -54,13 +53,26 @@ export default class zimScrapService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.zimstopFlag) {
+                                    console.log('User stop zim Service');
+                                    await this.PauseService();
+                                    console.log('User start zim Service agian');
+                                }
                                 let from = cath.find(x => x.name === ptp['fromPortname']);
                                 let to = cath.find(x => x.name === ptp['toPortname']);
                                 let fromCode;
                                 let toCode;
                                 //check if this port not in my cache call api and get code 
                                 if (!from) {
-                                    fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]) || 'noCode'
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.zimshowLog) {
+                                            console.log('\x1b[31m', 'zim:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.zimerr++;
+                                    }
+                                    fromCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['fromPortname'],
                                         code: fromCode
@@ -72,7 +84,15 @@ export default class zimScrapService {
                                     fromCode = from['code'];
                                 }
                                 if (!to) {
-                                    toCode = await this.findCode(ptp['toPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]) || 'noCode';
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.zimshowLog) {
+                                            console.log('\x1b[31m', 'zim:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.zimerr++;
+                                    }
+                                    toCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['toPortname'],
                                         code: toCode
@@ -86,17 +106,37 @@ export default class zimScrapService {
                                 if (toCode === 'noCode' || fromCode === 'noCode') {
                                     continue
                                 }
-                                const pageNum: any = await this.findPageNumber(fromCode, toCode, endTime);
+                                if (GlobalSchedule.zimshowLog) {
+                                    console.log('zim:find number of page zim', 'start');
+                                }
+                                let pageNum: any = await Promise.race([this.findPageNumber(fromCode, toCode, endTime), this.setTimeOut(30)]);
+                                if (pageNum == "i") {
+                                    if (GlobalSchedule.zimshowLog) {
+                                        console.log('"\x1b[31m"', 'zim:find number of page zim', 'fail');
+                                    }
+                                    pageNum = 0;
+                                    GlobalSchedule.zimerr++;
+                                }
                                 for (let p = 0; p < pageNum; p++) {
-                                    await this.sendData(
+                                    if (GlobalSchedule.zimshowLog) {
+                                        console.log('zim:scrap data', 'start');
+                                    }
+                                    let temp = await Promise.race([this.sendData(
                                         fromCode,
                                         toCode,
                                         endTime,
                                         id,
                                         ptp,
                                         p + 1
-                                    );
+                                    ), this.setTimeOut(120)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.zimshowLog) {
+                                            console.log('"\x1b[31m"', 'zim:scrap data', 'fail');
+                                        }
+                                        GlobalSchedule.zimerr++;
+                                    }
                                 }
+
                             }
                             portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                             if (!portToPortList[0]) {
@@ -114,8 +154,8 @@ export default class zimScrapService {
                 finally {
                     console.log('zim: finish');
                     GlobalSchedule.zimScheduleService = false;
+                    GlobalSchedule.zimstopFlag = false;
                 }
-
             }
         );
     }
@@ -232,11 +272,22 @@ export default class zimScrapService {
                                         roueTemp.masterSetting = id;
                                         roueTemp.siteId = 5;
                                         //!!!!
-                                        await this.scrap.saveRoute(roueTemp);
+                                        try {
+                                            await this.scrap.saveRoute(roueTemp);
+                                            if (GlobalSchedule.zimshowLog) {
+                                                console.log('zim:save in db');
+                                            }
+                                            GlobalSchedule.zimScheduleCount++;
+                                        } catch (e) {
+                                            util.writeLog('DataBase error:' + e.message);
+                                            console.log('DataBase error:', e.message);
+                                        }
                                         // //dispose variables
-                                        GlobalSchedule.zimScheduleCount++;
+
                                         roueTemp = null;
                                     } catch (e) {
+                                        util.writeLog('error:' + e.message);
+                                        console.log('smoolty error zim', e.message);
                                         continue;
                                     }
                                 }
@@ -271,26 +322,30 @@ export default class zimScrapService {
     }
     public findCode(code) {
         return new Promise((resolve, reject) => {
+            if (GlobalSchedule.zimshowLog) {
+                console.log('zim:find Port Code', 'start');
+            }
             let url = `https://www.zim.com/umbraco/surface/ScheduleByRoute/GetPortsInLands?query=${code.trim()}`;
             request(url, (err, res, body) => {
+                let result = ''
                 try {
-                    if (err) {
-                        resolve('')
-                    } else {
+                    if (!err) {
                         let obj = JSON.parse(body);
                         if (obj['suggestions'].length !== 0) {
-                            resolve(obj['suggestions'][0]['data'])
-                        }
-                        else {
-                            resolve('')
+                            result = obj['suggestions'][0]['data'];
                         }
                     }
                 } catch (e) {
-                    resolve('')
+
+                }
+                finally {
+                    if (GlobalSchedule.zimshowLog) {
+                        console.log('zim:find Port Code', 'end');
+                    }
+                    resolve(result)
                 }
             })
         })
-
     }
     public sleep() {
         return new Promise((resolve) => {
@@ -356,5 +411,21 @@ export default class zimScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.zimstopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }

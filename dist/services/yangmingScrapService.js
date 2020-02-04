@@ -61,13 +61,26 @@ class yangMingScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            if (globalSheduleList_1.GlobalSchedule.yangMingstopFlag) {
+                                console.log('User stop yang Ming Service');
+                                yield this.PauseService();
+                                console.log('User start yang Ming Service agian');
+                            }
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
                             let toCode;
                             //check if this port not in my cache call api and get code 
                             if (!from) {
-                                fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.yangMingshowLog) {
+                                        console.log('\x1b[31m', 'yangming:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.yangMingerr++;
+                                }
+                                fromCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['fromPortname'],
                                     code: fromCode
@@ -80,7 +93,15 @@ class yangMingScrapService {
                                 fromCode = from['code'];
                             }
                             if (!to) {
-                                toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.yangMingshowLog) {
+                                        console.log('\x1b[31m', 'yangming:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.yangMingerr++;
+                                }
+                                toCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['toPortname'],
                                     code: toCode
@@ -197,8 +218,17 @@ class yangMingScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 8;
                         //!!!!
-                        yield this.scrap.saveRoute(roueTemp);
-                        globalSheduleList_1.GlobalSchedule.yangMingScheduleCount++;
+                        try {
+                            yield this.scrap.saveRoute(roueTemp);
+                            if (globalSheduleList_1.GlobalSchedule.yangMingshowLog) {
+                                console.log('yangming:Save in db');
+                            }
+                            globalSheduleList_1.GlobalSchedule.yangMingScheduleCount++;
+                        }
+                        catch (e) {
+                            utilService_1.default.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
                         // //dispose variables
                         roueTemp = null;
                         // await page.waitForNavigation();
@@ -225,6 +255,9 @@ class yangMingScrapService {
         return [year, month, day].join('/');
     }
     findCode(code) {
+        if (globalSheduleList_1.GlobalSchedule.yangMingshowLog) {
+            console.log('yangMing:find code', 'start');
+        }
         return new Promise((resolve, reject) => {
             let url = `https://o-www.yangming.com/e-service/schedule/PointToPoint_LocList.ashx?q=${code.trim().toLowerCase()}&limit=99999&timestamp=${Date.now()}&p_Type=F&p_floc=`;
             request(url, (err, res, body) => {
@@ -257,6 +290,21 @@ class yangMingScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         });
+    }
+    setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        });
+    }
+    PauseService() {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            while (globalSheduleList_1.GlobalSchedule.yangMingstopFlag) {
+                yield this.setTimeOut(1);
+            }
+            resolve('');
+        }));
     }
 }
 exports.default = yangMingScrapService;

@@ -57,13 +57,26 @@ export default class hapagScrapService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.hapagstopFlag) {
+                                    console.log('User Paused hapag Service');
+                                    await this.PauseService();
+                                    console.log('User start hapag Service agian');
+                                }
                                 let from = cath.find(x => x.name === ptp['fromPortname']);
                                 let to = cath.find(x => x.name === ptp['toPortname']);
                                 let fromCode;
                                 let toCode;
                                 //check if this port not in my cache call api and get code 
                                 if (!from) {
-                                    fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.hapagshowLog) {
+                                            console.log('\x1b[31m', 'hapag:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.hapagerr++;
+                                    }
+                                    fromCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['fromPortname'],
                                         code: fromCode
@@ -75,7 +88,15 @@ export default class hapagScrapService {
                                     fromCode = from['code'];
                                 }
                                 if (!to) {
-                                    toCode = await this.findCode(ptp['toPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.hapagshowLog) {
+                                            console.log('\x1b[31m', 'hapag:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.hapagerr++;
+                                    }
+                                    toCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['toPortname'],
                                         code: toCode
@@ -317,8 +338,17 @@ export default class hapagScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 7;
                         //!!!!
-                        await this.scrap.saveRoute(roueTemp);
-                        GlobalSchedule.hapagScheduleCount++;
+                        try {
+                            await this.scrap.saveRoute(roueTemp);
+                            if (GlobalSchedule.hapagshowLog) {
+                                console.log('hapag:Save in db');
+                            }
+                            GlobalSchedule.hapagScheduleCount++;
+                        } catch (e) {
+                            util.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
+
                         //dispose variables
                         roueTemp = null;
                         //back to previes page
@@ -352,6 +382,9 @@ export default class hapagScrapService {
     }
     public findCode(code) {
         return new Promise((resolve, reject) => {
+            if (GlobalSchedule.hapagshowLog) {
+                console.log('hapag:find code', 'start');
+            }
             let url = `https://o-www.yangming.com/e-service/schedule/PointToPoint_LocList.ashx?q=${code.trim().toLowerCase()}&limit=99999&timestamp=${Date.now()}&p_Type=F&p_floc=`;
             request(url, (err, res, body) => {
                 try {
@@ -382,5 +415,21 @@ export default class hapagScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.hapagstopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }

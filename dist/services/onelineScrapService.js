@@ -56,13 +56,26 @@ class oneLineService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            if (globalSheduleList_1.GlobalSchedule.oneLinestopFlag) {
+                                console.log('User stop oneLine Service');
+                                yield this.PauseService();
+                                console.log('User start oneLine Service agian');
+                            }
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
                             let toCode;
                             //check if this port not in my cache call api and get code 
                             if (!from) {
-                                fromCode = (yield this.findOneLineCode(ptp['fromPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findOneLineCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.oneLineshowLog) {
+                                        console.log('\x1b[31m', 'oneline:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.oneLineerr++;
+                                }
+                                fromCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['fromPortname'],
                                     code: fromCode
@@ -75,7 +88,15 @@ class oneLineService {
                                 fromCode = from['code'];
                             }
                             if (!to) {
-                                toCode = (yield this.findOneLineCode(ptp['toPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findOneLineCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.oneLineshowLog) {
+                                        console.log('\x1b[31m', 'oneline:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.oneLineerr++;
+                                }
+                                toCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['toPortname'],
                                     code: toCode
@@ -90,7 +111,13 @@ class oneLineService {
                             if (toCode === 'noCode' || fromCode === 'noCode') {
                                 continue;
                             }
-                            yield this.sendData(fromCode, toCode, startTime, endTime, id, ptp);
+                            let temp = yield Promise.race([this.sendData(fromCode, toCode, startTime, endTime, id, ptp), this.setTimeOut(120)]);
+                            if (temp == "i") {
+                                if (globalSheduleList_1.GlobalSchedule.oneLineshowLog) {
+                                    console.log('\x1b[31m', 'oneline:find Scrap Data', 'fail');
+                                }
+                                globalSheduleList_1.GlobalSchedule.oneLineerr++;
+                            }
                         }
                         portToPortList = yield this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                         if (!portToPortList[0]) {
@@ -174,8 +201,17 @@ class oneLineService {
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 1;
                                     //!!!!
-                                    yield this.scrap.saveRoute(roueTemp);
-                                    globalSheduleList_1.GlobalSchedule.oneLineScheduleCount++;
+                                    try {
+                                        yield this.scrap.saveRoute(roueTemp);
+                                        if (globalSheduleList_1.GlobalSchedule.oneLineshowLog) {
+                                            console.log('oneline:Save in db');
+                                        }
+                                        globalSheduleList_1.GlobalSchedule.oneLineScheduleCount++;
+                                    }
+                                    catch (e) {
+                                        utilService_1.default.writeLog('DataBase error:' + e.message);
+                                        console.log('DataBase error:', e.message);
+                                    }
                                     // //dispose variables
                                     roueTemp = null;
                                     tempVessel = null;
@@ -218,6 +254,9 @@ class oneLineService {
     }
     findOneLineCode(code) {
         return new Promise((resolve, reject) => {
+            if (globalSheduleList_1.GlobalSchedule.oneLineshowLog) {
+                console.log('oneline:find code', 'start');
+            }
             let url = `http://ecomm.one-line.com/ecom/CUP_HOM_3000GS.do?f_cmd=123&loc_nm=${code.trim().toLowerCase()}&oriLocNm=${code.trim().toLowerCase()}`;
             request(url, (err, res, body) => {
                 try {
@@ -249,6 +288,21 @@ class oneLineService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         });
+    }
+    setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        });
+    }
+    PauseService() {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            while (globalSheduleList_1.GlobalSchedule.oneLinestopFlag) {
+                yield this.setTimeOut(1);
+            }
+            resolve('');
+        }));
     }
 }
 exports.default = oneLineService;

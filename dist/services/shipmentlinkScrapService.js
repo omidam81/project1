@@ -61,13 +61,26 @@ class shipmentLinkService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            if (globalSheduleList_1.GlobalSchedule.shipmentLinkstopFlag) {
+                                console.log('User start shipmentLink Service');
+                                yield this.PauseService();
+                                console.log('User stop shipmentLink Service agian');
+                            }
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
                             let toCode;
                             //check if this port not in my cache call api and get code 
                             if (!from) {
-                                fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.shipmentLinkshowLog) {
+                                        console.log('\x1b[31m', 'shipmentLink:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.shipmentLinkerr++;
+                                }
+                                fromCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['fromPortname'],
                                     code: fromCode
@@ -80,7 +93,15 @@ class shipmentLinkService {
                                 fromCode = from['code'];
                             }
                             if (!to) {
-                                toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.shipmentLinkshowLog) {
+                                        console.log('\x1b[31m', 'shipmentLink:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.shipmentLinkerr++;
+                                }
+                                toCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['toPortname'],
                                     code: toCode
@@ -240,8 +261,17 @@ class shipmentLinkService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 3;
                         //!!!!
-                        yield this.scrap.saveRoute(roueTemp);
-                        globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleCount++;
+                        try {
+                            yield this.scrap.saveRoute(roueTemp);
+                            if (globalSheduleList_1.GlobalSchedule.shipmentLinkshowLog) {
+                                console.log('shipmentlink:Save in db');
+                            }
+                            globalSheduleList_1.GlobalSchedule.shipmentLinkScheduleCount++;
+                        }
+                        catch (e) {
+                            utilService_1.default.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
                         // //dispose variables
                         roueTemp = null;
                     }
@@ -269,6 +299,9 @@ class shipmentLinkService {
         return [year, month, day].join('-');
     }
     findCode(code) {
+        if (globalSheduleList_1.GlobalSchedule.shipmentLinkshowLog) {
+            console.log('shipmentLink:find code', 'start');
+        }
         return new Promise((resolve, reject) => {
             try {
                 let url = `https://www.shipmentlink.com/servlet/TUF1_AutoCompleteServlet`;
@@ -348,6 +381,21 @@ class shipmentLinkService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         });
+    }
+    setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        });
+    }
+    PauseService() {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            while (globalSheduleList_1.GlobalSchedule.shipmentLinkstopFlag) {
+                yield this.setTimeOut(1);
+            }
+            resolve('');
+        }));
     }
 }
 exports.default = shipmentLinkService;

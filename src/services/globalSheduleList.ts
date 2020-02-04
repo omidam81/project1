@@ -29,4 +29,35 @@ export class GlobalSchedule {
     public static zimScheduleCount = 0;
     public static hapagScheduleCount = 0;
     public static ooclScheduleCount = 0;
+
+    public static oneLinestopFlag = false;
+    public static maerskstopFlag = false;
+    public static aplstopFlag = false;
+    public static yangMingstopFlag = false;
+    public static shipmentLinkstopFlag = false;
+    public static pilstopFlag = false;
+    public static zimstopFlag = false;
+    public static hapagstopFlag = false;
+    public static ooclstopFlag = false;
+
+    public static oneLineshowLog = false;
+    public static maerskshowLog = false;
+    public static aplshowLog = false;
+    public static yangMingshowLog = false;
+    public static shipmentLinkshowLog = false;
+    public static pilshowLog = false;
+    public static zimshowLog = false;
+    public static hapagshowLog = false;
+    public static ooclshowLog = false;
+
+    public static oneLineerr = 0;
+    public static maerskerr = 0;
+    public static aplerr = 0;
+    public static yangMingerr = 0;
+    public static shipmentLinkerr = 0;
+    public static pilerr = 0;
+    public static zimerr = 0;
+    public static hapagerr = 0;
+    public static ooclerr = 0;
+
 }

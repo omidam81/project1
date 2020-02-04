@@ -55,13 +55,26 @@ export default class OoclScrapService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.ooclstopFlag) {
+                                    console.log('User stop maersk Service');
+                                    await this.PauseService();
+                                    console.log('User star oocl Service agian');
+                                }
                                 let from = cath.find(x => x.name === ptp['fromPortname']);
                                 let to = cath.find(x => x.name === ptp['toPortname']);
                                 let fromCode;
                                 let toCode;
                                 //check if this port not in my cache call api and get code 
                                 if (!from) {
-                                    fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.ooclshowLog) {
+                                            console.log('\x1b[31m', 'oocl:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.ooclerr++;
+                                    }
+                                    fromCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['fromPortname'],
                                         code: fromCode
@@ -73,7 +86,15 @@ export default class OoclScrapService {
                                     fromCode = from['code'];
                                 }
                                 if (!to) {
-                                    toCode = await this.findCode(ptp['toPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.ooclshowLog) {
+                                            console.log('\x1b[31m', 'oocl:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.ooclerr++;
+                                    }
+                                    toCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['toPortname'],
                                         code: toCode
@@ -87,15 +108,20 @@ export default class OoclScrapService {
                                 if (toCode === 'noCode' || fromCode === 'noCode') {
                                     continue
                                 }
-                                await this.sendData(
+                                let temp = await Promise.race([this.sendData(
                                     fromCode,
                                     toCode,
                                     startTime,
                                     id,
                                     ptp,
                                     endTime
-                                );
-
+                                ), this.setTimeOut(120)]);
+                                if (temp == "i") {
+                                    if (GlobalSchedule.ooclshowLog) {
+                                        console.log('\x1b[31m', 'oocl:scrap data', 'fail');
+                                    }
+                                    GlobalSchedule.ooclerr++;
+                                }
                             }
                             portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                             if (!portToPortList[0]) {
@@ -246,9 +272,18 @@ export default class OoclScrapService {
                                     roueTemp.masterSetting = id;
                                     roueTemp.siteId = 5;
                                     //!!!!
-                                    await this.scrap.saveRoute(roueTemp);
+                                    try {
+                                        await this.scrap.saveRoute(roueTemp);
+                                        if (GlobalSchedule.ooclshowLog) {
+                                            console.log('oocl:Save in db');
+                                        }
+                                        GlobalSchedule.ooclScheduleCount++;
+                                    } catch (e) {
+                                        util.writeLog('DataBase error:' + e.message);
+                                        console.log('DataBase error:', e.message);
+                                    }
                                     // //dispose variables
-                                    GlobalSchedule.ooclScheduleCount++;
+
                                     roueTemp = null;
                                 } catch (e) {
                                     continue;
@@ -285,6 +320,9 @@ export default class OoclScrapService {
     }
     public findCode(code) {
         return new Promise((resolve, reject) => {
+            if (GlobalSchedule.ooclshowLog) {
+                console.log('oocl:find code', 'start');
+            }
             try {
                 var options = {
                     method: 'GET',
@@ -353,5 +391,21 @@ export default class OoclScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.ooclstopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }

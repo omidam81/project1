@@ -60,13 +60,26 @@ class aplScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            if (globalSheduleList_1.GlobalSchedule.aplstopFlag) {
+                                console.log('User stop apl Service');
+                                yield this.PauseService();
+                                console.log('User start apl Service agian');
+                            }
                             let from = cath.find(x => x.name === ptp['fromPortname']);
                             let to = cath.find(x => x.name === ptp['toPortname']);
                             let fromCode;
                             let toCode;
                             //check if this port not in my cache call api and get code 
                             if (!from) {
-                                fromCode = (yield this.findCode(ptp['fromPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+                                        console.log('\x1b[31m', 'apl:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.aplerr++;
+                                }
+                                fromCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['fromPortname'],
                                     code: fromCode
@@ -79,7 +92,15 @@ class aplScrapService {
                                 fromCode = from['code'];
                             }
                             if (!to) {
-                                toCode = (yield this.findCode(ptp['toPortname'])) || 'noCode';
+                                let temp = yield Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                if (temp == "i") {
+                                    if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+                                        console.log('\x1b[31m', 'apl:find Port Code', 'fail');
+                                    }
+                                    temp = 'noCode';
+                                    globalSheduleList_1.GlobalSchedule.aplerr++;
+                                }
+                                toCode = temp || 'noCode';
                                 cath.push({
                                     name: ptp['toPortname'],
                                     code: toCode
@@ -93,6 +114,9 @@ class aplScrapService {
                             }
                             if (toCode === 'noCode' || fromCode === 'noCode') {
                                 continue;
+                            }
+                            if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+                                console.log('apl:Scrap Data', 'start');
                             }
                             yield this.sendData(fromCode, toCode, startTime, endTime, id, ptp);
                         }
@@ -233,8 +257,17 @@ class aplScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 2;
                         //!!!!
-                        yield this.scrap.saveRoute(roueTemp);
-                        globalSheduleList_1.GlobalSchedule.aplScheduleCount++;
+                        try {
+                            yield this.scrap.saveRoute(roueTemp);
+                            if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+                                console.log('apl:Save in db');
+                            }
+                            globalSheduleList_1.GlobalSchedule.aplScheduleCount++;
+                        }
+                        catch (e) {
+                            utilService_1.default.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
                         // //dispose variables
                         roueTemp = null;
                     }
@@ -242,6 +275,10 @@ class aplScrapService {
             }
             catch (e) {
                 utilService_1.default.writeLog(e);
+                if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+                    console.log('\x1b[31m', 'apl:Scrap Data', 'fail');
+                    globalSheduleList_1.GlobalSchedule.aplerr++;
+                }
             }
             finally {
                 yield browser.close();
@@ -261,25 +298,28 @@ class aplScrapService {
         return [month, day, year].join('/');
     }
     findCode(code) {
+        if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+            console.log('apl:find code', 'start');
+        }
         return new Promise((resolve, reject) => {
             let url = `http://www.apl.com/api/PortsWithInlands/GetAll?id=${code.trim().toLowerCase()}`;
+            let result = '';
             request(url, (err, res, body) => {
                 try {
-                    if (err) {
-                        resolve('');
-                    }
-                    else {
+                    if (!err) {
                         let obj = JSON.parse(body);
                         if (obj.length !== 0) {
-                            resolve(obj[0]['Name']);
-                        }
-                        else {
-                            resolve('');
+                            result = obj[0]['Name'];
                         }
                     }
                 }
                 catch (e) {
-                    resolve('');
+                }
+                finally {
+                    if (globalSheduleList_1.GlobalSchedule.aplshowLog) {
+                        console.log('apl:find code', 'end');
+                    }
+                    resolve(result);
                 }
             });
         });
@@ -312,6 +352,21 @@ class aplScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         });
+    }
+    setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        });
+    }
+    PauseService() {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            while (globalSheduleList_1.GlobalSchedule.aplstopFlag) {
+                yield this.setTimeOut(1);
+            }
+            resolve('');
+        }));
     }
 }
 exports.default = aplScrapService;

@@ -184,6 +184,7 @@ class scrapControler {
                         break;
                     case 8:
                         this.yang.loadPortToPortSchedule(siteSetting.String);
+                        break;
                     case 9:
                         this.oocl.loadPortToPortSchedule(siteSetting.String);
                 }
@@ -491,55 +492,205 @@ class scrapControler {
             })
         })
         this.router.get('/api/checkServices', (req, res) => {
+            let hasErrorZim = GlobalSchedule.zimerr > 5;
+            if (hasErrorZim) {
+                GlobalSchedule.zimerr = 0;
+            }
+            let hasErrorApl = GlobalSchedule.aplerr > 5;
+            if (hasErrorApl) {
+                GlobalSchedule.aplerr = 0;
+            }
+            let hasErrorHapag = GlobalSchedule.hapagerr > 5;
+            if (hasErrorHapag) {
+                GlobalSchedule.hapagerr = 0;
+            }
+            let hasErrorMaerk = GlobalSchedule.maerskerr > 5;
+            if (hasErrorMaerk) {
+                GlobalSchedule.maerskerr = 0;
+            }
+            let hasErrorOneLine = GlobalSchedule.oneLineerr > 5;
+            if (hasErrorOneLine) {
+                GlobalSchedule.oneLineerr = 0;
+            }
+            let hasErrorOocl = GlobalSchedule.ooclerr > 5;
+            if (hasErrorOocl) {
+                GlobalSchedule.ooclerr = 0;
+            }
+            let hasErrorPil = GlobalSchedule.pilerr > 5;
+            if (hasErrorPil) {
+                GlobalSchedule.pilerr = 0;
+            }
+            let hasErrorShip = GlobalSchedule.shipmentLinkerr > 5;
+            if (hasErrorShip) {
+                GlobalSchedule.shipmentLinkerr = 0;
+            }
+            let hasErrorYang = GlobalSchedule.yangMingerr > 5;
+            if (hasErrorYang) {
+                GlobalSchedule.yangMingerr = 0;
+            }
             let result = [];
             result.push({
                 name: 'Zim',
                 service: GlobalSchedule.zimScheduleService,
-                count: GlobalSchedule.zimScheduleCount
+                count: GlobalSchedule.zimScheduleCount,
+                err: hasErrorZim,
+                pause: GlobalSchedule.zimstopFlag,
+                showLog: GlobalSchedule.zimshowLog
             });
             result.push({
                 name: 'apl',
                 service: GlobalSchedule.aplScheduleService,
-                count: GlobalSchedule.aplScheduleCount
+                count: GlobalSchedule.aplScheduleCount,
+                err: hasErrorApl,
+                pause: GlobalSchedule.aplstopFlag,
+                showLog: GlobalSchedule.aplshowLog
             });
             result.push({
                 name: 'maersk',
                 service: GlobalSchedule.maerskScheduleService,
-                count: GlobalSchedule.maerskScheduleCount
+                count: GlobalSchedule.maerskScheduleCount,
+                err: hasErrorMaerk,
+                pause: GlobalSchedule.maerskstopFlag,
+                showLog: GlobalSchedule.maerskshowLog
             });
             result.push({
                 name: 'oneLine',
                 service: GlobalSchedule.oneLineScheduleService,
-                count: GlobalSchedule.oneLineScheduleCount
+                count: GlobalSchedule.oneLineScheduleCount,
+                err: hasErrorOneLine,
+                pause: GlobalSchedule.oneLinestopFlag,
+                showLog: GlobalSchedule.oneLineshowLog
             });
             result.push({
                 name: 'pil',
                 service: GlobalSchedule.pilScheduleService,
-                count: GlobalSchedule.pilScheduleCount
+                count: GlobalSchedule.pilScheduleCount,
+                err: hasErrorPil,
+                pause: GlobalSchedule.pilstopFlag,
+                showLog: GlobalSchedule.pilshowLog
             });
             result.push({
                 name: 'shipmentLink',
                 service: GlobalSchedule.shipmentLinkScheduleService,
-                count: GlobalSchedule.shipmentLinkScheduleCount
+                count: GlobalSchedule.shipmentLinkScheduleCount,
+                err: hasErrorShip,
+                pause: GlobalSchedule.shipmentLinkstopFlag,
+                showLog: GlobalSchedule.shipmentLinkshowLog
             });
             result.push({
                 name: 'yangming',
                 service: GlobalSchedule.yangMingScheduleService,
-                count: GlobalSchedule.yangMingScheduleCount
+                count: GlobalSchedule.yangMingScheduleCount,
+                err: hasErrorYang,
+                pause: GlobalSchedule.yangMingstopFlag,
+                showLog: GlobalSchedule.yangMingshowLog
             });
             result.push({
                 name: 'hapag-lloyd',
                 service: GlobalSchedule.hapagScheduleService,
-                count: GlobalSchedule.hapagScheduleCount
+                count: GlobalSchedule.hapagScheduleCount,
+                err: hasErrorHapag,
+                pause: GlobalSchedule.hapagstopFlag,
+                showLog: GlobalSchedule.hapagshowLog
             });
             result.push({
                 name: 'oocl',
                 service: GlobalSchedule.ooclScheduleService,
                 count: GlobalSchedule.ooclScheduleCount,
+                err: hasErrorOocl,
+                pause: GlobalSchedule.ooclstopFlag,
+                showLog: GlobalSchedule.ooclshowLog
             })
             res.status(200).send({
                 result
             })
+        })
+        this.router.post('/api/scrap/toggle', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkToken(token);
+            if (status == 200) {
+                let site: string = req.body.site;
+                switch (site.toLowerCase()) {
+                    case 'zim':
+                        GlobalSchedule.zimstopFlag = !GlobalSchedule.zimstopFlag;
+                        break
+                    case 'apl':
+                        GlobalSchedule.aplstopFlag = !GlobalSchedule.aplstopFlag;
+                        break;
+                    case 'maersk':
+                        GlobalSchedule.maerskstopFlag = !GlobalSchedule.maerskstopFlag;
+                        break;
+                    case 'oneline':
+                        GlobalSchedule.oneLinestopFlag = !GlobalSchedule.oneLinestopFlag;
+                        break;
+                    case 'pil':
+                        GlobalSchedule.pilstopFlag = !GlobalSchedule.pilstopFlag;
+                        break;
+                    case 'shipmentlink':
+                        GlobalSchedule.shipmentLinkstopFlag = !GlobalSchedule.shipmentLinkstopFlag;
+                        break;
+                    case 'yangming':
+                        GlobalSchedule.yangMingstopFlag = !GlobalSchedule.yangMingstopFlag;
+                        break;
+                    case 'hapag-lloyd':
+                        GlobalSchedule.hapagstopFlag = !GlobalSchedule.hapagstopFlag;
+                        break;
+                    case 'oocl':
+                        GlobalSchedule.ooclstopFlag = !GlobalSchedule.ooclstopFlag;
+                        break;
+                }
+                res.status(200).send({
+                    msg: 'success'
+                })
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
+        })
+        this.router.post('/api/scrap/toggleLog', (req, res) => {
+            let token = req.headers['x-access-token'];
+            let status = Jwt.checkToken(token);
+            if (status == 200) {
+                let site: string = req.body.site;
+                switch (site.toLowerCase()) {
+                    case 'zim':
+                        GlobalSchedule.zimshowLog = !GlobalSchedule.zimshowLog;
+                        break;
+                    case 'apl':
+                        GlobalSchedule.aplshowLog = !GlobalSchedule.aplshowLog;
+                        break;
+                    case 'maersk':
+                        GlobalSchedule.maerskshowLog = !GlobalSchedule.maerskshowLog;
+                        break;
+                    case 'oneline':
+                        GlobalSchedule.oneLineshowLog = !GlobalSchedule.oneLineshowLog;
+                        break;
+                    case 'pil':
+                        GlobalSchedule.pilshowLog = !GlobalSchedule.pilshowLog;
+                        break;
+                    case 'shipmentlink':
+                        GlobalSchedule.shipmentLinkshowLog = !GlobalSchedule.shipmentLinkshowLog;
+                        break;
+                    case 'yangming':
+                        GlobalSchedule.yangMingshowLog = !GlobalSchedule.yangMingshowLog;
+                        break;
+                    case 'hapag-lloyd':
+                        GlobalSchedule.hapagshowLog = !GlobalSchedule.hapagshowLog;
+                        break;
+                    case 'oocl':
+                        GlobalSchedule.ooclshowLog = !GlobalSchedule.ooclshowLog;
+                        break;
+
+                }
+                res.status(200).send({
+                    msg: 'success'
+                })
+            } else {
+                res.status(status).send({
+                    msg: 'fail'
+                });
+            }
         })
     }
 }

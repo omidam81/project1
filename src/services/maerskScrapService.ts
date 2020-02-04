@@ -57,13 +57,27 @@ export default class maeskScrapService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.maerskstopFlag) {
+                                    console.log('User Paused maersk Service');
+                                    await this.PauseService();
+                                    console.log('User start maersk Service agian');
+                                }
                                 let from = cath.find(x => x.name === ptp['fromPortname']);
                                 let to = cath.find(x => x.name === ptp['toPortname']);
                                 let fromCode;
                                 let toCode;
                                 //check if this port not in my cache call api and get code 
                                 if (!from) {
-                                    fromCode = await this.findOneLineCode(ptp['fromPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findOneLineCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.maerskshowLog) {
+                                            console.log('\x1b[31m', 'maersk:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.maerskerr++;
+                                    }
+
+                                    fromCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['fromPortname'],
                                         code: fromCode
@@ -75,7 +89,15 @@ export default class maeskScrapService {
                                     fromCode = from['code'];
                                 }
                                 if (!to) {
-                                    toCode = await this.findOneLineCode(ptp['toPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findOneLineCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.maerskshowLog) {
+                                            console.log('\x1b[31m', 'maersk:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.maerskerr++;
+                                    }
+                                    toCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['toPortname'],
                                         code: toCode
@@ -89,14 +111,20 @@ export default class maeskScrapService {
                                 if (toCode === 'noCode' || fromCode === 'noCode') {
                                     continue
                                 }
-                                await this.sendData(
+                                let temp = await Promise.race([this.sendData(
                                     fromCode,
                                     toCode,
                                     startTime,
                                     endTime,
                                     id,
                                     ptp
-                                );
+                                ), this.setTimeOut(120)]);
+                                if (temp == "i") {
+                                    if (GlobalSchedule.maerskshowLog) {
+                                        console.log('\x1b[31m', 'scrap Data', 'fail');
+                                    }
+                                    GlobalSchedule.maerskerr++;
+                                }
                             }
                             portToPortList = await this.scrap.loadDetailSetting(1, portToPortList[portToPortList.length - 1]['FldPkDetailsSetting']);
                             if (!portToPortList[0]) {
@@ -120,10 +148,6 @@ export default class maeskScrapService {
     }
     public sendData(from, to, startDate, NOW, id, portsDetail) {
         return new Promise((resolve, reject) => {
-            //1PLJHUYRVY2ZD
-            //2LMUYHDQXMRNJ
-
-            //09B2WXKA3I3R3
             let u =
                 porttoporturl +
                 `?from=${from}&to=${to}&cargoType=DRY&containerTypeName=40%27+Dry+Standard&containerType=DRY&containerLength=40&containerIsoCode=42G1&containerTempControl=false&fromServiceMode=CY&toServiceMode=CY&numberOfWeeks=${NOW}&dateType=D&date=${startDate}&vesselFlag=&vesselFlagName=&originServiceMode=CY&destinationServiceMode=SD`;
@@ -192,7 +216,15 @@ export default class maeskScrapService {
                                                 "serviceMode": "DRY"
                                             })
                                             let finalP = { params: params };
-                                            const deadLines: any = await this.findDeadLine(JSON.stringify(finalP));
+                                            let temp = await Promise.race([this.findDeadLine(JSON.stringify(finalP)), this.setTimeOut(30)]);
+                                            if (temp == "i") {
+                                                if (GlobalSchedule.maerskshowLog) {
+                                                    console.log('\x1b[31m', 'maersk:find deadLine', 'fail');
+                                                }
+                                                temp = [];
+                                                GlobalSchedule.maerskerr++;
+                                            }
+                                            const deadLines: any = temp;
                                             if (deadLines.length > 0) {
                                                 const SINONAMS = deadLines[0].filter(x => x.deadlineKey === 'SINONAMS');
                                                 if (SINONAMS.length > 0) {
@@ -210,7 +242,15 @@ export default class maeskScrapService {
                                         }
                                         //check
                                         if (schedule['scheduleDetails'].length > 1) {
-                                            roueTemp.ts_port_name = await this.getDeatilsGet(schedule['scheduleDetails'][1]['fromLocation']['siteGeoId']);
+                                            let temp = await Promise.race([this.getDeatilsGet(schedule['scheduleDetails'][1]['fromLocation']['siteGeoId']), this.setTimeOut(30)]);
+                                            if (temp == "i") {
+                                                if (GlobalSchedule.maerskshowLog) {
+                                                    console.log('\x1b[31m', 'maersk:find deadLine', 'fail');
+                                                }
+                                                temp = '';
+                                                GlobalSchedule.maerskerr++;
+                                            }
+                                            roueTemp.ts_port_name = temp;
                                             roueTemp.vessel_2 = schedule['scheduleDetails'][1]['transport']['vessel']['name'];
                                             roueTemp.voyage_2 = schedule['scheduleDetails'][1]['transport']['voyageNumber'];
                                         }
@@ -227,8 +267,17 @@ export default class maeskScrapService {
                                         roueTemp.masterSetting = id;
                                         roueTemp.siteId = 3;
                                         //!!!!
-                                        await this.scrap.saveRoute(roueTemp);
-                                        GlobalSchedule.maerskScheduleCount++;
+                                        try {
+                                            await this.scrap.saveRoute(roueTemp);
+                                            if (GlobalSchedule.maerskshowLog) {
+                                                console.log('maersk:Save in db');
+                                            }
+                                            GlobalSchedule.maerskScheduleCount++;
+                                        } catch (e) {
+                                            util.writeLog('DataBase error:' + e.message);
+                                            console.log('DataBase error:', e.message);
+                                        }
+
                                         // //dispose variables
                                         roueTemp = null;
                                     }
@@ -267,6 +316,9 @@ export default class maeskScrapService {
     }
     public findOneLineCode(code) {
         return new Promise((resolve, reject) => {
+            if (GlobalSchedule.maerskshowLog) {
+                console.log('maersk:find code', 'start');
+            }
             this.publicCode = code;
             let two = code.trim().substring(0, 2);
             let url = `https://api.maerskline.com/maeu/locations/cities?cityprefix=${two}`;
@@ -360,5 +412,21 @@ export default class maeskScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.maerskstopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }

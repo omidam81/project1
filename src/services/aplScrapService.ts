@@ -61,13 +61,27 @@ export default class aplScrapService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.aplstopFlag) {
+                                    console.log('User stop apl Service');
+                                    await this.PauseService();
+                                    console.log('User start apl Service agian');
+                                }
                                 let from = cath.find(x => x.name === ptp['fromPortname']);
                                 let to = cath.find(x => x.name === ptp['toPortname']);
                                 let fromCode;
                                 let toCode;
                                 //check if this port not in my cache call api and get code 
                                 if (!from) {
-                                    fromCode = await this.findCode(ptp['fromPortname']) || 'noCode'
+
+                                    let temp = await Promise.race([this.findCode(ptp['fromPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.aplshowLog) {
+                                            console.log('\x1b[31m', 'apl:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.aplerr++;
+                                    }
+                                    fromCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['fromPortname'],
                                         code: fromCode
@@ -79,7 +93,15 @@ export default class aplScrapService {
                                     fromCode = from['code'];
                                 }
                                 if (!to) {
-                                    toCode = await this.findCode(ptp['toPortname']) || 'noCode'
+                                    let temp = await Promise.race([this.findCode(ptp['toPortname']), this.setTimeOut(30)]);
+                                    if (temp == "i") {
+                                        if (GlobalSchedule.aplshowLog) {
+                                            console.log('\x1b[31m', 'apl:find Port Code', 'fail');
+                                        }
+                                        temp = 'noCode';
+                                        GlobalSchedule.aplerr++;
+                                    }
+                                    toCode = temp || 'noCode';
                                     cath.push({
                                         name: ptp['toPortname'],
                                         code: toCode
@@ -92,6 +114,9 @@ export default class aplScrapService {
                                 }
                                 if (toCode === 'noCode' || fromCode === 'noCode') {
                                     continue
+                                }
+                                if (GlobalSchedule.aplshowLog) {
+                                    console.log('apl:Scrap Data', 'start');
                                 }
                                 await this.sendData(
                                     fromCode,
@@ -256,8 +281,16 @@ export default class aplScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 2;
                         //!!!!
-                        await this.scrap.saveRoute(roueTemp);
-                        GlobalSchedule.aplScheduleCount++;
+                        try {
+                            await this.scrap.saveRoute(roueTemp);
+                            if (GlobalSchedule.aplshowLog) {
+                                console.log('apl:Save in db');
+                            }
+                            GlobalSchedule.aplScheduleCount++;
+                        } catch (e) {
+                            util.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
                         // //dispose variables
                         roueTemp = null;
                     }
@@ -265,7 +298,11 @@ export default class aplScrapService {
 
                 }
             } catch (e) {
-                util.writeLog(e)
+                util.writeLog(e);
+                if (GlobalSchedule.aplshowLog) {
+                    console.log('\x1b[31m', 'apl:Scrap Data', 'fail');
+                    GlobalSchedule.aplerr++;
+                }
             } finally {
                 await browser.close();
                 if (+this.siteSettingGlobal['FldbreakTime']) {
@@ -287,23 +324,28 @@ export default class aplScrapService {
         return [month, day, year].join('/');
     }
     public findCode(code) {
+        if (GlobalSchedule.aplshowLog) {
+            console.log('apl:find code', 'start');
+        }
         return new Promise((resolve, reject) => {
             let url = `http://www.apl.com/api/PortsWithInlands/GetAll?id=${code.trim().toLowerCase()}`;
+            let result = '';
             request(url, (err, res, body) => {
                 try {
-                    if (err) {
-                        resolve('')
-                    } else {
+                    if (!err) {
                         let obj = JSON.parse(body);
                         if (obj.length !== 0) {
-                            resolve(obj[0]['Name'])
-                        }
-                        else {
-                            resolve('')
+                            result = obj[0]['Name'];
                         }
                     }
                 } catch (e) {
-                    resolve('')
+
+                }
+                finally {
+                    if (GlobalSchedule.aplshowLog) {
+                        console.log('apl:find code', 'end');
+                    }
+                    resolve(result);
                 }
             })
         })
@@ -336,5 +378,21 @@ export default class aplScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.aplstopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }

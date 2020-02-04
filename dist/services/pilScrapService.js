@@ -60,6 +60,11 @@ class pilScrapService {
                 if (portToPortList[0]) {
                     while (true) {
                         for (let ptp of portToPortList) {
+                            if (globalSheduleList_1.GlobalSchedule.pilstopFlag) {
+                                console.log('User stop pil Service');
+                                yield this.PauseService();
+                                console.log('User start pil Service agian');
+                            }
                             let from = this.findCode(ptp['fromPortname']);
                             let to = this.findCode(ptp['toPortname']);
                             if (!from || !to) {
@@ -172,8 +177,17 @@ class pilScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 4;
                         //!!!!
-                        yield this.scrap.saveRoute(roueTemp);
-                        globalSheduleList_1.GlobalSchedule.pilScheduleCount++;
+                        try {
+                            yield this.scrap.saveRoute(roueTemp);
+                            if (globalSheduleList_1.GlobalSchedule.pilshowLog) {
+                                console.log('pil:Save in db');
+                            }
+                            globalSheduleList_1.GlobalSchedule.pilScheduleCount++;
+                        }
+                        catch (e) {
+                            utilService_1.default.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
                         // //dispose variables
                         roueTemp = null;
                     }
@@ -208,6 +222,9 @@ class pilScrapService {
         return [year, month, day].join('-');
     }
     findCode(code) {
+        if (globalSheduleList_1.GlobalSchedule.pilshowLog) {
+            console.log('pil:find code', 'start');
+        }
         try {
             let res = pilPorts.filter(x => x.name.trim().toLowerCase().indexOf(code.trim().toLowerCase()) !== -1);
             if (res.length > 0) {
@@ -259,6 +276,21 @@ class pilScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         });
+    }
+    setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        });
+    }
+    PauseService() {
+        return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            while (globalSheduleList_1.GlobalSchedule.pilstopFlag) {
+                yield this.setTimeOut(1);
+            }
+            resolve('');
+        }));
     }
 }
 exports.default = pilScrapService;

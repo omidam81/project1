@@ -56,6 +56,11 @@ export default class pilScrapService {
                     if (portToPortList[0]) {
                         while (true) {
                             for (let ptp of portToPortList) {
+                                if (GlobalSchedule.pilstopFlag) {
+                                    console.log('User stop pil Service');
+                                    await this.PauseService();
+                                    console.log('User start pil Service agian');
+                                }
                                 let from = this.findCode(ptp['fromPortname']);
                                 let to = this.findCode(ptp['toPortname']);
 
@@ -195,8 +200,17 @@ export default class pilScrapService {
                         roueTemp.masterSetting = id;
                         roueTemp.siteId = 4;
                         //!!!!
-                        await this.scrap.saveRoute(roueTemp);
-                        GlobalSchedule.pilScheduleCount++;
+                        try {
+                            await this.scrap.saveRoute(roueTemp);
+                            if (GlobalSchedule.pilshowLog) {
+                                console.log('pil:Save in db');
+                            }
+                            GlobalSchedule.pilScheduleCount++;
+                        } catch (e) {
+                            util.writeLog('DataBase error:' + e.message);
+                            console.log('DataBase error:', e.message);
+                        }
+                        
                         // //dispose variables
                         roueTemp = null;
                     }
@@ -231,6 +245,9 @@ export default class pilScrapService {
         return [year, month, day].join('-');
     }
     public findCode(code) {
+        if (GlobalSchedule.pilshowLog) {
+            console.log('pil:find code', 'start');
+        }
         try {
             let res = pilPorts.filter(x => x.name.trim().toLowerCase().indexOf(code.trim().toLowerCase()) !== -1)
             if (res.length > 0) {
@@ -282,5 +299,21 @@ export default class pilScrapService {
         return new Promise(resolve => {
             setTimeout(resolve, time);
         })
+    }
+    public setTimeOut(s) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('i');
+            }, s * 1000);
+        })
+    }
+    public PauseService() {
+        return new Promise(async (resolve) => {
+            while (GlobalSchedule.pilstopFlag) {
+                await this.setTimeOut(1);
+            }
+            resolve('');
+        })
+
     }
 }
